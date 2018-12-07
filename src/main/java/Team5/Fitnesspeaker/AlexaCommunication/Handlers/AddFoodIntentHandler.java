@@ -10,48 +10,53 @@
 
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
-import static Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler.FOOD_SLOT;
-import static com.amazon.ask.request.Predicates.intentName;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+import static Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler.FOOD_SLOT;
+import static com.amazon.ask.request.Predicates.intentName;
+
 public class AddFoodIntentHandler implements RequestHandler {
-	@Override
-	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddFoodIntent"));
-	}
+    @Override
+    public boolean canHandle(HandlerInput i) {
+        return i.matches(intentName("AddFoodIntent"));
+    }
 
-	@Override
-	public Optional<Response> handle(final HandlerInput i) {
-		final Slot favoriteFoodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(FOOD_SLOT);
-		String speechText, repromptText;
-
-		if (favoriteFoodSlot == null || favoriteFoodSlot.getResolutions() == null
-				|| !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_MATCH")
-						&& !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_NO_MATCH")) {
+    @Override
+    public Optional<Response> handle(HandlerInput i) {
+        Slot favoriteFoodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().get(FOOD_SLOT);
+        String speechText="", repromptText;
+        
+        if (favoriteFoodSlot == null || favoriteFoodSlot.getResolutions() == null
+				|| (!favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_MATCH")
+						&& !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_NO_MATCH"))) {
 			speechText = "You need to provide a valid food. Please try again.";
 			repromptText = "I will repeat, I'm not sure what you ate. Please tell me what you ate, for example, i ate pasta.";
 		} else {
-			final String added_food = favoriteFoodSlot.getValue();
-			final Map<String, Object> items = new TreeMap<>(i.getAttributesManager().getSessionAttributes());
-			items.put(added_food, added_food);
+			String added_food = favoriteFoodSlot.getValue();
+			Map<String, Object> items = new TreeMap<String, Object>(
+					i.getAttributesManager().getSessionAttributes());
+			Integer count=items.get("Food-" + added_food) == null ? Integer.valueOf(1) : (Integer.valueOf(((Integer) items.get("Food-" + added_food)).intValue() + 1));
+			items.put("Food-"+added_food, Integer.valueOf(count.intValue()));
 			i.getAttributesManager().setSessionAttributes(items);
-			speechText = String.format("you added %s. You can ask me what you ate so far saying, what did i eat?",
-					added_food);
+			speechText = String.format("you added %s. you ate so far %d of this, You can ask me what you ate so far saying, what did i eat?",
+					added_food,count);
 			repromptText = "You can ask me what you ate so far saying, what did i eat?";
 		}
 
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
-	}
+        return i.getResponseBuilder()
+                .withSimpleCard("FitnessSpeakerSession", speechText)
+                .withSpeech(speechText)
+                .withReprompt(repromptText)
+                .withShouldEndSession(Boolean.FALSE)
+                .build();
+    }
 
 }
