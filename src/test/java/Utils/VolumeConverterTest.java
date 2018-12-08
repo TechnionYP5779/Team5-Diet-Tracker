@@ -29,5 +29,35 @@ public class VolumeConverterTest {
 		assertEquals(0., VolumeConverter.milliliterToLiter(0),DELTA);
 		assertEquals(-1, VolumeConverter.milliliterToLiter(-10.2),DELTA);
 	}
+	
+	@Test
+	public void mlToCups() {
+		assertEquals(0.0084535097,VolumeConverter.millilitersToCups(2),DELTA);
+		assertEquals(0., VolumeConverter.millilitersToCups(0),DELTA);
+		assertEquals(-1, VolumeConverter.millilitersToCups(-10.2),DELTA);
+	}
+	
+	@Test
+	public void litersToCups() {
+		assertEquals(8.4535096595,VolumeConverter.litersToCups(2),DELTA);
+		assertEquals(0., VolumeConverter.litersToCups(0),DELTA);
+		assertEquals(-1, VolumeConverter.litersToCups(-10.2),DELTA);
+	}
+	
+	@Test
+	public void cupsToLiters() {
+		assertEquals(0.47317625,VolumeConverter.cupsToLiters(2),DELTA);
+		assertEquals(0., VolumeConverter.cupsToLiters(0),DELTA);
+		assertEquals(-1, VolumeConverter.cupsToLiters(-10.2),DELTA);
+	}
+	
+	@Test
+	public void cupsToMilliliters() {
+		assertEquals(473.17625,VolumeConverter.cupsToMilliliters(2),DELTA);
+		assertEquals(0., VolumeConverter.cupsToMilliliters(0),DELTA);
+		assertEquals(-1, VolumeConverter.cupsToMilliliters(-10.2),DELTA);
+	}
+
+
 
 }
