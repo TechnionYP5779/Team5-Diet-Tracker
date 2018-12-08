@@ -15,7 +15,7 @@ public interface VolumeConverter {
 	 * @param liters : amount of given item in liters
 	 * @return amount of same item in milliliters if ml >=0 , -1 otherwise
 	 */
-	static double literToMl(double liters) {
+	static double literToMilliliter(double liters) {
 		return liters < 0 ? -1 : liters * liters_const;
 	}
 	
@@ -23,7 +23,7 @@ public interface VolumeConverter {
 	 * @param ml : amount of given item in milliliters
 	 * @return amount of same item in liters if ml >=0 , -1 otherwise
 	 */
-	static double mlToLiter(double ml) {
+	static double milliliterToLiter(double ml) {
 		return ml < 0 ? -1 : ml / liters_const;
 	}
 	

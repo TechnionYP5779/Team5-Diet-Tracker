@@ -18,16 +18,16 @@ public class VolumeConverterTest {
 	
 	@Test
 	public void literToMl() {
-		assertEquals(liters_const,VolumeConverter.literToMl(1),DELTA);
-		assertEquals(0., VolumeConverter.literToMl(0),DELTA);
-		assertEquals(-1, VolumeConverter.literToMl(-10.2),DELTA);
+		assertEquals(liters_const,VolumeConverter.literToMilliliter(1),DELTA);
+		assertEquals(0., VolumeConverter.literToMilliliter(0),DELTA);
+		assertEquals(-1, VolumeConverter.literToMilliliter(-10.2),DELTA);
 	}
 	
 	@Test
 	public void mlToLiter() {
-		assertEquals(1/liters_const,VolumeConverter.mlToLiter(1),DELTA);
-		assertEquals(0., VolumeConverter.mlToLiter(0),DELTA);
-		assertEquals(-1, VolumeConverter.mlToLiter(-10.2),DELTA);
+		assertEquals(1/liters_const,VolumeConverter.milliliterToLiter(1),DELTA);
+		assertEquals(0., VolumeConverter.milliliterToLiter(0),DELTA);
+		assertEquals(-1, VolumeConverter.milliliterToLiter(-10.2),DELTA);
 	}
 
 }
