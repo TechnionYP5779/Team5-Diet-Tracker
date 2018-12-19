@@ -11,6 +11,7 @@ import org.junit.Test;
  * @author Shaked Sapir
  *
  */
+@SuppressWarnings("static-method")
 public class VolumeConverterTest {
 
 	public static final double DELTA = 0.01;
@@ -225,6 +226,7 @@ public class VolumeConverterTest {
 		assertEquals(0,VolumeConverter.gallonsToPints(0),DELTA);
 		assertEquals(-1,VolumeConverter.gallonsToPints(-2),DELTA);
 	}
+	
 	
 	@Test
 	public void cupsToGallons() {

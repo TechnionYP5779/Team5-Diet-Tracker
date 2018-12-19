@@ -5,7 +5,21 @@ package Utils;
 
 import static org.junit.Assert.*;
 
+import java.io.FileInputStream;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
 import org.junit.Test;
+
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import Utils.Portion.Type;
 
@@ -13,7 +27,7 @@ import Utils.Portion.Type;
  * @author Shaked Sapir
  *
  */
-@SuppressWarnings("unlikely-arg-type") public class PortionTest {
+@SuppressWarnings({"static-method","unlikely-arg-type"}) public class PortionTest {
 
 	double DELTA = 0.01;
 	@Test
@@ -81,5 +95,5 @@ import Utils.Portion.Type;
 		assert !(a.equals(null));
 		assert !(a.equals(String.valueOf("b")));
 	}
-
+	
 }

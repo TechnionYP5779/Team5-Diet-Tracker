@@ -12,18 +12,33 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
+import java.io.FileInputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.CountDownLatch;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import Utils.Portion;
 
 public class WhatIAteIntentHandler implements RequestHandler {
 	public static final String FOOD_SLOT = "Food";
-	public static final int START_INDEX_OF_FOOD =5;
+	public static final int START_INDEX_OF_FOOD = 5;
+
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("WhatIAteIntent"));
@@ -31,24 +46,66 @@ public class WhatIAteIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(final HandlerInput input) {
-		String speechText;
-		Map<String, Object> items = new TreeMap<String, Object>(
-				input.getAttributesManager().getSessionAttributes());
-		final Set<String> food_set = items.keySet();
-		String foods_eaten = "";
-		int i = 0;
-		for (final String key : food_set)
-			if (key.startsWith("Food-")) {
-				String val = key.substring(START_INDEX_OF_FOOD);
-				Integer count = (Integer)items.get(key);
-				if(i!=0&&i< food_set.size() - 1) foods_eaten+=", ";
-				else if(i==food_set.size() - 1 && i!=0) foods_eaten+=", and ";
-				foods_eaten+=val;
-				if (count.intValue()> 1)
-					foods_eaten += String.format(" %d times",count);
-				++i;
-			}
+		// Get a reference to our posts
 
+		String UserMail = "shalev@gmail";
+        try {
+    		FileInputStream serviceAccount;
+        	FirebaseOptions options = null;
+    		try {
+    			serviceAccount = new FileInputStream("db_credentials.json");
+    			options = new FirebaseOptions.Builder()
+    				    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+    				    .setDatabaseUrl("https://fitnesspeaker.firebaseio.com/")
+    				    .build();
+    			FirebaseApp.initializeApp(options);
+    		} catch (Exception e1) {
+    		}
+    	}catch(Exception e) {
+    	}
+		final FirebaseDatabase database = FirebaseDatabase.getInstance();
+		DatabaseReference dbRef = database.getReference().child(UserMail).child("Food");
+
+		final List<Portion> FoodList = new LinkedList();
+		CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				for (DataSnapshot portionSnapshot : dataSnapshot.getChildren()) {
+					Portion portion = portionSnapshot.getValue(Portion.class);
+					FoodList.add(portion);
+					 
+				}
+				done.countDown();
+
+			}
+			
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+				System.out.println("The read failed: " + databaseError.getCode());
+			}
+		});
+		try {
+			done.await();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+		}
+
+		String speechText;
+		//Map<String, Object> items = new TreeMap<String, Object>(input.getAttributesManager().getSessionAttributes());
+		//final Set<String> food_set = items.keySet();
+		String foods_eaten = "";
+		/*
+		 * int i = 0; for (final String key : food_set) if (key.startsWith("Food-")) {
+		 * String val = key.substring(START_INDEX_OF_FOOD); Integer count =
+		 * (Integer)items.get(key); if(i!=0&&i< food_set.size() - 1) foods_eaten+=", ";
+		 * else if(i==food_set.size() - 1 && i!=0) foods_eaten+=", and ";
+		 * foods_eaten+=val; if (count.intValue()> 1) foods_eaten +=
+		 * String.format(" %d times",count); ++i; }
+		 */
+		for (Portion p : FoodList) {
+			foods_eaten += ", " + p.getName()+" "+Integer.valueOf((int)p.getAmount())+" grams ";
+		}
 		if (!foods_eaten.isEmpty())
 			speechText = String.format("You ate %s.", foods_eaten);
 		else

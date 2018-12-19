@@ -8,19 +8,19 @@ package Utils;
 import java.util.Objects;
 
 public class Portion {
-    enum Type { FOOD , DRINK} ;
+    public enum Type { FOOD , DRINK} 
 
-    private final Type type;
-    private final String name;
+    public final Type type;
+    public final String name;
 
     /** if food - in grams, if liquid - in milliliters **/
-    private double amount;
+    public double amount;
 
     /** nutritional values **/
-    private double calories_per_100_grams;
-    private double proteins_per_100_grams;
-    private double carbs_per_100_grams;
-    private double fats_per_100_grams;
+    public double calories_per_100_grams;
+    public double proteins_per_100_grams;
+    public double carbs_per_100_grams;
+    public double fats_per_100_grams;
 
 
     public Portion(Portion.Type type , String name, double amount, double calories,
@@ -33,6 +33,15 @@ public class Portion {
         this.carbs_per_100_grams = carbs;
         this.fats_per_100_grams = fats;
     }
+    public Portion() {
+    	this.type = Type.FOOD;
+        this.name = "garbage";
+        this.amount = 0;
+        this.calories_per_100_grams = 0;
+        this.proteins_per_100_grams = 0;
+        this.carbs_per_100_grams = 0;
+        this.fats_per_100_grams = 0;
+	}
 
     @Override
     public boolean equals(Object o) {

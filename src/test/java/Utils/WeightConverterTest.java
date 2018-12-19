@@ -11,6 +11,7 @@ import org.junit.Test;
  * @author Shaked Sapir
  *
  */
+@SuppressWarnings("static-method")
 public class WeightConverterTest {
 
 	public static final double DELTA = 0.01;
