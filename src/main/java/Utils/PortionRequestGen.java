@@ -42,7 +42,8 @@ public class PortionRequestGen {
      }
 	   
 	public static Portion generatePortionHandler(String food_name, Portion.Type t) throws Exception {
-		String urlquery = "https://api.nal.usda.gov/ndb/search/?format=json&q="+food_name+"&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul";
+		
+		String urlquery = "https://api.nal.usda.gov/ndb/search/?format=json&q="+food_name.replace(' ','_')+"&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul";
 		HttpURLConnection con = (HttpURLConnection) new URL(urlquery).openConnection();
 		// optional default is GET
 		con.setRequestMethod("GET");
