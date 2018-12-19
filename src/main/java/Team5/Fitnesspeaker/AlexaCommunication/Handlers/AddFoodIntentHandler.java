@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import Utils.Portion;
 import Utils.Portion.Type;
+import Utils.PortionRequestGen;
 
 import java.io.FileInputStream;
 import java.util.LinkedList;
@@ -111,7 +112,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 			if (FoodList.isEmpty()) {
 				try {
 					if (dbRef != null)
-						dbRef.push().setValueAsync(new Portion(Type.FOOD, added_food, 100, 100, 0, 0, 0)).get();
+						dbRef.push().setValueAsync(PortionRequestGen.generatePortion(added_food, Type.FOOD)).get();
 				} catch (InterruptedException | ExecutionException e) {
 					// TODO Auto-generated catch block
 					speechText += e.getMessage() + " ";
@@ -120,7 +121,9 @@ public class AddFoodIntentHandler implements RequestHandler {
 				try {
 					FirebaseDatabase.getInstance().getReference().child(UserMail).child("Food")
 					.child(FoodId.get(0)).setValueAsync(new Portion(Type.FOOD, added_food,
-							100 + FoodList.get(0).getAmount(), 100, 0, 0, 0)).get();
+							100 + FoodList.get(0).getAmount(), FoodList.get(0).getCalories_per_100_grams(),
+							FoodList.get(0).getProteins_per_100_grams(), FoodList.get(0).getCarbs_per_100_grams(),
+							FoodList.get(0).getFats_per_100_grams())).get();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
