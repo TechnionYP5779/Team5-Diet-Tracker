@@ -10,7 +10,7 @@ import org.junit.Test;
 public class PortionRequestGenTest {
 	
 
-	@Test
+	@Test 
 	public void test() {
 	assertEquals(PortionRequestGen.generatePortion("banana", Portion.Type.FOOD).toString(),
 				"Portion name: banana , 100.0 grams\nPortion type: FOOD\n----------------------------------\n"
