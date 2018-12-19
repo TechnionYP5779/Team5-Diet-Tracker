@@ -95,7 +95,6 @@ public class AddFoodIntentHandler implements RequestHandler {
 
 					}
 					done.countDown();
-
 				}
 
 				@Override
