@@ -52,7 +52,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 			try {
 				serviceAccount = new FileInputStream("db_credentials.json");
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker.firebaseio.com/").build();
+						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
 				FirebaseApp.initializeApp(options);
 			} catch (final Exception e1) {
 				// empty block
@@ -103,6 +103,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 			foods_eaten += ", " + p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams ";
 		if (!foods_eaten.isEmpty())
 			speechText = String.format("You ate %s.", foods_eaten);
+		
 		else
 			speechText = "you ate nothing. you can tell me what you ate, for example, i ate pasta.";
 

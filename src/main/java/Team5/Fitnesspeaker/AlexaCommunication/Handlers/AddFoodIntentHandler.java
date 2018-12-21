@@ -57,7 +57,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 			try {
 				serviceAccount = new FileInputStream("db_credentials.json");
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker.firebaseio.com/").build();
+						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
 				FirebaseApp.initializeApp(options);
 			} catch (final Exception e1) {
 				speechText += e1.getMessage() + " ";// its ok

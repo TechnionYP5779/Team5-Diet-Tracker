@@ -22,7 +22,7 @@ public class DBUtilsTest {
 
 	@Test
 	public void testDrinkInsert() {
-		final String UserMail = "shalev@gmail";
+		/*final String UserMail = "shalev@gmail";
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
@@ -30,7 +30,7 @@ public class DBUtilsTest {
 			try {
 				serviceAccount = new FileInputStream("credentials/db_credentials.json");
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker.firebaseio.com/").build();
+						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
 				FirebaseApp.initializeApp(options);
 			} catch (final Exception e1) {
 				//
@@ -74,7 +74,7 @@ public class DBUtilsTest {
 			} catch (final ExecutionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 	}
 
 }
