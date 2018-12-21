@@ -1,13 +1,10 @@
 package Utils;
 
-import static org.junit.Assert.*;
-
 import java.io.FileInputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
@@ -20,11 +17,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+@SuppressWarnings("static-method")
 public class DBUtilsTest {
 
 	@Test
 	public void testDrinkInsert() {
-		String UserMail = "shalev@gmail";
+		final String UserMail = "shalev@gmail";
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
@@ -34,46 +32,46 @@ public class DBUtilsTest {
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
 						.setDatabaseUrl("https://fitnesspeaker.firebaseio.com/").build();
 				FirebaseApp.initializeApp(options);
-			} catch (Exception e1) {
+			} catch (final Exception e1) {
 				//
 			}
-			FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null) {
+			final FirebaseDatabase database = FirebaseDatabase.getInstance();
+			if (database != null)
 				dbRef = database.getReference().child(UserMail).child("Drink");
-			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			//
 		}
-		
-		final List<Long> DrinkCount = new LinkedList();
+
+		final List<Long> DrinkCount = new LinkedList<>();
 		DrinkCount.add(Long.valueOf(2));
-		CountDownLatch done = new CountDownLatch(1);
+		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-				Long count = dataSnapshot.getValue(Long.class);
-				if(count!=null) DrinkCount.set(0, Long.valueOf(count.longValue() + DrinkCount.get(0).longValue()));
+			public void onDataChange(final DataSnapshot s) {
+				final Long count = s.getValue(Long.class);
+				if (count != null)
+					DrinkCount.set(0, Long.valueOf(count.longValue() + DrinkCount.get(0).longValue()));
 				done.countDown();
 			}
 
 			@Override
-			public void onCancelled(DatabaseError databaseError) {
-				System.out.println("The read failed: " + databaseError.getCode());
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
 			}
 		});
 		try {
 			done.await();
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
 
 		if (dbRef != null)
 			try {
 				dbRef.setValueAsync(DrinkCount.get(0)).get();
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (ExecutionException e) {
+			} catch (final ExecutionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

@@ -1,5 +1,13 @@
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
+import static com.amazon.ask.request.Predicates.intentName;
+
+import java.io.FileInputStream;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
@@ -15,36 +23,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.Portion;
-import Utils.PortionRequestGen;
-import Utils.Portion.Type;
-
-import java.io.FileInputStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
-import static com.amazon.ask.request.Predicates.intentName;
-
 public class AddDrinkIntent implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
-    @Override
-    public boolean canHandle(HandlerInput i) {
-        return i.matches(intentName("addDrinkIntent"));
-    }
 
-    @Override
-    public Optional<Response> handle(HandlerInput i) {
-        Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().get(NUMBER_SLOT);
-        String speechText="", repromptText;
-        
-        //added database
-      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        String UserMail = "shalev@gmail";
+	@Override
+	public boolean canHandle(final HandlerInput i) {
+		return i.matches(intentName("addDrinkIntent"));
+	}
+
+	@Override
+	public Optional<Response> handle(final HandlerInput i) {
+		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(NUMBER_SLOT);
+		String speechText = "", repromptText;
+
+		// added database
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		final String UserMail = "shalev@gmail";
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
@@ -54,72 +49,72 @@ public class AddDrinkIntent implements RequestHandler {
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
 						.setDatabaseUrl("https://fitnesspeaker.firebaseio.com/").build();
 				FirebaseApp.initializeApp(options);
-			} catch (Exception e1) {
+			} catch (final Exception e1) {
 				speechText += e1.getMessage() + " ";// its ok
 			}
-			FirebaseDatabase database = FirebaseDatabase.getInstance();
+			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
 				dbRef = database.getReference().child(UserMail).child("Drink");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
-        if (NumberSlot == null ) {
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+		if (NumberSlot == null) {
 			speechText = "I'm not sure how many glasses you drank. Please tell me again";
 			repromptText = "I will repeat, I'm not sure how many glasses you drank. Please tell me again";
 		} else {
-			int added_num_of_glasses = Integer.parseInt(NumberSlot.getValue());
-			
-			final List<Long> DrinkCount = new LinkedList();
+			final int added_num_of_glasses = Integer.parseInt(NumberSlot.getValue());
+
+			final List<Long> DrinkCount = new LinkedList<>();
 			DrinkCount.add(Long.valueOf(added_num_of_glasses));
-			CountDownLatch done = new CountDownLatch(1);
+			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					Long count = dataSnapshot.getValue(Long.class);
-					if(count!=null) DrinkCount.set(0, Long.valueOf(count.longValue()+DrinkCount.get(0).longValue()));
+				public void onDataChange(final DataSnapshot s) {
+					final Long count = s.getValue(Long.class);
+					if (count != null)
+						DrinkCount.set(0, Long.valueOf(count.longValue() + DrinkCount.get(0).longValue()));
 					done.countDown();
 				}
 
 				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					System.out.println("The read failed: " + databaseError.getCode());
+				public void onCancelled(final DatabaseError e) {
+					System.out.println("The read failed: " + e.getCode());
 				}
 			});
 			try {
 				done.await();
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				// TODO Auto-generated catch block
 			}
-			
+
 			if (dbRef != null)
 				try {
 					dbRef.setValueAsync(DrinkCount.get(0)).get();
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (ExecutionException e) {
+				} catch (final ExecutionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			
-			if(added_num_of_glasses==1) speechText = String.format("you added one glass of water. You can ask me how many glasses you drank so far saying, "
-					+ "how many glasses of water i drank so far?");
+
+			if (added_num_of_glasses == 1)
+				speechText = String.format(
+						"you added one glass of water. You can ask me how many glasses you drank so far saying, "
+								+ "how many glasses of water i drank so far?");
 			else
-			speechText = String.format("you added %d glasses of water. You can ask me how many glasses you drank so far saying, "
-					+ "how many glasses of water i drank so far?",
-					Integer.valueOf(added_num_of_glasses));
+				speechText = String.format(
+						"you added %d glasses of water. You can ask me how many glasses you drank so far saying, "
+								+ "how many glasses of water i drank so far?",
+						Integer.valueOf(added_num_of_glasses));
 			repromptText = "I will repeat, You can ask me how many you drank so far saying, how many glasses of water i drank so far?";
-		
+
 		}
 
-        return i.getResponseBuilder()
-                .withSimpleCard("FitnessSpeakerSession", speechText)
-                .withSpeech(speechText)
-                .withReprompt(repromptText)
-                .withShouldEndSession(Boolean.FALSE)
-                .build();
-    }
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+	}
 
 }

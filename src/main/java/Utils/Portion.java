@@ -4,118 +4,115 @@
  * @since 2018-12-17*/
 package Utils;
 
-
 import java.util.Objects;
 
 public class Portion {
-    public enum Type { FOOD , DRINK} 
-
-    public final Type type;
-    public final String name;
-
-    /** if food - in grams, if liquid - in milliliters **/
-    public double amount;
-
-    /** nutritional values **/
-    public double calories_per_100_grams;
-    public double proteins_per_100_grams;
-    public double carbs_per_100_grams;
-    public double fats_per_100_grams;
-
-
-    public Portion(Portion.Type type , String name, double amount, double calories,
-                   double proteins, double carbs, double fats) {
-        this.type = type;
-        this.name = name;
-        this.amount = amount;
-        this.calories_per_100_grams = calories;
-        this.proteins_per_100_grams = proteins;
-        this.carbs_per_100_grams = carbs;
-        this.fats_per_100_grams = fats;
-    }
-    public Portion() {
-    	this.type = Type.FOOD;
-        this.name = "garbage";
-        this.amount = 0;
-        this.calories_per_100_grams = 0;
-        this.proteins_per_100_grams = 0;
-        this.carbs_per_100_grams = 0;
-        this.fats_per_100_grams = 0;
+	public enum Type {
+		FOOD, DRINK
 	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Portion portion = (Portion) o;
-        return Double.compare(portion.amount, amount) == 0 &&
-                Double.compare(portion.calories_per_100_grams, calories_per_100_grams) == 0 &&
-                Double.compare(portion.proteins_per_100_grams, proteins_per_100_grams) == 0 &&
-                Double.compare(portion.carbs_per_100_grams, carbs_per_100_grams) == 0 &&
-                Double.compare(portion.fats_per_100_grams, fats_per_100_grams) == 0 &&
-                type == portion.type &&
-                Objects.equals(name, portion.name);
-    }
+	public final Type type;
+	public final String name;
 
+	/** if food - in grams, if liquid - in milliliters **/
+	public double amount;
 
-    public double getAmount() {
-        return amount;
-    }
+	/** nutritional values **/
+	public double calories_per_100_grams;
+	public double proteins_per_100_grams;
+	public double carbs_per_100_grams;
+	public double fats_per_100_grams;
 
-    public double getCalories_per_100_grams() {
-        return calories_per_100_grams;
-    }
+	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
+			final double proteins, final double carbs, final double fats) {
+		this.type = type;
+		this.name = name;
+		this.amount = amount;
+		this.calories_per_100_grams = calories;
+		this.proteins_per_100_grams = proteins;
+		this.carbs_per_100_grams = carbs;
+		this.fats_per_100_grams = fats;
+	}
 
-    public double getCarbs_per_100_grams() {
-        return carbs_per_100_grams;
-    }
+	public Portion() {
+		this.type = Type.FOOD;
+		this.name = "garbage";
+		this.amount = 0;
+		this.calories_per_100_grams = 0;
+		this.proteins_per_100_grams = 0;
+		this.carbs_per_100_grams = 0;
+		this.fats_per_100_grams = 0;
+	}
 
-    public double getFats_per_100_grams() {
-        return fats_per_100_grams;
-    }
+	@Override
+	public boolean equals(final Object o) {
+		if (o == this)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		final Portion portion = (Portion) o;
+		return Double.compare(portion.amount, amount) == 0
+				&& Double.compare(portion.calories_per_100_grams, calories_per_100_grams) == 0
+				&& Double.compare(portion.proteins_per_100_grams, proteins_per_100_grams) == 0
+				&& Double.compare(portion.carbs_per_100_grams, carbs_per_100_grams) == 0
+				&& Double.compare(portion.fats_per_100_grams, fats_per_100_grams) == 0 && type == portion.type
+				&& Objects.equals(name, portion.name);
+	}
 
-    public String getName() {
-        return name;
-    }
+	public double getAmount() {
+		return amount;
+	}
 
-    public double getProteins_per_100_grams() {
-        return proteins_per_100_grams;
-    }
+	public double getCalories_per_100_grams() {
+		return calories_per_100_grams;
+	}
 
-    public Type getType() {
-        return type;
-    }
+	public double getCarbs_per_100_grams() {
+		return carbs_per_100_grams;
+	}
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+	public double getFats_per_100_grams() {
+		return fats_per_100_grams;
+	}
 
-    public void setCalories_per_100_grams(double calories_per_100_grams) {
-        this.calories_per_100_grams = calories_per_100_grams;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setCarbs_per_100_grams(double carbs_per_100_grams) {
-        this.carbs_per_100_grams = carbs_per_100_grams;
-    }
+	public double getProteins_per_100_grams() {
+		return proteins_per_100_grams;
+	}
 
-    public void setFats_per_100_grams(double fats_per_100_grams) {
-        this.fats_per_100_grams = fats_per_100_grams;
-    }
+	public Type getType() {
+		return type;
+	}
 
-    public void setProteins_per_100_grams(double proteins_per_100_grams) {
-        this.proteins_per_100_grams = proteins_per_100_grams;
-    }
+	public void setAmount(final double amount) {
+		this.amount = amount;
+	}
 
-    @Override
-    public String toString() {
-    	String units = this.type != Type.FOOD ? " ml" : " grams";
-        return "Portion name: "+this.name+" , "+this.amount +units + "\n" +
-                "Portion type: "+this.type+"\n" +
-        		"----------------------------------\n"+
-                "Nutritional Values per 100 grams:\n" +
-                "Calories: "+this.calories_per_100_grams+"\n"+
-                "Proteins: "+this.proteins_per_100_grams+"\n"+
-                "Carbohydrates: "+this.carbs_per_100_grams+"\n"+
-                "Fats: "+this.fats_per_100_grams;
-    }
+	public void setCalories_per_100_grams(final double calories_per_100_grams) {
+		this.calories_per_100_grams = calories_per_100_grams;
+	}
+
+	public void setCarbs_per_100_grams(final double carbs_per_100_grams) {
+		this.carbs_per_100_grams = carbs_per_100_grams;
+	}
+
+	public void setFats_per_100_grams(final double fats_per_100_grams) {
+		this.fats_per_100_grams = fats_per_100_grams;
+	}
+
+	public void setProteins_per_100_grams(final double proteins_per_100_grams) {
+		this.proteins_per_100_grams = proteins_per_100_grams;
+	}
+
+	@Override
+	public String toString() {
+		final String units = this.type != Type.FOOD ? " ml" : " grams";
+		return "Portion name: " + this.name + " , " + this.amount + units + "\nPortion type: " + this.type + "\n"
+				+ "----------------------------------\nNutritional Values per 100 grams:\nCalories: "
+				+ this.calories_per_100_grams + "\nProteins: " + this.proteins_per_100_grams + "\nCarbohydrates: "
+				+ this.carbs_per_100_grams + "\nFats: " + this.fats_per_100_grams;
+	}
 }

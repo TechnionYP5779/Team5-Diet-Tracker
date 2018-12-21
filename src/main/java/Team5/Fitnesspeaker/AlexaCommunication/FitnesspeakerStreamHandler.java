@@ -10,7 +10,6 @@
 
 package Team5.Fitnesspeaker.AlexaCommunication;
 
-
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
@@ -26,13 +25,14 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SessionEndedRequestHandle
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler;
 
 public class FitnesspeakerStreamHandler extends SkillStreamHandler {
-	static final String skillID="amzn1.ask.skill.8204b920-c87b-453b-8bee-b10cd79945a8";
+	static final String skillID = "amzn1.ask.skill.8204b920-c87b-453b-8bee-b10cd79945a8";
+
 	@SuppressWarnings("unchecked")
 	private static Skill getSkill() {
 		return Skills.standard()
 				.addRequestHandlers(new WhatIAteIntentHandler(), new AddFoodIntentHandler(), new LaunchRequestHandler(),
 						new CancelandStopIntentHandler(), new SessionEndedRequestHandler(), new HelpIntentHandler(),
-						new FallbackIntentHandler(),new AddDrinkIntent(), new HowManyIDrankIntent())
+						new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent())
 				.withSkillId(skillID).build();
 	}
 

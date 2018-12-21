@@ -15,10 +15,7 @@ import static com.amazon.ask.request.Predicates.intentName;
 import java.io.FileInputStream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
@@ -45,55 +42,54 @@ public class WhatIAteIntentHandler implements RequestHandler {
 	}
 
 	@Override
-	public Optional<Response> handle(final HandlerInput input) {
+	public Optional<Response> handle(final HandlerInput i) {
 		// Get a reference to our posts
 
-		String UserMail = "shalev@gmail";
-        try {
-    		FileInputStream serviceAccount;
-        	FirebaseOptions options = null;
-    		try {
-    			serviceAccount = new FileInputStream("db_credentials.json");
-    			options = new FirebaseOptions.Builder()
-    				    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-    				    .setDatabaseUrl("https://fitnesspeaker.firebaseio.com/")
-    				    .build();
-    			FirebaseApp.initializeApp(options);
-    		} catch (Exception e1) {
-    		}
-    	}catch(Exception e) {
-    	}
-		final FirebaseDatabase database = FirebaseDatabase.getInstance();
-		DatabaseReference dbRef = database.getReference().child(UserMail).child("Food");
+		final String UserMail = "shalev@gmail";
+		try {
+			FileInputStream serviceAccount;
+			FirebaseOptions options = null;
+			try {
+				serviceAccount = new FileInputStream("db_credentials.json");
+				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
+						.setDatabaseUrl("https://fitnesspeaker.firebaseio.com/").build();
+				FirebaseApp.initializeApp(options);
+			} catch (final Exception e1) {
+				// empty block
 
-		final List<Portion> FoodList = new LinkedList();
-		CountDownLatch done = new CountDownLatch(1);
+			}
+		} catch (final Exception e) {
+			// empty block
+
+		}
+		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Food");
+
+		final List<Portion> FoodList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-				for (DataSnapshot portionSnapshot : dataSnapshot.getChildren()) {
-					Portion portion = portionSnapshot.getValue(Portion.class);
-					FoodList.add(portion);
-					 
-				}
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot portionSnapshot : s.getChildren())
+					FoodList.add(portionSnapshot.getValue(Portion.class));
 				done.countDown();
 
 			}
-			
+
 			@Override
-			public void onCancelled(DatabaseError databaseError) {
-				System.out.println("The read failed: " + databaseError.getCode());
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
 			}
 		});
 		try {
 			done.await();
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
 
 		String speechText;
-		//Map<String, Object> items = new TreeMap<String, Object>(input.getAttributesManager().getSessionAttributes());
-		//final Set<String> food_set = items.keySet();
+		// Map<String, Object> items = new TreeMap<String,
+		// Object>(input.getAttributesManager().getSessionAttributes());
+		// final Set<String> food_set = items.keySet();
 		String foods_eaten = "";
 		/*
 		 * int i = 0; for (final String key : food_set) if (key.startsWith("Food-")) {
@@ -103,15 +99,14 @@ public class WhatIAteIntentHandler implements RequestHandler {
 		 * foods_eaten+=val; if (count.intValue()> 1) foods_eaten +=
 		 * String.format(" %d times",count); ++i; }
 		 */
-		for (Portion p : FoodList) {
-			foods_eaten += ", " + p.getName()+" "+Integer.valueOf((int)p.getAmount())+" grams ";
-		}
+		for (final Portion p : FoodList)
+			foods_eaten += ", " + p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams ";
 		if (!foods_eaten.isEmpty())
 			speechText = String.format("You ate %s.", foods_eaten);
 		else
 			speechText = "you ate nothing. you can tell me what you ate, for example, i ate pasta.";
 
-		return input.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();
 
 	}
