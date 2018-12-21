@@ -47,6 +47,17 @@ public class PortionRequestGen {
 		}
 		return null;
 	}
+	
+	public static Portion generatePortionWithAmount(final String portion_name, final Portion.Type t,Integer amount) {
+		try {
+			Portion p=PortionRequestGen.generatePortion(portion_name, t);
+			p.setAmount(amount.intValue());
+			return p;
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static Portion generatePortionHandler(final String food_name, final Portion.Type t) throws Exception {
 

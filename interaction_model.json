@@ -31,9 +31,14 @@
                         {
                             "name": "Food",
                             "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
                         }
                     ],
                     "samples": [
+                        "i ate {Number} grams of {Food}",
                         "i also ate {Food}",
                         "yes also {Food}",
                         "also add {Food}",
