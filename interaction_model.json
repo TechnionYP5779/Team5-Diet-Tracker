@@ -1,0 +1,97 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "fitnesspeaker",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": [
+                        "goodbye"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AddFoodIntent",
+                    "slots": [
+                        {
+                            "name": "Food",
+                            "type": "AMAZON.Food"
+                        }
+                    ],
+                    "samples": [
+                        "i also ate {Food}",
+                        "yes also {Food}",
+                        "also add {Food}",
+                        "to add {Food}",
+                        "please add {Food}",
+                        "i ate {Food}"
+                    ]
+                },
+                {
+                    "name": "WhatIAteIntent",
+                    "slots": [],
+                    "samples": [
+                        "what did i eat today",
+                        "what did i eat so far",
+                        "what did i eat"
+                    ]
+                },
+                {
+                    "name": "addDrinkIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "i drank {Number}  cup of water",
+                        "i drank {Number}  glass of water",
+                        "i drank {Number} glasses of water",
+                        "i drank {Number} cups of water",
+                        "i drank glass of water",
+                        "i drank cup of water"
+                    ]
+                },
+                {
+                    "name": "HowMuchIDrankIntent",
+                    "slots": [],
+                    "samples": [
+                        "how many glasses of water i drank so far",
+                        "how many glasses of water i drank",
+                        "how many cups of water i drank so far",
+                        "how many cups of water i drank",
+                        "how much i drank so far"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "AMAZON.Food",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "kuba"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
