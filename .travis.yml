@@ -1,5 +1,5 @@
 language: java
-install: mvn install -Dtest=\!DBUtilsTest* -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
+install: mvn install -Dtest=!*DBUtilsTest* -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V
 jdk:
   - oraclejdk8
 after_success:
