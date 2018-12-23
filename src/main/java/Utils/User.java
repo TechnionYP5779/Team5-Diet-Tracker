@@ -75,8 +75,8 @@ public class User {
 		return gender;
 	}
 
-	public void setGender(Gender gender) {
-		this.gender = gender;
+	public void setGender(Gender g) {
+		this.gender = g;
 	}
 
 	public double getAge() {
