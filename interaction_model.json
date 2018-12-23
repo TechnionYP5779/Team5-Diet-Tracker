@@ -38,6 +38,7 @@
                         }
                     ],
                     "samples": [
+                        "i ate {Number} gram of {Food}",
                         "i ate {Number} grams of {Food}",
                         "i also ate {Food}",
                         "yes also {Food}",
