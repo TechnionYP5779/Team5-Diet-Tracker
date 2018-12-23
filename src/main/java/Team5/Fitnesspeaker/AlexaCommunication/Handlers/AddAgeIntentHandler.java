@@ -23,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class AddAgeIntentHandler implements RequestHandler{
+import Utils.User;
+
+public class AddAgeIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
@@ -54,7 +56,7 @@ public class AddAgeIntentHandler implements RequestHandler{
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Age");
+				dbRef = database.getReference().child(UserMail).child("User");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
@@ -66,13 +68,19 @@ public class AddAgeIntentHandler implements RequestHandler{
 		} else {
 			final int age = Integer.parseInt(NumberSlot.getValue());
 
-			final List<Long> AgeList = new LinkedList<>();
-			AgeList.add(Long.valueOf(age));
+			final List<User> UserList = new LinkedList<>();
+			final List<String> UserId = new LinkedList<>();
+			User u = new User();
+			u.setAge(age);
+			// UserList.add(u);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
-					AgeList.set(0, Long.valueOf(AgeList.get(0).longValue()));
+					for (final DataSnapshot userSnapshot : s.getChildren()) {
+						UserList.add(userSnapshot.getValue(User.class));
+						UserId.add(userSnapshot.getKey());
+					}
 					done.countDown();
 				}
 
@@ -86,20 +94,29 @@ public class AddAgeIntentHandler implements RequestHandler{
 			} catch (final InterruptedException e) {
 				// TODO Auto-generated catch block
 			}
-
-			if (dbRef != null)
+			if (UserList.isEmpty())
 				try {
-					dbRef.setValueAsync(AgeList.get(0)).get();
+					if (dbRef != null)
+						dbRef.push().setValueAsync(u).get();
+				} catch (InterruptedException | ExecutionException e) {
+					speechText += e.getMessage() + " ";
+				}
+			else
+				try {
+					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User").child(UserId.get(0))
+							.setValueAsync(new User(UserList.get(0).getName(), UserList.get(0).getGender(), age,
+									UserList.get(0).getWeight(), UserList.get(0).getHeight(),
+									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
+									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCalories(),
+									UserList.get(0).getDailyLitresOfWater(), UserList.get(0).getDailyProteinGrams()))
+							.get();
 				} catch (final InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (final ExecutionException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			speechText = String.format(
-					"you are %d years old",
-					Integer.valueOf(age));
+
+			speechText = String.format("you are %d years old", Integer.valueOf(age));
 			repromptText = "I will repeat, You can ask me how old are you saying, how older am i?";
 
 		}

@@ -12,7 +12,7 @@ public class User {
 	
 	public String name="";
 	public Gender gender=Gender.MALE;
-	public double age=-1;
+	public int age=-1;
 	public double weight=-1;
 	public double height=-1;
 	public double dailyCalories;
@@ -25,9 +25,10 @@ public class User {
 	/*
 	 * basic constructor with all the parameters
 	 */
-	public User(String name, Gender gender, double age, double weight, double height,
+	public User(String name, Gender gender, int age, double weight, double height,
 			double dailyCaloriesGoal,double dailyLitresOfWaterGoal,
-			double dailyProteinGramsGoal) {
+			double dailyProteinGramsGoal, double dailyCalories, double dailyLitresOfWater,
+			double dailyProteinGrams) {
 		this.name=name;
 		this.gender=gender;
 		this.age=age;
@@ -36,6 +37,9 @@ public class User {
 		this.dailyCaloriesGoal=dailyCaloriesGoal;
 		this.dailyLitresOfWaterGoal=dailyLitresOfWaterGoal;
 		this.dailyProteinGramsGoal=dailyProteinGramsGoal;
+		this.dailyCalories = dailyCalories;
+		this.dailyLitresOfWater = dailyLitresOfWater;
+		this.dailyProteinGrams = dailyProteinGrams;
 	}
 	
 	/*
@@ -79,11 +83,11 @@ public class User {
 		this.gender = g;
 	}
 
-	public double getAge() {
+	public int getAge() {
 		return age;
 	}
 
-	public void setAge(double age) {
+	public void setAge(int age) {
 		this.age = age;
 	}
 
