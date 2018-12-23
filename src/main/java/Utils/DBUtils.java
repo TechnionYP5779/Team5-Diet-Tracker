@@ -182,6 +182,9 @@ public class DBUtils {
 		return Optional.ofNullable(DrinkCount.get(0));
 	}
 	
+	/*
+	 * removes the user directory, BE CAREFUL WITH THIS!!!
+	 */
 	public void DBUtilsRemoveUserDirectory() {
 		try {
 			this.database.getReference().child(this.user_mail).removeValueAsync().get();
