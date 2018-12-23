@@ -81,27 +81,28 @@ public class HowManyIDrankIntent implements RequestHandler {
 			speechText = String.format("you didn't drink today");
 			try {
 				(new EmailSender()).sendMail(speechText, "Water Drank", "igor731996@gmail.com");
-			}catch(Exception e) {
-				//e.printStackTrace();
+			} catch (Exception e) {
+				// e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			final Integer count = DrinkCount.get(0);
 			if (count.intValue() == 1) {
 				speechText = String.format("you drank one glass of water");
 				try {
 					(new EmailSender()).sendMail(speechText, "Water Drank", "igor731996@gmail.com");
-				}catch(Exception e) {
-					//e.printStackTrace();
-				}			}
-				
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
+
 			else {
 				speechText = String.format("you drank %d glasses of water", count);
 				try {
 					(new EmailSender()).sendMail(speechText, "Water Drank", "igor731996@gmail.com");
-				}catch(Exception e) {
-					//e.printStackTrace();
-				}			}
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)

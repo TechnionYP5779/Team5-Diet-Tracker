@@ -9,8 +9,7 @@ public class EmailSenderTest {
 	@Test
 	@SuppressWarnings("static-method")
 	public void testMailSend() {
-		String foods_eaten = "pasta and potatoes";
-		String speechText = String.format("You ate %s.", foods_eaten);
-		(new EmailSender()).sendMail(speechText, "test subject", "donotreplay.team5.fitnessspeaker@gmail.com");
+		(new EmailSender()).sendMail(String.format("You ate %s.", "pasta and potatoes"), "test subject",
+				"donotreplay.team5.fitnessspeaker@gmail.com");
 	}
 }
