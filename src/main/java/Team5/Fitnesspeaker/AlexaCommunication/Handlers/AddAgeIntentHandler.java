@@ -28,7 +28,7 @@ public class AddAgeIntentHandler implements RequestHandler{
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("addAgeIntent"));
+		return i.matches(intentName("AddAgeIntent"));
 	}
 
 	@Override
