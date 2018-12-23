@@ -4,9 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-
 
 import com.amazon.ask.model.services.Pair;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -85,7 +85,6 @@ public class DBUtils {
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
-		
 	}
 
 	/*
@@ -121,5 +120,55 @@ public class DBUtils {
 		return portionList;
 	}
 	
+	
+	/*
+	 * add "added_cups" water cups to user counter
+	 * where added_cups is a given integer parameter
+	 */
+	public void DBAddWaterCups(Integer added_cups) {
+		DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");	
+		Integer updatedCount=Integer.valueOf(added_cups.intValue()+
+				DBGetWaterCups().orElse(Integer.valueOf(0)).intValue());
+		try {
+			dbRef.setValueAsync(updatedCount).get();
+		} catch (ExecutionException| InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/*
+	 * returns the current water count of the user
+	 * or an empty Optional if there is no counter for this user
+	 */
+	public Optional<Integer> DBGetWaterCups() {
+		DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");
+		final List<Integer> DrinkCount = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				final Integer count = s.getValue(Integer.class);
+				if (count != null)
+					DrinkCount.add(count);
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+		if (DrinkCount.isEmpty())
+			return Optional.empty();
+		return Optional.ofNullable(DrinkCount.get(0));
+	}
 
 }
