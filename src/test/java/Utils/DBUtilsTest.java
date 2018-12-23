@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
@@ -30,7 +31,6 @@ public class DBUtilsTest {
 		assertEquals(Integer.valueOf(20), db.DBGetWaterCups().orElse(null));
 		db.DBUtilsRemoveUserDirectory();
 	}
-	
 	@Test
 	public void testFoodHandling() {
 		String testUser="test_user";
