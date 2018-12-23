@@ -120,6 +120,17 @@ public class DBUtils {
 		return portionList;
 	}
 	
+	/*
+	 * returns the stored portion object with the name food_name
+	 * or null if it doesn't exists
+	 */
+	public Portion DBGetFood(String food_name) {
+		final List<Pair<String,Portion>> portionList = this.DBGetFoodList();
+		for(Pair<String,Portion> pair: portionList)
+			if(pair.getValue().getName().equals(food_name)) return pair.getValue();
+		return null;
+	}
+	
 	
 	/*
 	 * add "added_cups" water cups to user counter
@@ -169,6 +180,14 @@ public class DBUtils {
 		if (DrinkCount.isEmpty())
 			return Optional.empty();
 		return Optional.ofNullable(DrinkCount.get(0));
+	}
+	
+	public void DBUtilsRemoveUserDirectory() {
+		try {
+			this.database.getReference().child(this.user_mail).removeValueAsync().get();
+		} catch (ExecutionException| InterruptedException e) {
+			//should not happen
+		} 
 	}
 
 }
