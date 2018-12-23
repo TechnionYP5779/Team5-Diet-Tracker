@@ -21,6 +21,7 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.FallbackIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HelpIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowManyIDrankIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.LaunchRequestHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SendEmailHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SessionEndedRequestHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler;
 
@@ -32,7 +33,8 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 		return Skills.standard()
 				.addRequestHandlers(new WhatIAteIntentHandler(), new AddFoodIntentHandler(), new LaunchRequestHandler(),
 						new CancelandStopIntentHandler(), new SessionEndedRequestHandler(), new HelpIntentHandler(),
-						new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent())
+						new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent(),
+						new SendEmailHandler())
 				.withSkillId(skillID).build();
 	}
 
