@@ -63,7 +63,93 @@ public class User {
 				&& Double.compare(user.dailyProteinGramsGoal, dailyProteinGramsGoal) == 0 && gender == user.gender
 				&& Objects.equals(name, user.name);
 	}
-	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public double getAge() {
+		return age;
+	}
+
+	public void setAge(double age) {
+		this.age = age;
+	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
+	public void setHeight(double height) {
+		this.height = height;
+	}
+
+	public double getDailyCalories() {
+		return dailyCalories;
+	}
+
+	public void setDailyCalories(double dailyCalories) {
+		this.dailyCalories = dailyCalories;
+	}
+
+	public double getDailyCaloriesGoal() {
+		return dailyCaloriesGoal;
+	}
+
+	public void setDailyCaloriesGoal(double dailyCaloriesGoal) {
+		this.dailyCaloriesGoal = dailyCaloriesGoal;
+	}
+
+	public double getDailyLitresOfWater() {
+		return dailyLitresOfWater;
+	}
+
+	public void setDailyLitresOfWater(double dailyLitresOfWater) {
+		this.dailyLitresOfWater = dailyLitresOfWater;
+	}
+
+	public double getDailyLitresOfWaterGoal() {
+		return dailyLitresOfWaterGoal;
+	}
+
+	public void setDailyLitresOfWaterGoal(double dailyLitresOfWaterGoal) {
+		this.dailyLitresOfWaterGoal = dailyLitresOfWaterGoal;
+	}
+
+	public double getDailyProteinGrams() {
+		return dailyProteinGrams;
+	}
+
+	public void setDailyProteinGrams(double dailyProteinGrams) {
+		this.dailyProteinGrams = dailyProteinGrams;
+	}
+
+	public double getDailyProteinGramsGoal() {
+		return dailyProteinGramsGoal;
+	}
+
+	public void setDailyProteinGramsGoal(double dailyProteinGramsGoal) {
+		this.dailyProteinGramsGoal = dailyProteinGramsGoal;
+	}
 	
 	
 	
