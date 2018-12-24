@@ -10,6 +10,7 @@
 
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
+import Utils.EmailSender;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
@@ -101,11 +102,25 @@ public class WhatIAteIntentHandler implements RequestHandler {
 		 */
 		for (final Portion p : FoodList)
 			foods_eaten += ", " + p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams ";
-		if (!foods_eaten.isEmpty())
+		if (!foods_eaten.isEmpty()) {
 			speechText = String.format("You ate %s.", foods_eaten);
-
-		else
+			try {
+				(new EmailSender()).sendMail(speechText, "food eaten", "igor731996@gmail.com");
+			}
+			catch(Exception e) {
+				//e.printStackTrace();
+			}
+		}
+		else {
 			speechText = "you ate nothing. you can tell me what you ate, for example, i ate pasta.";
+			try {
+				(new EmailSender()).sendMail(speechText, "food eaten", "igor731996@gmail.com");
+			}
+			catch(Exception e) {
+				//e.printStackTrace();
+			}
+		}
+			
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();
