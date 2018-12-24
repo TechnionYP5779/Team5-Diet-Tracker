@@ -28,7 +28,7 @@ import Utils.Portion.Type;
 public class DBUtils {
 
 	FirebaseDatabase database;
-	String user_mail;
+	String user_mail; 
 
 	/*
 	 * database's Constructor. Creates a DBUtils instance for user_mail which is the
