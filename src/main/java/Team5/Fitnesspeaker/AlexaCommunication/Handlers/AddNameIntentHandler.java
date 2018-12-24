@@ -25,18 +25,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import Utils.User;
 
-public class AddAgeIntentHandler implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
+public class AddNameIntentHandler implements RequestHandler{
+	public static final String NAME_SLOT = "Name";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddAgeIntent"));
+		return i.matches(intentName("AddNameIntent"));
 	}
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
+		final Slot NameSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(NAME_SLOT);
 		String speechText = "", repromptText;
 
 		// added database
@@ -62,16 +62,16 @@ public class AddAgeIntentHandler implements RequestHandler {
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		if (NumberSlot == null) {
-			speechText = "I'm not sure how old are you. Please tell me again";
-			repromptText = "I will repeat, I'm not sure how old are you. Please tell me again";
+		if (NameSlot == null) {
+			speechText = "I'm not sure what is your name. Please tell me again";
+			repromptText = "I will repeat, I'm not sure what is your name. Please tell me again";
 		} else {
-			final int age = Integer.parseInt(NumberSlot.getValue());
+			final String name = NameSlot.getValue();
 
 			final List<User> UserList = new LinkedList<>();
 			final List<String> UserId = new LinkedList<>();
 			User u = new User();
-			u.setAge(age);
+			u.setName(name);
 			// UserList.add(u);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
@@ -104,7 +104,7 @@ public class AddAgeIntentHandler implements RequestHandler {
 			else
 				try {
 					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User").child(UserId.get(0))
-							.setValueAsync(new User(UserList.get(0).getName(), UserList.get(0).getGender(), age,
+							.setValueAsync(new User(name, UserList.get(0).getGender(), UserList.get(0).getAge(),
 									UserList.get(0).getWeight(), UserList.get(0).getHeight(),
 									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
 									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCalories(),
@@ -116,12 +116,13 @@ public class AddAgeIntentHandler implements RequestHandler {
 					e.printStackTrace();
 				}
 
-			speechText = String.format("you are %d years old", Integer.valueOf(age));
-			repromptText = "I will repeat, You can ask me how old are you saying, how older am i?";
+			speechText = String.format("Welcome %s!", name);
+			repromptText = "I will repeat, You can ask me what is your name by saying, what is my name?";
 
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 	}
+
 }

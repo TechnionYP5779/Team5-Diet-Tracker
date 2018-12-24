@@ -1,16 +1,5 @@
-/*
-     Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-     Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
-     except in compliance with the License. A copy of the License is located at
-         http://aws.amazon.com/apache2.0/
-     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
-     the specific language governing permissions and limitations under the License.
-*/
-
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
-import static Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler.FOOD_SLOT;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
@@ -34,26 +23,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.Portion;
-import Utils.Portion.Type;
-import Utils.PortionRequestGen;
+import Utils.User;
 
-public class AddFoodIntentHandler implements RequestHandler {
+public class AddHeightIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
+
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddFoodIntent"));
+		return i.matches(intentName("AddHeightIntent"));
 	}
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		final Slot favoriteFoodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(FOOD_SLOT);
-		
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
-		Integer grams=NumberSlot == null ? Integer.valueOf(100) : Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
 		String speechText = "", repromptText;
+
+		// added database
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		final String UserMail = "shalev@gmail";
 		DatabaseReference dbRef = null;
 		try {
@@ -69,32 +56,29 @@ public class AddFoodIntentHandler implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Food");
+				dbRef = database.getReference().child(UserMail).child("User");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		if (favoriteFoodSlot == null || favoriteFoodSlot.getResolutions() == null
-				|| !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_MATCH")
-						&& !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_NO_MATCH")) {
-			speechText = "You need to provide a valid food. Please try again.";
-			repromptText = "I will repeat, I'm not sure what you ate. Please tell me what you ate, for example, i ate pasta.";
+		if (NumberSlot == null) {
+			speechText = "I'm not sure what is your height. Please tell me again";
+			repromptText = "I will repeat, I'm not sure what is your height. Please tell me again";
 		} else {
-			final String added_food = favoriteFoodSlot.getValue();
-			final List<Portion> FoodList = new LinkedList<>();
-			final List<String> FoodId = new LinkedList<>();
+			final int height = Integer.parseInt(NumberSlot.getValue());
+
+			final List<User> UserList = new LinkedList<>();
+			final List<String> UserId = new LinkedList<>();
+			User u = new User();
+			u.setHeight(height);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
-					for (final DataSnapshot portionSnapshot : s.getChildren()) {
-						final Portion portion = portionSnapshot.getValue(Portion.class);
-						if (portion.getName().equals(added_food)) {
-							FoodList.add(portion);
-							FoodId.add(portionSnapshot.getKey());
-
-						}
-
+					for (final DataSnapshot userSnapshot : s.getChildren()) {
+						UserList.add(userSnapshot.getValue(User.class));
+						UserId.add(userSnapshot.getKey());
 					}
 					done.countDown();
 				}
@@ -109,34 +93,34 @@ public class AddFoodIntentHandler implements RequestHandler {
 			} catch (final InterruptedException e) {
 				// TODO Auto-generated catch block
 			}
-
-			if (FoodList.isEmpty())
+			if (UserList.isEmpty())
 				try {
 					if (dbRef != null)
-						dbRef.push().setValueAsync(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,grams)).get();
+						dbRef.push().setValueAsync(u).get();
 				} catch (InterruptedException | ExecutionException e) {
 					speechText += e.getMessage() + " ";
 				}
 			else
 				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("Food").child(FoodId.get(0))
-							.setValueAsync(new Portion(Type.FOOD, added_food,Double.valueOf(grams.intValue()).doubleValue() + FoodList.get(0).getAmount(),
-									FoodList.get(0).getCalories_per_100_grams(),
-									FoodList.get(0).getProteins_per_100_grams(),
-									FoodList.get(0).getCarbs_per_100_grams(), FoodList.get(0).getFats_per_100_grams()))
+					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User").child(UserId.get(0))
+							.setValueAsync(new User(UserList.get(0).getName(), UserList.get(0).getGender(), UserList.get(0).getAge(),
+									UserList.get(0).getWeight(),height,
+									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
+									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCalories(),
+									UserList.get(0).getDailyLitresOfWater(), UserList.get(0).getDailyProteinGrams()))
 							.get();
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
 				} catch (final ExecutionException e) {
 					e.printStackTrace();
 				}
-			speechText = String.format("you added %s, You can ask me what you ate so far saying, what did i eat?",
-					added_food);
-			repromptText = "You can ask me what you ate so far saying, what did i eat?";
+
+			speechText = String.format("your height is %d centimeters", Integer.valueOf(height));
+			repromptText = "I will repeat, You can ask me what is your height saying, what is my height?";
+
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 	}
-
 }

@@ -20,10 +20,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
+import Utils.User;
+
+public class HowMuchWeightIntentHandler implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+		return i.matches(intentName("HowMuchWeightIntent"));
 	}
 
 	@Override
@@ -47,20 +49,19 @@ public class HowManyIDrankIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("User");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<Integer> DrinkCount = new LinkedList<>();
+		final List<User> UserList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					UserList.add(userSnapshot.getValue(User.class));
 				done.countDown();
 			}
 
@@ -75,14 +76,14 @@ public class HowManyIDrankIntent implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you didn't drink today");
+		if (UserList.isEmpty())
+			speechText = String.format("you didn't tell me what is your weight");
 		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				speechText = String.format("you drank one glass of water");
+			final int weight = UserList.get(0).getWeight();
+			if (weight == -1)
+				speechText = String.format("you didn't tell me what is your weight");
 			else
-				speechText = String.format("you drank %d glasses of water", count);
+				speechText = String.format("you weight %d kilograms", Integer.valueOf(weight));
 
 		}
 
