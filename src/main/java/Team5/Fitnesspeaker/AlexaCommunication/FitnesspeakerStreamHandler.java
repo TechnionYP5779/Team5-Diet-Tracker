@@ -36,7 +36,8 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 				.addRequestHandlers(new WhatIAteIntentHandler(), new AddFoodIntentHandler(), new LaunchRequestHandler(),
 						new CancelandStopIntentHandler(), new SessionEndedRequestHandler(), new HelpIntentHandler(),
 						new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent(), new AddAgeIntentHandler(),
-						new HowOldIntentHandler(),new SendEmailHandler()).withSkillId(skillID).build();
+						new HowOldIntentHandler(), new SendEmailHandler())
+				.withSkillId(skillID).build();
 	}
 
 	public FitnesspeakerStreamHandler() {

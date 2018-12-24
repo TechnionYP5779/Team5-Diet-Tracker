@@ -53,7 +53,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
-		final Integer grams = NumberSlot == null ? Integer.valueOf(100)
+		Integer grams = NumberSlot == null ? Integer.valueOf(100)
 				: Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
 		String speechText = "", repromptText;
 		final String UserMail = "shalev@gmail";
