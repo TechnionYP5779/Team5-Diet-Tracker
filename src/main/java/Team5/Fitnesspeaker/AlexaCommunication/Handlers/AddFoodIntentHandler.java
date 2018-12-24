@@ -40,6 +40,7 @@ import Utils.PortionRequestGen;
 
 public class AddFoodIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
+
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("AddFoodIntent"));
@@ -49,10 +50,11 @@ public class AddFoodIntentHandler implements RequestHandler {
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot favoriteFoodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(FOOD_SLOT);
-		
+
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
-		Integer grams=NumberSlot == null ? Integer.valueOf(100) : Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
+		final Integer grams = NumberSlot == null ? Integer.valueOf(100)
+				: Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
 		String speechText = "", repromptText;
 		final String UserMail = "shalev@gmail";
 		DatabaseReference dbRef = null;
@@ -113,14 +115,18 @@ public class AddFoodIntentHandler implements RequestHandler {
 			if (FoodList.isEmpty())
 				try {
 					if (dbRef != null)
-						dbRef.push().setValueAsync(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,grams)).get();
+						dbRef.push()
+								.setValueAsync(
+										PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD, grams))
+								.get();
 				} catch (InterruptedException | ExecutionException e) {
 					speechText += e.getMessage() + " ";
 				}
 			else
 				try {
 					FirebaseDatabase.getInstance().getReference().child(UserMail).child("Food").child(FoodId.get(0))
-							.setValueAsync(new Portion(Type.FOOD, added_food,Double.valueOf(grams.intValue()).doubleValue() + FoodList.get(0).getAmount(),
+							.setValueAsync(new Portion(Type.FOOD, added_food,
+									Double.valueOf(grams.intValue()).doubleValue() + FoodList.get(0).getAmount(),
 									FoodList.get(0).getCalories_per_100_grams(),
 									FoodList.get(0).getProteins_per_100_grams(),
 									FoodList.get(0).getCarbs_per_100_grams(), FoodList.get(0).getFats_per_100_grams()))

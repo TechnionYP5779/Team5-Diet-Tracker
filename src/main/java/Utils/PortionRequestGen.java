@@ -43,10 +43,11 @@ public class PortionRequestGen {
 		}
 		return null;
 	}
-	
-	public static Portion generatePortionWithAmount(final String portion_name, final Portion.Type t,Integer amount) {
+
+	public static Portion generatePortionWithAmount(final String portion_name, final Portion.Type t,
+			final Integer amount) {
 		try {
-			Portion p=PortionRequestGen.generatePortion(portion_name, t);
+			final Portion p = PortionRequestGen.generatePortion(portion_name, t);
 			p.setAmount(amount.intValue());
 			return p;
 		} catch (final Exception e) {
@@ -66,9 +67,9 @@ public class PortionRequestGen {
 	public static Portion queryItem(final String id, final String food_name, final Portion.Type t) throws Exception {
 		final String urlitem = "https://api.nal.usda.gov/ndb/reports/?ndbno=" + id
 				+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul";
-				
+
 		// Read JSON response and print
-		final JSONObject myResponse =UserInfoRequest.readJsonFromUrl(urlitem);
+		final JSONObject myResponse = UserInfoRequest.readJsonFromUrl(urlitem);
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		/** get (from json) the array that stores the nutritional values we want **/
 		final JSONArray nut_arr = myResponse.getJSONObject("report").getJSONObject("food").getJSONArray("nutrients");
