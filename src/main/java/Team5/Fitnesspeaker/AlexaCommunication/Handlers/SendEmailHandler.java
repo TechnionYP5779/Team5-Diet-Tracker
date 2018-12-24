@@ -127,5 +127,4 @@ public class SendEmailHandler implements RequestHandler {
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail Sent").withSpeech("Mail Sent")
 				.withShouldEndSession(Boolean.FALSE).build();
 	}
-
 }

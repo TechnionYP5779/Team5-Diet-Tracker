@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import Utils.User;
 
-public class HowOldIntentHandler implements RequestHandler{
+public class HowOldIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("HowOldIntent"));

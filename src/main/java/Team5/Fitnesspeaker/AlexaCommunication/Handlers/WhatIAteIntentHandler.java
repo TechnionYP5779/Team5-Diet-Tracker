@@ -103,7 +103,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 			foods_eaten += ", " + p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams ";
 		if (!foods_eaten.isEmpty())
 			speechText = String.format("You ate %s.", foods_eaten);
-		
+
 		else
 			speechText = "you ate nothing. you can tell me what you ate, for example, i ate pasta.";
 
