@@ -1,66 +1,75 @@
 package Utils;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.List;
 
 import org.junit.Test;
 
+import com.amazon.ask.model.services.Pair;
 
+import Utils.Portion.Type;
+
+@SuppressWarnings("static-method")
 public class DBUtilsTest {
 
 	@Test
-	public void testDrinkInsert() {
-		/*final String UserMail = "shalev@gmail";
-		DatabaseReference dbRef = null;
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("credentials/db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				//
-			}
-			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Drink");
-		} catch (final Exception e) {
-			//
-		}
+	public void testDrinkHandling() {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		assertNull(db.DBGetWaterCups().orElse(null));
+		db.DBAddWaterCups(Integer.valueOf(5));
+		assertEquals(Integer.valueOf(5), db.DBGetWaterCups().orElse(null));
+		db.DBAddWaterCups(Integer.valueOf(7));
+		assertEquals(Integer.valueOf(12), db.DBGetWaterCups().orElse(null));
+		db.DBAddWaterCups(Integer.valueOf(8));
+		assertEquals(Integer.valueOf(20), db.DBGetWaterCups().orElse(null));
+		db.DBUtilsRemoveUserDirectory();
+	}
 
-		final List<Long> DrinkCount = new LinkedList<>();
-		DrinkCount.add(Long.valueOf(2));
-		final CountDownLatch done = new CountDownLatch(1);
-		dbRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				final Long count = s.getValue(Long.class);
-				if (count != null)
-					DrinkCount.set(0, Long.valueOf(count.longValue() + DrinkCount.get(0).longValue()));
-				done.countDown();
-			}
+	@Test
+	public void testFoodHandling() {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		assertNull(db.DBGetFood("banana"));
+		assert db.DBGetFoodList().isEmpty();
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Integer.valueOf(52)));
+		Portion p = db.DBGetFood("banana");
+		assertNotNull(p);
+		assertEquals("banana", p.getName());
+		assertEquals(Integer.valueOf(52), Integer.valueOf((int) p.getAmount()));
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Integer.valueOf(48)));
+		p = db.DBGetFood("banana");
+		assertNotNull(p);
+		assertEquals("banana", p.getName());
+		assertEquals(Integer.valueOf(100), Integer.valueOf((int) p.getAmount()));
+		p = db.DBGetFood("avocado");
+		assertNull(p);
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("avocado", Type.FOOD, Integer.valueOf(48)));
+		p = db.DBGetFood("avocado");
+		assertNotNull(p);
+		assertEquals("avocado", p.getName());
+		assertEquals(Integer.valueOf(48), Integer.valueOf((int) p.getAmount()));
 
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
-		try {
-			done.await();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-		}
+		final List<Pair<String, Portion>> portionList = db.DBGetFoodList();
+		assertEquals(2, portionList.size());
 
-		if (dbRef != null)
-			try {
-				dbRef.setValueAsync(DrinkCount.get(0)).get();
-			} catch (final InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (final ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+		assert portionList.get(0).getName() != null && portionList.get(0).getName().length() > 0
+				&& portionList.get(1).getName() != null && portionList.get(1).getName().length() > 0;
+		final Portion p1 = portionList.get(0).getValue();
+		final Portion p2 = portionList.get(1).getValue();
+
+		final Portion p_banana = "banana".equals(p1.getName()) ? p1 : p2;
+		final Portion p_avocado = "avocado".equals(p1.getName()) ? p1 : p2;
+
+		assertEquals(Integer.valueOf(48), Integer.valueOf((int) p_avocado.getAmount()));
+		assertEquals(Integer.valueOf(100), Integer.valueOf((int) p_banana.getAmount()));
+
+		db.DBUtilsRemoveUserDirectory();
 	}
 
 }
