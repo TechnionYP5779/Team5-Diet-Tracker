@@ -21,20 +21,20 @@ import com.google.firebase.database.ValueEventListener;
 import Utils.Portion.Type;
 
 /**
- * 
+ *
  * @author ShalevKuba
  * @date 12-23-2018
  */
 public class DBUtils {
 
 	FirebaseDatabase database;
-	String user_mail; 
+	String user_mail;
 
 	/*
 	 * database's Constructor. Creates a DBUtils instance for user_mail which is the
 	 * user mail
 	 */
-	public DBUtils(String user_mail) {
+	public DBUtils(final String user_mail) {
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -55,29 +55,26 @@ public class DBUtils {
 	 * this function only adds the given amount to the current portion's consumption
 	 * amount.
 	 */
-	public void DBPushFood(Portion p) {
-		DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Food");
-		String added_food=p.getName();
-		final List<Pair<String,Portion>> portionList = this.DBGetFoodList();
-		boolean updated=false;
-		for(Pair<String,Portion> pair:portionList)
-			if(pair.getValue().getName().equals(added_food)) {
+	public void DBPushFood(final Portion p) {
+		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Food");
+		final String added_food = p.getName();
+		final List<Pair<String, Portion>> portionList = this.DBGetFoodList();
+		boolean updated = false;
+		for (final Pair<String, Portion> pair : portionList)
+			if (pair.getValue().getName().equals(added_food)) {
 				try {
-					dbRef.child(pair.getName()).setValueAsync(
-							new Portion(Type.FOOD, added_food,
-							p.getAmount() + pair.getValue().getAmount(),
-							pair.getValue().getCalories_per_100_grams(),
-							pair.getValue().getProteins_per_100_grams(),
-							pair.getValue().getCarbs_per_100_grams(), 
+					dbRef.child(pair.getName()).setValueAsync(new Portion(Type.FOOD, added_food,
+							p.getAmount() + pair.getValue().getAmount(), pair.getValue().getCalories_per_100_grams(),
+							pair.getValue().getProteins_per_100_grams(), pair.getValue().getCarbs_per_100_grams(),
 							pair.getValue().getFats_per_100_grams())).get();
-					updated=true;
+					updated = true;
 				} catch (InterruptedException | ExecutionException e) {
 					// should not get here unless there is database error
 					e.printStackTrace();
 				}
 				break;
 			}
-		if(!updated)
+		if (!updated)
 			try {
 				if (dbRef != null)
 					dbRef.push().setValueAsync(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
@@ -88,73 +85,72 @@ public class DBUtils {
 	}
 
 	/*
-	 * returns the user's portion list (with their keys)
-	 * if the user's Food directory is empty it returns empty list
+	 * returns the user's portion list (with their keys) if the user's Food
+	 * directory is empty it returns empty list
 	 */
-	public List<Pair<String,Portion>> DBGetFoodList() {
-		DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Food");
-		final List<Pair<String,Portion>> portionList = new LinkedList<>();
+	public List<Pair<String, Portion>> DBGetFoodList() {
+		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Food");
+		final List<Pair<String, Portion>> portionList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 
 			@Override
-			public void onDataChange(DataSnapshot s) {
+			public void onDataChange(final DataSnapshot s) {
 				for (final DataSnapshot portionSnapshot : s.getChildren())
-					portionList.add(new Pair<String,Portion>(portionSnapshot.getKey(), 
+					portionList.add(new Pair<>(portionSnapshot.getKey(),
 							portionSnapshot.getValue(Portion.class)));
 				done.countDown();
 			}
 
 			@Override
-			public void onCancelled(DatabaseError e) {
+			public void onCancelled(final DatabaseError e) {
 				System.out.println("The read failed: " + e.getCode());
 			}
 
 		});
 		try {
 			done.await();
-		} catch (InterruptedException e1) {
+		} catch (final InterruptedException e1) {
 			// should not get here, if it does, it is database error- nothing we can do
 			e1.printStackTrace();
 		}
 		return portionList;
 	}
-	
+
 	/*
-	 * returns the stored portion object with the name food_name
-	 * or null if it doesn't exists
+	 * returns the stored portion object with the name food_name or null if it
+	 * doesn't exists
 	 */
-	public Portion DBGetFood(String food_name) {
-		final List<Pair<String,Portion>> portionList = this.DBGetFoodList();
-		for(Pair<String,Portion> pair: portionList)
-			if(pair.getValue().getName().equals(food_name)) return pair.getValue();
+	public Portion DBGetFood(final String food_name) {
+		final List<Pair<String, Portion>> portionList = this.DBGetFoodList();
+		for (final Pair<String, Portion> pair : portionList)
+			if (pair.getValue().getName().equals(food_name))
+				return pair.getValue();
 		return null;
 	}
-	
-	
+
 	/*
-	 * add "added_cups" water cups to user counter
-	 * where added_cups is a given integer parameter
+	 * add "added_cups" water cups to user counter where added_cups is a given
+	 * integer parameter
 	 */
-	public void DBAddWaterCups(Integer added_cups) {
-		DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");	
-		Integer updatedCount=Integer.valueOf(added_cups.intValue()+
-				DBGetWaterCups().orElse(Integer.valueOf(0)).intValue());
+	public void DBAddWaterCups(final Integer added_cups) {
+		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");
+		final Integer updatedCount = Integer
+				.valueOf(added_cups.intValue() + DBGetWaterCups().orElse(Integer.valueOf(0)).intValue());
 		try {
 			dbRef.setValueAsync(updatedCount).get();
-		} catch (ExecutionException| InterruptedException e) {
+		} catch (ExecutionException | InterruptedException e) {
 			// should not get here, if it does, it is database error- nothing we can do
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/*
-	 * returns the current water count of the user
-	 * or an empty Optional if there is no counter for this user
+	 * returns the current water count of the user or an empty Optional if there is
+	 * no counter for this user
 	 */
 	public Optional<Integer> DBGetWaterCups() {
-		DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");
+		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
@@ -181,16 +177,16 @@ public class DBUtils {
 			return Optional.empty();
 		return Optional.ofNullable(DrinkCount.get(0));
 	}
-	
+
 	/*
 	 * removes the user directory, BE CAREFUL WITH THIS!!!
 	 */
 	public void DBUtilsRemoveUserDirectory() {
 		try {
 			this.database.getReference().child(this.user_mail).removeValueAsync().get();
-		} catch (ExecutionException| InterruptedException e) {
-			//should not happen
-		} 
+		} catch (ExecutionException | InterruptedException e) {
+			// should not happen
+		}
 	}
 
 }

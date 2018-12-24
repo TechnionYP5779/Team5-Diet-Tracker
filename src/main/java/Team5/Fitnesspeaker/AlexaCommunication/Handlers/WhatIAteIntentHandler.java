@@ -111,8 +111,6 @@ public class WhatIAteIntentHandler implements RequestHandler {
 				//e.printStackTrace();
 			}
 		}
-			
-		
 		else {
 			speechText = "you ate nothing. you can tell me what you ate, for example, i ate pasta.";
 			try {
