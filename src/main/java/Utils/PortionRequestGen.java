@@ -21,10 +21,6 @@
 
 package Utils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -61,48 +57,18 @@ public class PortionRequestGen {
 
 	public static Portion generatePortionHandler(final String food_name, final Portion.Type t) throws Exception {
 
-		final String urlquery = "https://api.nal.usda.gov/ndb/search/?format=json&q=" + food_name.replace(' ', '_')
-				+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul";
-		final HttpURLConnection con = (HttpURLConnection) new URL(urlquery).openConnection();
-		// optional default is GET
-		con.setRequestMethod("GET");
-		// add request header
-		con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-		@SuppressWarnings("resource")
-		final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		final StringBuffer response = new StringBuffer();
-		while ((inputLine = in.readLine()) != null)
-			response.append(inputLine);
-		in.close();
-
-		/**
-		 * <\> @code "ndbno"<\> contains the id_no of the product in the general USDA DB
-		 **/
-		return queryItem(new JSONObject(response.toString()).getJSONObject("list").getJSONArray("item").getJSONObject(0)
-				.getString("ndbno"), food_name, t);
+		return queryItem(UserInfoRequest
+				.readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + food_name.replace(' ', '_')
+						+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul")
+				.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"), food_name, t);
 	}
 
 	public static Portion queryItem(final String id, final String food_name, final Portion.Type t) throws Exception {
 		final String urlitem = "https://api.nal.usda.gov/ndb/reports/?ndbno=" + id
 				+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul";
-		final HttpURLConnection con = (HttpURLConnection) new URL(urlitem).openConnection();
-		// optional default is GET
-		con.setRequestMethod("GET");
-		// add request header
-		con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-		@SuppressWarnings("resource")
-		final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		final StringBuffer response = new StringBuffer();
-		while ((inputLine = in.readLine()) != null)
-			response.append(inputLine);
-		in.close();
-
+				
 		// Read JSON response and print
-		final JSONObject myResponse = new JSONObject(response.toString());
+		final JSONObject myResponse =UserInfoRequest.readJsonFromUrl(urlitem);
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		/** get (from json) the array that stores the nutritional values we want **/
 		final JSONArray nut_arr = myResponse.getJSONObject("report").getJSONObject("food").getJSONArray("nutrients");
