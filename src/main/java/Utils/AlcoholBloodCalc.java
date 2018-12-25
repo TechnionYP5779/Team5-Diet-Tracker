@@ -2,7 +2,6 @@
 package Utils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,13 +48,16 @@ public class AlcoholBloodCalc {
 			if(diffInHours(now, p.getTime())>DP)
 				DP=diffInHours(now, p.getTime());
 		
-		int alcInMilis=0;
+		double alcInMilis=0;
 		for(Portion p: relevantDrinks)
-			alcInMilis+=p.getAmount()*p.getAlchohol_by_volume();
+			alcInMilis+=p.getAmount()*(p.getAlchohol_by_volume()/100);
+		
 		SD=alcInMilis/12.7; // 12.7 Milliliters is one standard drink
 		
-		
-		return 10 * (((CF * SD * WIB) / (BW * WT)) - DP * MR); // calculating according to EBAC formula
+		double result= (((CF * SD * WIB) / (BW * WT)) - DP * MR); // calculating according to EBAC formula
+		if(result<=0)
+			return 0;
+		return result;
 	}
 	
 }
