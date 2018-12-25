@@ -21,9 +21,17 @@
 
 package Utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PortionRequestGen {
@@ -58,8 +66,7 @@ public class PortionRequestGen {
 
 	public static Portion generatePortionHandler(final String food_name, final Portion.Type t) throws Exception {
 
-		return queryItem(UserInfoRequest
-				.readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + food_name.replace(' ', '_')
+		return queryItem(readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + food_name.replace(' ', '_')
 						+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul")
 				.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"), food_name, t);
 	}
@@ -69,7 +76,7 @@ public class PortionRequestGen {
 				+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul";
 
 		// Read JSON response and print
-		final JSONObject myResponse = UserInfoRequest.readJsonFromUrl(urlitem);
+		final JSONObject myResponse = readJsonFromUrl(urlitem);
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		/** get (from json) the array that stores the nutritional values we want **/
 		final JSONArray nut_arr = myResponse.getJSONObject("report").getJSONObject("food").getJSONArray("nutrients");
@@ -89,5 +96,26 @@ public class PortionRequestGen {
 		 **/
 		return new Portion(t, food_name, 100.0, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
 				nutritions.get(2).doubleValue(), nutritions.get(3).doubleValue());
+	}
+	
+	private static String readAll(final Reader rd) throws IOException {
+		final StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1)
+			sb.append((char) cp);
+		return sb.toString();
+	}
+
+	public static JSONObject readJsonFromUrl(final String url) throws IOException, JSONException {
+		final InputStream is = new URL(url).openStream();
+		try {
+			@SuppressWarnings("resource")
+			final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			final String jsonText = readAll(rd);
+			final JSONObject json = new JSONObject(jsonText);
+			return json;
+		} finally {
+			is.close();
+		}
 	}
 }
