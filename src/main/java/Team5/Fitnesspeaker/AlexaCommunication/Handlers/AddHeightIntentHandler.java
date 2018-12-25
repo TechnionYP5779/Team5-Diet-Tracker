@@ -23,7 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.User;
+import Utils.UserInfo;
 
 public class AddHeightIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
@@ -56,7 +56,7 @@ public class AddHeightIntentHandler implements RequestHandler{
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User");
+				dbRef = database.getReference().child(UserMail).child("User-Info");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
@@ -68,16 +68,16 @@ public class AddHeightIntentHandler implements RequestHandler{
 		} else {
 			final int height = Integer.parseInt(NumberSlot.getValue());
 
-			final List<User> UserList = new LinkedList<>();
+			final List<UserInfo> UserList = new LinkedList<>();
 			final List<String> UserId = new LinkedList<>();
-			User u = new User();
+			UserInfo u = new UserInfo();
 			u.setHeight(height);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
 					for (final DataSnapshot userSnapshot : s.getChildren()) {
-						UserList.add(userSnapshot.getValue(User.class));
+						UserList.add(userSnapshot.getValue(UserInfo.class));
 						UserId.add(userSnapshot.getKey());
 					}
 					done.countDown();
@@ -102,12 +102,11 @@ public class AddHeightIntentHandler implements RequestHandler{
 				}
 			else
 				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User").child(UserId.get(0))
-							.setValueAsync(new User(UserList.get(0).getName(), UserList.get(0).getGender(), UserList.get(0).getAge(),
-									UserList.get(0).getWeight(),height,
+					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
+							.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
+									height,
 									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCalories(),
-									UserList.get(0).getDailyLitresOfWater(), UserList.get(0).getDailyProteinGrams()))
+									UserList.get(0).getDailyProteinGramsGoal(),UserList.get(0).getDailyLimitCigarettes()))
 							.get();
 				} catch (final InterruptedException e) {
 					e.printStackTrace();

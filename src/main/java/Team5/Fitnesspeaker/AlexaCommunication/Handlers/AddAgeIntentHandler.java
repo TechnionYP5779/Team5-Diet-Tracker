@@ -23,7 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.User;
+import Utils.UserInfo;
 
 public class AddAgeIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
@@ -56,7 +56,7 @@ public class AddAgeIntentHandler implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User");
+				dbRef = database.getReference().child(UserMail).child("User-Info");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
@@ -68,9 +68,9 @@ public class AddAgeIntentHandler implements RequestHandler {
 		} else {
 			final int age = Integer.parseInt(NumberSlot.getValue());
 
-			final List<User> UserList = new LinkedList<>();
+			final List<UserInfo> UserList = new LinkedList<>();
 			final List<String> UserId = new LinkedList<>();
-			User u = new User();
+			UserInfo u = new UserInfo();
 			u.setAge(age);
 			// UserList.add(u);
 			final CountDownLatch done = new CountDownLatch(1);
@@ -78,7 +78,7 @@ public class AddAgeIntentHandler implements RequestHandler {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
 					for (final DataSnapshot userSnapshot : s.getChildren()) {
-						UserList.add(userSnapshot.getValue(User.class));
+						UserList.add(userSnapshot.getValue(UserInfo.class));
 						UserId.add(userSnapshot.getKey());
 					}
 					done.countDown();
@@ -103,12 +103,11 @@ public class AddAgeIntentHandler implements RequestHandler {
 				}
 			else
 				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User").child(UserId.get(0))
-							.setValueAsync(new User(UserList.get(0).getName(), UserList.get(0).getGender(), age,
-									UserList.get(0).getWeight(), UserList.get(0).getHeight(),
+					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
+							.setValueAsync(new UserInfo(UserList.get(0).getGender(), age,
+									UserList.get(0).getHeight(),
 									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCalories(),
-									UserList.get(0).getDailyLitresOfWater(), UserList.get(0).getDailyProteinGrams()))
+									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyLimitCigarettes()))
 							.get();
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
@@ -116,7 +115,7 @@ public class AddAgeIntentHandler implements RequestHandler {
 					e.printStackTrace();
 				}
 
-			speechText = String.format("you are %d years old", Integer.valueOf(age));
+			speechText = String.format("logged succesfully", Integer.valueOf(age));
 			repromptText = "I will repeat, You can ask me how old are you saying, how older am i?";
 
 		}
