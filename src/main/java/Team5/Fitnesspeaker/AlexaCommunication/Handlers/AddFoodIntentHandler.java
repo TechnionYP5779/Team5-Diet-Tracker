@@ -14,6 +14,7 @@ import static Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHand
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,12 @@ import Utils.PortionRequestGen;
 
 public class AddFoodIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
+	
+	public static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
+	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("AddFoodIntent"));
@@ -54,7 +61,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 				.get(NUMBER_SLOT);
 		Integer grams=NumberSlot == null ? Integer.valueOf(100) : Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
 		String speechText = "", repromptText;
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
@@ -69,7 +76,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Food");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Food");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
@@ -119,7 +126,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 				}
 			else
 				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("Food").child(FoodId.get(0))
+					FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates").child(getDate()).child("Food").child(FoodId.get(0))
 							.setValueAsync(new Portion(Type.FOOD, added_food,Double.valueOf(grams.intValue()).doubleValue() + FoodList.get(0).getAmount(),
 									FoodList.get(0).getCalories_per_100_grams(),
 									FoodList.get(0).getProteins_per_100_grams(),
