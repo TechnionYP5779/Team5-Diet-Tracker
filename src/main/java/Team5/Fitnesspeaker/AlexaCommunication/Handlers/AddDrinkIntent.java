@@ -3,6 +3,7 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,12 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AddDrinkIntent implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
+	
+	public static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
+	
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -54,7 +61,7 @@ public class AddDrinkIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}

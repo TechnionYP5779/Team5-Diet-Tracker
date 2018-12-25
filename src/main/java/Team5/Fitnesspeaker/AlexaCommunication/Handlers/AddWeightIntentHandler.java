@@ -3,6 +3,7 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +24,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.User;
+import Utils.DailyInfo;
 
-public class AddWeightIntentHandler implements RequestHandler{
+public class AddWeightIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
+
+	public static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -56,7 +62,7 @@ public class AddWeightIntentHandler implements RequestHandler{
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Daily-Info");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
@@ -68,18 +74,18 @@ public class AddWeightIntentHandler implements RequestHandler{
 		} else {
 			final int weight = Integer.parseInt(NumberSlot.getValue());
 
-			final List<User> UserList = new LinkedList<>();
-			final List<String> UserId = new LinkedList<>();
-			User u = new User();
-			u.setWeight(weight);
+			final List<DailyInfo> DailyInfoList = new LinkedList<>();
+			final List<String> DailyInfoId = new LinkedList<>();
+			DailyInfo di = new DailyInfo();
+			di.setWeight(weight);
 			// UserList.add(u);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
 					for (final DataSnapshot userSnapshot : s.getChildren()) {
-						UserList.add(userSnapshot.getValue(User.class));
-						UserId.add(userSnapshot.getKey());
+						DailyInfoList.add(userSnapshot.getValue(DailyInfo.class));
+						DailyInfoId.add(userSnapshot.getKey());
 					}
 					done.countDown();
 				}
@@ -94,21 +100,20 @@ public class AddWeightIntentHandler implements RequestHandler{
 			} catch (final InterruptedException e) {
 				// TODO Auto-generated catch block
 			}
-			if (UserList.isEmpty())
+			if (DailyInfoList.isEmpty())
 				try {
 					if (dbRef != null)
-						dbRef.push().setValueAsync(u).get();
+						dbRef.push().setValueAsync(di).get();
 				} catch (InterruptedException | ExecutionException e) {
 					speechText += e.getMessage() + " ";
 				}
 			else
 				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User").child(UserId.get(0))
-							.setValueAsync(new User(UserList.get(0).getName(), UserList.get(0).getGender(), UserList.get(0).getAge(),
-									weight, UserList.get(0).getHeight(),
-									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCalories(),
-									UserList.get(0).getDailyLitresOfWater(), UserList.get(0).getDailyProteinGrams()))
+					FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates").child(getDate())
+							.child("Daily-Info").setValueAsync(new DailyInfo(weight,
+									DailyInfoList.get(0).getDailyCalories(),
+									DailyInfoList.get(0).getDailyLitresOfWater(),
+									DailyInfoList.get(0).getDailyProteinGrams()))
 							.get();
 				} catch (final InterruptedException e) {
 					e.printStackTrace();

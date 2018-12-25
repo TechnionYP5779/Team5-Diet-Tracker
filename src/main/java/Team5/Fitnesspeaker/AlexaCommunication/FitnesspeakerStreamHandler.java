@@ -14,6 +14,7 @@ import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
 
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchCaloriesIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchHeightIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchWeightIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddWeightIntentHandler;
@@ -44,7 +45,7 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent(), new AddAgeIntentHandler(),
 						new HowOldIntentHandler(), new WhatIsMyNameIntentHandler(), new AddNameIntentHandler(),
 						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
-						new HowMuchHeightIntent(), new SendEmailHandler())
+						new HowMuchHeightIntent(), new SendEmailHandler(), new HowMuchCaloriesIntentHandler())
 				.withSkillId(skillID).build();
 	}
 
