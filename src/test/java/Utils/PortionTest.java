@@ -5,6 +5,9 @@ package Utils;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.Test;
 
 import Utils.Portion.Type;
@@ -13,7 +16,7 @@ import Utils.Portion.Type;
  * @author Shaked Sapir
  *
  */
-@SuppressWarnings({ "static-method", "unlikely-arg-type" })
+@SuppressWarnings("unlikely-arg-type")
 public class PortionTest {
 
 	double DELTA = 0.01;
@@ -50,43 +53,48 @@ public class PortionTest {
 
 	@Test
 	public void testToString() {
+		Date time = new Date();
 		assertEquals(
 				"Portion name: bacon , 100.0 grams\nPortion type: FOOD\n----------------------------------\n"
 						+ "Nutritional Values per 100 grams:\nCalories: 700.0\nProteins: 13.0\n"
-						+ "Carbohydrates: 302.0\nFats: 30.3",
-				new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3).toString());
+						+ "Carbohydrates: 302.0\nFats: 30.3\nAlchohol by volume: 0.0\nTime taken: "
+						+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time),
+				new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time).toString());
 
 	}
 
 	@Test
 	public void testToString2() {
+		Date time = new Date();
 		assertEquals(
 				"Portion name: fuzetea , 100.0 ml\nPortion type: DRINK\n----------------------------------\n"
 						+ "Nutritional Values per 100 grams:\nCalories: 700.0\nProteins: 13.0\n"
-						+ "Carbohydrates: 302.0\nFats: 30.3",
-				new Portion(Type.DRINK, "fuzetea", 100, 700, 13, 302, 30.3).toString());
+						+ "Carbohydrates: 302.0\nFats: 30.3\nAlchohol by volume: 0.0\nTime taken: "
+						+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time),
+				new Portion(Type.DRINK, "fuzetea", 100, 700, 13, 302, 30.3, 0, time).toString());
 
 	}
 
 	@Test
 	public void testEquals() {
-		assert new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3));
-		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 13, 301, 30.3));
-		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.1));
-		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 14, 302, 30.3));
-		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.FOOD, "bacon", 100, 701, 13, 302, 30.3));
-		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.FOOD, "bacon", 101, 700, 13, 302, 30.3));
-		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.FOOD, "baconn", 100, 700, 13, 302, 30.3));
-		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3)
-				.equals(new Portion(Type.DRINK, "bacon", 100, 700, 13, 302, 30.3));
-		final Portion a = new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3);
+		Date time = new Date();
+		assert new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time));
+		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 13, 301, 30.3, 0, time));
+		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.1, 0, time));
+		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.FOOD, "bacon", 100, 700, 14, 302, 30.3, 0, time));
+		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.FOOD, "bacon", 100, 701, 13, 302, 30.3, 0, time));
+		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.FOOD, "bacon", 101, 700, 13, 302, 30.3, 0, time));
+		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.FOOD, "baconn", 100, 700, 13, 302, 30.3, 0, time));
+		assert !new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
+				.equals(new Portion(Type.DRINK, "bacon", 100, 700, 13, 302, 30.3, 0, time));
+		final Portion a = new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time);
 		assert a.equals(a);
 		assert !a.equals(null);
 		assert !a.equals(String.valueOf("b"));

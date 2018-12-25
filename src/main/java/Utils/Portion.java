@@ -4,6 +4,8 @@
  * @since 2018-12-17*/
 package Utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class Portion {
@@ -22,6 +24,9 @@ public class Portion {
 	public double proteins_per_100_grams;
 	public double carbs_per_100_grams;
 	public double fats_per_100_grams;
+	public double alchohol_by_volume;
+	/** the date and time the portion has taken **/
+	public Date time;
 
 	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
 			final double proteins, final double carbs, final double fats) {
@@ -32,6 +37,34 @@ public class Portion {
 		this.proteins_per_100_grams = proteins;
 		this.carbs_per_100_grams = carbs;
 		this.fats_per_100_grams = fats;
+		this.alchohol_by_volume = 0;
+		this.time = new Date();
+	}
+
+	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
+			final double proteins, final double carbs, final double fats, final double alchohol) {
+		this.type = type;
+		this.name = name;
+		this.amount = amount;
+		this.calories_per_100_grams = calories;
+		this.proteins_per_100_grams = proteins;
+		this.carbs_per_100_grams = carbs;
+		this.fats_per_100_grams = fats;
+		this.alchohol_by_volume = alchohol;
+		this.time = new Date();
+	}
+
+	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
+			final double proteins, final double carbs, final double fats, final double alchohol, final Date time) {
+		this.type = type;
+		this.name = name;
+		this.amount = amount;
+		this.calories_per_100_grams = calories;
+		this.proteins_per_100_grams = proteins;
+		this.carbs_per_100_grams = carbs;
+		this.fats_per_100_grams = fats;
+		this.alchohol_by_volume = alchohol;
+		this.time = time;
 	}
 
 	public Portion() {
@@ -42,6 +75,8 @@ public class Portion {
 		this.proteins_per_100_grams = 0;
 		this.carbs_per_100_grams = 0;
 		this.fats_per_100_grams = 0;
+		this.alchohol_by_volume = 0;
+		this.time = null;
 	}
 
 	@Override
@@ -56,6 +91,8 @@ public class Portion {
 				&& Double.compare(portion.proteins_per_100_grams, proteins_per_100_grams) == 0
 				&& Double.compare(portion.carbs_per_100_grams, carbs_per_100_grams) == 0
 				&& Double.compare(portion.fats_per_100_grams, fats_per_100_grams) == 0 && type == portion.type
+				&& Double.compare(portion.alchohol_by_volume, alchohol_by_volume) == 0
+				&& (portion.time == null ? time == null : portion.time.equals(time))
 				&& Objects.equals(name, portion.name);
 	}
 
@@ -83,6 +120,14 @@ public class Portion {
 		return proteins_per_100_grams;
 	}
 
+	public double getAlchohol_by_volume() {
+		return alchohol_by_volume;
+	}
+
+	public Date getTime() {
+		return time;
+	}
+
 	public Type getType() {
 		return type;
 	}
@@ -107,12 +152,22 @@ public class Portion {
 		this.proteins_per_100_grams = proteins_per_100_grams;
 	}
 
+	public void setAlchohol_by_volume(double alchohol_by_volume) {
+		this.alchohol_by_volume = alchohol_by_volume;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
 	@Override
 	public String toString() {
 		final String units = this.type != Type.FOOD ? " ml" : " grams";
 		return "Portion name: " + this.name + " , " + this.amount + units + "\nPortion type: " + this.type + "\n"
 				+ "----------------------------------\nNutritional Values per 100 grams:\nCalories: "
 				+ this.calories_per_100_grams + "\nProteins: " + this.proteins_per_100_grams + "\nCarbohydrates: "
-				+ this.carbs_per_100_grams + "\nFats: " + this.fats_per_100_grams;
+				+ this.carbs_per_100_grams + "\nFats: " + this.fats_per_100_grams + "\nAlchohol by volume: "
+				+ this.alchohol_by_volume + "\nTime taken: "
+				+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time);
 	}
 }
