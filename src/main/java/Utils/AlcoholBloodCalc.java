@@ -1,14 +1,26 @@
+
 package Utils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class AlcoholBloodCalc {
 	
+	 static double diffInHours(Date d1,Date d2) {
+		return ((d1.getTime()-d2.getTime())/(60*60*1000));
+	}
+	
 	private final double WIB=0.806; // constant. Percentage of water body in blood.
-	private int SD; // Standard drinks. Number of 10 grams of ethanol.
+	private double SD; // Standard drinks. Number of 10 grams of ethanol.
 	private final double CF=1.2; // Conversion factor
 	private double BW=0.58; //body water constant. 0.58 for male and 0.49 for female.
 	private double WT=67.0; //body weight in KG
 	private double MR=0.015; //metabolism constant. 0.015 for male and 0.017 for females
-	private int DP; // drinking period in hours.
+	private double DP; // drinking period in hours.
 	
 	AlcoholBloodCalc setForMale() {
 		this.BW=0.58;
@@ -25,6 +37,25 @@ public class AlcoholBloodCalc {
 	AlcoholBloodCalc setWeight(double w) {
 		this.WT=w;
 		return this;
+	}
+	
+	double CalcForNow(ArrayList<Portion> drinks){
+		
+		
+		Date now=new Date();
+		List<Portion> relevantDrinks=drinks.stream().filter(p->diffInHours(now,p.getTime())<=10).collect(Collectors.toList()); 
+		
+		for(Portion p : relevantDrinks)
+			if(diffInHours(now, p.getTime())>DP)
+				DP=diffInHours(now, p.getTime());
+		
+		int alcInMilis=0;
+		for(Portion p: relevantDrinks)
+			alcInMilis+=p.getAmount()*p.getAlchohol_by_volume();
+		SD=alcInMilis/12.7; // 12.7 Milliliters is one standard drink
+		
+		
+		return 10 * (((CF * SD * WIB) / (BW * WT)) - DP * MR); // calculating according to EBAC formula
 	}
 	
 }
