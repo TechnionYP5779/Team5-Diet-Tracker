@@ -51,7 +51,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 	public Optional<Response> handle(final HandlerInput i) {
 		// Get a reference to our posts
 
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;

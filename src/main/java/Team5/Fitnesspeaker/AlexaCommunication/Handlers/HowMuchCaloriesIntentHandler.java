@@ -47,7 +47,7 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 
 		// added
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		// DatabaseReference dbRef = null, dbRef2 = null;
 		DatabaseReference dbRef2 = null;
 		try {

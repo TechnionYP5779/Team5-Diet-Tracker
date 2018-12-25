@@ -61,7 +61,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 				.get(NUMBER_SLOT);
 		Integer grams=NumberSlot == null ? Integer.valueOf(100) : Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
 		String speechText = "", repromptText;
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
