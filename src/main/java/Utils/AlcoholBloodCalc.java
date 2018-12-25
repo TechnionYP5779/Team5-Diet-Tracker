@@ -21,24 +21,24 @@ public class AlcoholBloodCalc {
 	private double MR=0.015; //metabolism constant. 0.015 for male and 0.017 for females
 	private double DP; // drinking period in hours.
 	
-	AlcoholBloodCalc setForMale() {
+	public AlcoholBloodCalc setForMale() {
 		this.BW=0.58;
 		this.MR=0.015;
 		return this;
 	}
 	
-	AlcoholBloodCalc setForFemale() {
+	public AlcoholBloodCalc setForFemale() {
 		this.BW=0.49;
 		this.MR=0.017;
 		return this;
 	}
 
-	AlcoholBloodCalc setWeight(double w) {
+	public AlcoholBloodCalc setWeight(double w) {
 		this.WT=w;
 		return this;
 	}
 	
-	double CalcForNow(ArrayList<Portion> drinks){
+	public double CalcForNow(List<Portion> drinks){
 		
 		
 		Date now=new Date();

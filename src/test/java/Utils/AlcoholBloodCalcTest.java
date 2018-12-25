@@ -66,5 +66,9 @@ public class AlcoholBloodCalcTest {
 		
 		assertEquals(0.03649,c.CalcForNow(l),0.0001);
 	}
-
+	
+	@Test
+	public void trivialTest() {
+		assertEquals(0,new AlcoholBloodCalc().CalcForNow(new ArrayList()),0);
+	}
 }
