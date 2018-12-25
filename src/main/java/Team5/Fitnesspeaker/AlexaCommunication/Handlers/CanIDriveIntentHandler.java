@@ -55,7 +55,7 @@ public class CanIDriveIntentHandler implements RequestHandler {
 
 		}
 		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
-				.child(getDate()).child("Alchohol");
+				.child(getDate()).child("Alcohol");
 
 		final List<Portion> todaysAlchohol = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
