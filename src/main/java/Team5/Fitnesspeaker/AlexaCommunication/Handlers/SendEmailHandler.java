@@ -32,7 +32,7 @@ public class SendEmailHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		String mailToSend = "";
 		try {
 			FileInputStream serviceAccount;
@@ -119,7 +119,7 @@ public class SendEmailHandler implements RequestHandler {
 		mailToSend += foods_eaten;
 
 		try {
-			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status", "igor731996@gmail.com");
+			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status", i.getServiceClientFactory().getUpsService().getProfileEmail());
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}

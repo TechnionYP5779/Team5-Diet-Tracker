@@ -52,6 +52,7 @@ public class PortionTest {
 	}
 
 	@Test
+	@SuppressWarnings("static-method")
 	public void testToString() {
 		Date time = new Date();
 		assertEquals(
@@ -60,10 +61,10 @@ public class PortionTest {
 						+ "Carbohydrates: 302.0\nFats: 30.3\nAlchohol by volume: 0.0\nTime taken: "
 						+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time),
 				new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time).toString());
-
 	}
 
 	@Test
+	@SuppressWarnings("static-method")
 	public void testToString2() {
 		Date time = new Date();
 		assertEquals(
@@ -72,10 +73,10 @@ public class PortionTest {
 						+ "Carbohydrates: 302.0\nFats: 30.3\nAlchohol by volume: 0.0\nTime taken: "
 						+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time),
 				new Portion(Type.DRINK, "fuzetea", 100, 700, 13, 302, 30.3, 0, time).toString());
-
 	}
 
 	@Test
+	@SuppressWarnings("static-method")
 	public void testEquals() {
 		Date time = new Date();
 		assert new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)

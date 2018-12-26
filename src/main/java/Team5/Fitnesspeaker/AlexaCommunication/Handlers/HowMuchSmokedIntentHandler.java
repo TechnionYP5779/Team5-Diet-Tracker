@@ -3,6 +3,7 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +21,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.User;
-
-public class WhatIsMyNameIntentHandler implements RequestHandler{
+public class HowMuchSmokedIntentHandler implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("WhatIsMyNameIntent"));
+		return i.matches(intentName("HowMuchSmokedIntent"));
+	}
+	
+	public static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
 
 	@Override
@@ -49,19 +53,20 @@ public class WhatIsMyNameIntentHandler implements RequestHandler{
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Cigarettes");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<User> UserList = new LinkedList<>();
+		final List<Integer> SmokeCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot userSnapshot : s.getChildren())
-					UserList.add(userSnapshot.getValue(User.class));
+				final Integer count = s.getValue(Integer.class);
+				if (count != null)
+					SmokeCount.add(count);
 				done.countDown();
 			}
 
@@ -76,14 +81,14 @@ public class WhatIsMyNameIntentHandler implements RequestHandler{
 			// TODO Auto-generated catch block
 		}
 
-		if (UserList.isEmpty())
-			speechText = String.format("you didn't tell me what is your name");
+		if (SmokeCount.isEmpty())
+			speechText = String.format("you did not smoke today, Well Done");
 		else {
-			final String name = UserList.get(0).getName();
-			if (name == null)
-				speechText = String.format("you didn't tell me what is your name");
+			final Integer count = SmokeCount.get(0);
+			if (count.intValue() == 1)
+				speechText = String.format("you smoked one cigarette");
 			else
-				speechText = String.format("your name is %s ", name);
+				speechText = String.format("you smoked %d cigarettes", count);
 
 		}
 
@@ -91,5 +96,4 @@ public class WhatIsMyNameIntentHandler implements RequestHandler{
 				.withShouldEndSession(Boolean.FALSE).build();
 
 	}
-
 }

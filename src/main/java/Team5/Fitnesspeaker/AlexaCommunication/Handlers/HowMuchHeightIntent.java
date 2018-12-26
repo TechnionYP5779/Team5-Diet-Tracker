@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.User;
+import Utils.UserInfo;
 
 public class HowMuchHeightIntent implements RequestHandler{
 	@Override
@@ -34,7 +34,7 @@ public class HowMuchHeightIntent implements RequestHandler{
 
 		// added
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
@@ -49,19 +49,19 @@ public class HowMuchHeightIntent implements RequestHandler{
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User");
+				dbRef = database.getReference().child(UserMail).child("User-Info");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<User> UserList = new LinkedList<>();
+		final List<UserInfo> UserList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
 				for (final DataSnapshot userSnapshot : s.getChildren())
-					UserList.add(userSnapshot.getValue(User.class));
+					UserList.add(userSnapshot.getValue(UserInfo.class));
 				done.countDown();
 			}
 

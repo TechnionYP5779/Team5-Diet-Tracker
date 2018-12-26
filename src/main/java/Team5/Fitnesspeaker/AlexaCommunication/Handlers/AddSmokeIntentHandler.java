@@ -3,6 +3,7 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +24,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.UserInfo;
-
-public class AddHeightIntentHandler implements RequestHandler{
+public class AddSmokeIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
+	
+	public static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddHeightIntent"));
+		return i.matches(intentName("AddSmokeIntent"));
 	}
 
 	@Override
@@ -56,30 +60,27 @@ public class AddHeightIntentHandler implements RequestHandler{
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User-Info");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Cigarettes");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 		if (NumberSlot == null) {
-			speechText = "I'm not sure what is your height. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your height. Please tell me again";
+			speechText = "I'm not sure how many cigarettes you smoked. Please tell me again";
+			repromptText = "I will repeat, I'm not sure how many cigarettes you smoked. Please tell me again";
 		} else {
-			final int height = Integer.parseInt(NumberSlot.getValue());
+			final int added_num_of_cigarettes = Integer.parseInt(NumberSlot.getValue());
 
-			final List<UserInfo> UserList = new LinkedList<>();
-			final List<String> UserId = new LinkedList<>();
-			UserInfo u = new UserInfo();
-			u.setHeight(height);
+			final List<Long> SmokeCount = new LinkedList<>();
+			SmokeCount.add(Long.valueOf(added_num_of_cigarettes));
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
-					for (final DataSnapshot userSnapshot : s.getChildren()) {
-						UserList.add(userSnapshot.getValue(UserInfo.class));
-						UserId.add(userSnapshot.getKey());
-					}
+					final Long count = s.getValue(Long.class);
+					if (count != null)
+						SmokeCount.set(0, Long.valueOf(count.longValue() + SmokeCount.get(0).longValue()));
 					done.countDown();
 				}
 
@@ -93,33 +94,33 @@ public class AddHeightIntentHandler implements RequestHandler{
 			} catch (final InterruptedException e) {
 				// TODO Auto-generated catch block
 			}
-			if (UserList.isEmpty())
+
+			if (dbRef != null)
 				try {
-					if (dbRef != null)
-						dbRef.push().setValueAsync(u).get();
-				} catch (InterruptedException | ExecutionException e) {
-					speechText += e.getMessage() + " ";
-				}
-			else
-				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
-							.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
-									height,
-									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(),UserList.get(0).getDailyLimitCigarettes()))
-							.get();
+					dbRef.setValueAsync(SmokeCount.get(0)).get();
 				} catch (final InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (final ExecutionException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-			speechText = String.format("your height is %d centimeters", Integer.valueOf(height));
-			repromptText = "I will repeat, You can ask me what is your height saying, what is my height?";
+			if (added_num_of_cigarettes == 1)
+				speechText = String.format(
+						"you added one cigarette. You can ask me how many cigarettes you smoked so far saying, "
+								+ "how many cigarettes i smoked so far?");
+			else
+				speechText = String.format(
+						"you added %d cigarettes. You can ask me how many cigarettes you smoked so far saying, "
+								+ "how many cigarettes i smoked so far?",
+						Integer.valueOf(added_num_of_cigarettes));
+			repromptText = "I will repeat, You can ask me how many you smoked so far saying, how many cigarettes i smoked so far?";
 
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 	}
+
 }
