@@ -9,8 +9,8 @@ public class WeeklyStatistics {
 	public String weeklyProteins = "0.0";
 	public String weeklyCarbs = "0.0";
 	public String weeklyFats = "0.0";
-	public String weeklyWaterCups = "0.0";
-	public String weeklyCiggaretsSmoked = "0.0";
+	public String weeklyWaterCups = "0";
+	public String weeklyCiggaretsSmoked = "0";
 
 	public void calculateWeeklyData() {
 		Double calories = 0.0;

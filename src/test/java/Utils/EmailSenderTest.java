@@ -33,5 +33,19 @@ public class EmailSenderTest {
 		ds.dailyFats = "50.0000001";
 		new EmailSender().designedDailyStatisticsEmail("test2", "team5.yearlyproject@gmail.com", "Team", ds);
 	}
+	
+	@Test
+	public void designedWeeklyEmailTest() {
+		WeeklyStatistics w=new WeeklyStatistics();
+		DailyStatistics ds=new DailyStatistics();
+		w.dailyStatistics.add(ds);
+		w.dailyStatistics.add(ds);
+		w.dailyStatistics.add(ds);
+		w.dailyStatistics.add(ds);
+		w.dailyStatistics.add(ds);
+		w.dailyStatistics.add(ds);
+		w.dailyStatistics.add(ds);
+		new EmailSender().designedWeeklyStatisticsEmail("test3", "team5.yearlyproject@gmail.com", "Team", w);	
+	}
 
 }

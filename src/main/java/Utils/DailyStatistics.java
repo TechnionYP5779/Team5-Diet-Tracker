@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DailyStatistics {
-	public String cupsOfWater = "0.0";
+	public String cupsOfWater = "0";
 	public List<Portion> foodPortions = new ArrayList<>();
-	public String ciggaretesSmoked = "0.0";
+	public String ciggaretesSmoked = "0";
 	public String dailyCalories = "0.0";
 	public String dailyProteins = "0.0";
 	public String dailyCarbs = "0.0";
