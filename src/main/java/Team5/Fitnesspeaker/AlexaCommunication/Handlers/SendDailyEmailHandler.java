@@ -148,21 +148,6 @@ public class SendDailyEmailHandler implements RequestHandler {
 			this.dailyStatistics.ciggaretesSmoked = ciggaretesCount.get(0).toString();
 	}
 
-	private void getCurrentDayTotalInfo() {
-		// strings
-		Double calories = 0.0, proteins = 0.0, carbs = 0.0, fats = 0.0;
-		for (Portion portion : dailyStatistics.foodPortions) {
-			calories += portion.amount * portion.calories_per_100_grams / 100;
-			proteins += portion.amount * portion.proteins_per_100_grams / 100;
-			carbs += portion.amount * portion.carbs_per_100_grams / 100;
-			fats += portion.amount * portion.fats_per_100_grams / 100;
-		}
-		this.dailyStatistics.dailyCalories = calories.toString();
-		this.dailyStatistics.dailyProteins = proteins.toString();
-		this.dailyStatistics.dailyCarbs = carbs.toString();
-		this.dailyStatistics.dailyFats = fats.toString();
-	}
-
 	@Override
 	public boolean canHandle(HandlerInput i) {
 		return i.matches(intentName("SendDailyMailIntent"));
@@ -175,7 +160,7 @@ public class SendDailyEmailHandler implements RequestHandler {
 		getDrinkInfo();
 		getFoodInfo();
 		getCiggaretsInfo();
-		getCurrentDayTotalInfo();
+		dailyStatistics.calculateDailyNutritions();
 
 		try {
 			(new EmailSender()).designedDailyStatisticsEmail("Daily Statistics", this.UserMail.replace("_dot_", "."), UserName, dailyStatistics);

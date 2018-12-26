@@ -1,7 +1,6 @@
 package Utils;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -108,7 +107,7 @@ public class EmailSender {
 	}
 	
 	public void designedWeeklyStatisticsEmail(final String subject, final String toMail, final String name,
-			List<DailyStatistics> s) {
+			WeeklyStatistics s) {
 		
 	}
 }
