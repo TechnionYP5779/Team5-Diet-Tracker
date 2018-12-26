@@ -14,6 +14,7 @@ import com.google.firebase.database.ValueEventListener;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,21 +25,27 @@ import Utils.EmailSender;
 import Utils.Portion;
 
 public class SendEmailHandler implements RequestHandler {
-	
+
 	String UserMail;
-	String UserName; 
-	String mailToSend = "";
-	
+	String UserName;
+	String cupsOfWater;
+	List<Portion> foodPortions;
+	String ciggaretesSmoked;
+	String dailyCalories;
+	String dailyProteins;
+	String dailyCarbs;
+	String dailyFats;
+
 	private String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
-	
+
 	private void getUserInfo(HandlerInput i) {
 		this.UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
-	
+
 	private void openDatabase() {
 		try {
 			FileInputStream serviceAccount;
@@ -56,11 +63,10 @@ public class SendEmailHandler implements RequestHandler {
 			// empty block
 		}
 	}
-	
+
 	private void getDrinkInfo() {
-		// TODO send number of cups
 		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
-				.child("Dates").child(AddFoodIntentHandler.getDate()).child("Drink");
+				.child("Dates").child(getDate()).child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch doneDrink = new CountDownLatch(1);
 		dbRefDrink.addValueEventListener(new ValueEventListener() {
@@ -84,49 +90,15 @@ public class SendEmailHandler implements RequestHandler {
 		}
 
 		if (DrinkCount.isEmpty())
-			mailToSend += String.format("You haven't drink anything today\n");
-		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				mailToSend += String.format("You drank one glass of water today\n");
-			else
-				mailToSend += String.format("You drank %d glasses of water today\n", count);
-		}
-	}
-	
-	private String getFoodInfo() {
-		// TODO send as list of portions
-		return null;
-	}
-	
-	private String getCiggaretsInfo() {
-		// TODO send number of ciggarets smoked
-		return null;
-	}
-	
-	private static String getCurrentDayInfo() {
-		// TODO send total calories, total proteins, total carbs, total fats as seperate strings
-		return null;
-	}
-	
-	@Override
-	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("SendMailIntent"));
-
+			this.cupsOfWater = "0";
+		else
+			this.cupsOfWater = DrinkCount.get(0).toString();
 	}
 
-	@Override
-	public Optional<Response> handle(HandlerInput i) {
-		getUserInfo(i);
-		openDatabase();
-		
-		// Get Drink
-		getDrinkInfo();
-
-		// Get Food
+	private void getFoodInfo() {
 		final DatabaseReference dbRefFood = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
-				.child(AddFoodIntentHandler.getDate()).child("Food");
-		final List<Portion> FoodList = new LinkedList<>();
+				.child(getDate()).child("Food");
+		final List<Portion> FoodList = new ArrayList<>();
 		final CountDownLatch doneFood = new CountDownLatch(1);
 		dbRefFood.addValueEventListener(new ValueEventListener() {
 			@Override
@@ -145,21 +117,75 @@ public class SendEmailHandler implements RequestHandler {
 		try {
 			doneFood.await();
 		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
+			// empty block
 		}
-		String foods_eaten = "";
-		for (final Portion p : FoodList)
-			foods_eaten += p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams \n";
-		if (!foods_eaten.isEmpty())
-			foods_eaten = String.format("You ate: %s.\n", foods_eaten);
-		else
-			foods_eaten = "You haven't eaten nothing today.\n";
+		this.foodPortions = FoodList;
+	}
 
-		mailToSend += foods_eaten;
+	private void getCiggaretsInfo() {
+		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
+				.child("Dates").child(getDate()).child("Cigarettes");
+		final List<Integer> ciggaretesCount = new LinkedList<>();
+		final CountDownLatch doneCiggaretes = new CountDownLatch(1);
+		dbRefDrink.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				final Integer count = s.getValue(Integer.class);
+				if (count != null)
+					ciggaretesCount.add(count);
+				doneCiggaretes.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			doneCiggaretes.await();
+		} catch (final InterruptedException e) {
+			// empty block
+		}
+
+		if (ciggaretesCount.isEmpty())
+			this.ciggaretesSmoked = "0";
+		else
+			this.ciggaretesSmoked = ciggaretesCount.get(0).toString();
+	}
+
+	private void getCurrentDayTotalInfo() {
+		// strings
+		Double calories = 0.0, proteins = 0.0, carbs = 0.0, fats = 0.0;
+		for (Portion portion : foodPortions) {
+			calories += portion.amount * portion.calories_per_100_grams / 100;
+			proteins += portion.amount * portion.proteins_per_100_grams / 100;
+			carbs += portion.amount * portion.carbs_per_100_grams / 100;
+			fats += portion.amount * portion.fats_per_100_grams / 100;
+		}
+		this.dailyCalories = calories.toString();
+		this.dailyProteins = proteins.toString();
+		this.dailyCarbs = carbs.toString();
+		this.dailyFats = fats.toString();
+	}
+
+	@Override
+	public boolean canHandle(HandlerInput i) {
+		return i.matches(intentName("SendMailIntent"));
+
+	}
+
+	@Override
+	public Optional<Response> handle(HandlerInput i) {
+		getUserInfo(i);
+		openDatabase();
+		getDrinkInfo();
+		getFoodInfo();
+		getCiggaretsInfo();
+		getCurrentDayTotalInfo();
 
 		try {
-			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status",
-					i.getServiceClientFactory().getUpsService().getProfileEmail());
+			(new EmailSender()).designedEmail("Daily Statistics", UserMail, UserName, cupsOfWater, foodPortions,
+					dailyCalories, dailyProteins, dailyCarbs, dailyFats, ciggaretesSmoked);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
