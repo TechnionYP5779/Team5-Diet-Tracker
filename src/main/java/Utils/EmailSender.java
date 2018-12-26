@@ -101,14 +101,14 @@ public class EmailSender {
 				for(Portion p : foods) {
 					messegeText+="<td>"+p.getName()+"</td>\r\n" + 
 							"    <td>"+p.getAmount()+"</td>\r\n" + 
-							"    <td>"+p.getCalories_per_100_grams()*(p.getAmount()/100)+"</td>\r\n" + 
-							"    <td>"+p.getProteins_per_100_grams()*(p.getAmount()/100)+"</td>\r\n" + 
-							"    <td>"+p.getCarbs_per_100_grams()*(p.getAmount()/100)+"</td>\r\n" + 
-							"    <td>"+p.getFats_per_100_grams()*(p.getAmount()/100)+"</td>\r\n" + 
+							"    <td>"+String.format("%.2f",p.getCalories_per_100_grams()*(p.getAmount()/100))+"</td>\r\n" + 
+							"    <td>"+String.format("%.2f",p.getProteins_per_100_grams()*(p.getAmount()/100))+"</td>\r\n" + 
+							"    <td>"+String.format("%.2f",p.getCarbs_per_100_grams()*(p.getAmount()/100))+"</td>\r\n" + 
+							"    <td>"+String.format("%.2f",p.getFats_per_100_grams()*(p.getAmount()/100))+"</td>\r\n" + 
 							"  </tr>\r\n";
 				}  
 				messegeText+="  <tr style=\"outline: thin solid\">\r\n" + 
-				"  <td  style=\"outline: thin solid\" ></td>\r\n" + 
+				"  <td  style=\"outline: thin solid\" >Total</td>\r\n" + 
 				"  <td  style=\"outline: thin solid\" ></td>\r\n" +
 				"  <td  style=\"outline: thin solid\" >"+calories+"</td>\r\n" +
 				"  <td  style=\"outline: thin solid\" >"+proteins+"</td>\r\n" +
