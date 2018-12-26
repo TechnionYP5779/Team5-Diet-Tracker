@@ -82,9 +82,9 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		String speechText = "";
 
 		if (new AlcoholBloodCalc().CalcForNow(todaysAlchohol) >= 0.05)
-			speechText = "you can't drive right now";
+			speechText = "you can't drive right now, you drank too much";
 		else
-			speechText = "you are allowed to drive";
+			speechText = "you are allowed to drive, go safely";
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

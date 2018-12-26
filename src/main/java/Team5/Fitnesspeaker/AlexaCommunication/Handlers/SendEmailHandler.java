@@ -76,13 +76,13 @@ public class SendEmailHandler implements RequestHandler {
 		}
 
 		if (DrinkCount.isEmpty())
-			mailToSend += String.format("You didn't drink today\n");
+			mailToSend += String.format("You haven't drink anything today\n");
 		else {
 			final Integer count = DrinkCount.get(0);
 			if (count.intValue() == 1)
-				mailToSend += String.format("You drank one glass of water\n");
+				mailToSend += String.format("You drank one glass of water today\n");
 			else
-				mailToSend += String.format("You drank %d glasses of water\n", count);
+				mailToSend += String.format("You drank %d glasses of water today\n", count);
 		}
 
 		// Get Food
@@ -114,7 +114,7 @@ public class SendEmailHandler implements RequestHandler {
 		if (!foods_eaten.isEmpty())
 			foods_eaten = String.format("You ate: %s.\n", foods_eaten);
 		else
-			foods_eaten = "You ate nothing.\n";
+			foods_eaten = "You haven't eaten nothing today.\n";
 
 		mailToSend += foods_eaten;
 

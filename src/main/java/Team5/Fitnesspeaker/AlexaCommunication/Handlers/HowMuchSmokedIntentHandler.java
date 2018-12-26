@@ -86,9 +86,9 @@ public class HowMuchSmokedIntentHandler implements RequestHandler{
 		else {
 			final Integer count = SmokeCount.get(0);
 			if (count.intValue() == 1)
-				speechText = String.format("you smoked one cigarette");
+				speechText = String.format("you have already smoked one cigarette today");
 			else
-				speechText = String.format("you smoked %d cigarettes", count);
+				speechText = String.format("you have already smoked %d cigarettes today ", count);
 
 		}
 

@@ -85,7 +85,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 				|| !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_MATCH")
 						&& !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_NO_MATCH")) {
 			speechText = "You need to provide a valid food. Please try again.";
-			repromptText = "I will repeat, I'm not sure what you ate. Please tell me what you ate, for example, i ate pasta.";
+			repromptText = "I will repeat, I'm not sure what you ate. Please tell me what you ate, for example, i ate twenty grams of pasta.";
 		} else {
 			final String added_food = favoriteFoodSlot.getValue();
 			final List<Portion> FoodList = new LinkedList<>();
@@ -137,9 +137,9 @@ public class AddFoodIntentHandler implements RequestHandler {
 				} catch (final ExecutionException e) {
 					e.printStackTrace();
 				}
-			speechText = String.format("you added %s, You can ask me what you ate so far saying, what did i eat?",
+			speechText = String.format("you added %s, You can ask me what you have eaten so far saying, what did i eat?",
 					added_food);
-			repromptText = "You can ask me what you ate so far saying, what did i eat?";
+			repromptText = "You can ask me what you have eaten so far saying, what did i eat?";
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
