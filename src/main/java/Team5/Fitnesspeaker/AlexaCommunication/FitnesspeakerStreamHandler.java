@@ -15,6 +15,7 @@ import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
 
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchCaloriesIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchCoffeeIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchHeightIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchSmokedIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchWeightIntentHandler;
@@ -26,6 +27,7 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddNameIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddSmokeIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowOldIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddAgeIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddCoffeeIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddDrinkIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddFoodIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CancelandStopIntentHandler;
@@ -50,7 +52,7 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new HowOldIntentHandler(), new WhatIsMyNameIntentHandler(), new AddNameIntentHandler(),
 						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
 						new HowMuchHeightIntent(), new SendEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
-                            new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler()).
+                            new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler(), new AddCoffeeIntentHandler(), new HowMuchCoffeeIntent()).
                               withSkillId(skillID).build();
 	}
 
