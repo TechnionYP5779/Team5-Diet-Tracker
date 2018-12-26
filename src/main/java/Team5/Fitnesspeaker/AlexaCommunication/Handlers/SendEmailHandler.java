@@ -32,7 +32,7 @@ public class SendEmailHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		String mailToSend = "";
 		try {
 			FileInputStream serviceAccount;
@@ -51,8 +51,8 @@ public class SendEmailHandler implements RequestHandler {
 
 		}
 		// Get Drink
-		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail).
-				child("Dates").child(AddFoodIntentHandler.getDate()).child("Drink");
+		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
+				.child("Dates").child(AddFoodIntentHandler.getDate()).child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch doneDrink = new CountDownLatch(1);
 		dbRefDrink.addValueEventListener(new ValueEventListener() {
@@ -86,8 +86,8 @@ public class SendEmailHandler implements RequestHandler {
 		}
 
 		// Get Food
-		final DatabaseReference dbRefFood = FirebaseDatabase.getInstance().getReference().child(UserMail).
-				child("Dates").child(AddFoodIntentHandler.getDate()).child("Food");
+		final DatabaseReference dbRefFood = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
+				.child(AddFoodIntentHandler.getDate()).child("Food");
 		final List<Portion> FoodList = new LinkedList<>();
 		final CountDownLatch doneFood = new CountDownLatch(1);
 		dbRefFood.addValueEventListener(new ValueEventListener() {
@@ -120,7 +120,8 @@ public class SendEmailHandler implements RequestHandler {
 		mailToSend += foods_eaten;
 
 		try {
-			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status", i.getServiceClientFactory().getUpsService().getProfileEmail());
+			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status",
+					i.getServiceClientFactory().getUpsService().getProfileEmail());
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
