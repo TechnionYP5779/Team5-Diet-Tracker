@@ -14,6 +14,7 @@ import com.google.firebase.database.ValueEventListener;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,17 +24,22 @@ import Utils.EmailSender;
 import Utils.Portion;
 
 public class SendEmailHandler implements RequestHandler {
-
-	@Override
-	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("SendMailIntent"));
-
+	
+	String UserMail;
+	String UserName; 
+	String mailToSend = "";
+	
+	private String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
-
-	@Override
-	public Optional<Response> handle(HandlerInput i) {
-		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		String mailToSend = "";
+	
+	private void getUserInfo(HandlerInput i) {
+		this.UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
+	}
+	
+	private void openDatabase() {
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -48,9 +54,11 @@ public class SendEmailHandler implements RequestHandler {
 			}
 		} catch (final Exception e) {
 			// empty block
-
 		}
-		// Get Drink
+	}
+	
+	private void getDrinkInfo() {
+		// TODO send number of cups
 		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
 				.child("Dates").child(AddFoodIntentHandler.getDate()).child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
@@ -72,7 +80,7 @@ public class SendEmailHandler implements RequestHandler {
 		try {
 			doneDrink.await();
 		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
+			// empty block
 		}
 
 		if (DrinkCount.isEmpty())
@@ -84,6 +92,36 @@ public class SendEmailHandler implements RequestHandler {
 			else
 				mailToSend += String.format("You drank %d glasses of water today\n", count);
 		}
+	}
+	
+	private String getFoodInfo() {
+		// TODO send as list of portions
+		return null;
+	}
+	
+	private String getCiggaretsInfo() {
+		// TODO send number of ciggarets smoked
+		return null;
+	}
+	
+	private static String getCurrentDayInfo() {
+		// TODO send total calories, total proteins, total carbs, total fats as seperate strings
+		return null;
+	}
+	
+	@Override
+	public boolean canHandle(HandlerInput i) {
+		return i.matches(intentName("SendMailIntent"));
+
+	}
+
+	@Override
+	public Optional<Response> handle(HandlerInput i) {
+		getUserInfo(i);
+		openDatabase();
+		
+		// Get Drink
+		getDrinkInfo();
 
 		// Get Food
 		final DatabaseReference dbRefFood = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
