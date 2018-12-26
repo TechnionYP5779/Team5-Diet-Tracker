@@ -36,10 +36,10 @@ public class WeeklyStatisticsTest {
 
 		ws.calculateWeeklyData();
 
-		assertEquals("6.0", ws.weeklyCalories);
-		assertEquals("6.0", ws.weeklyCarbs);
-		assertEquals("6.0", ws.weeklyProteins);
-		assertEquals("6.0", ws.weeklyFats);
+		assertEquals("6.00", ws.weeklyCalories);
+		assertEquals("6.00", ws.weeklyCarbs);
+		assertEquals("6.00", ws.weeklyProteins);
+		assertEquals("6.00", ws.weeklyFats);
 		assertEquals("6", ws.weeklyWaterCups);
 		assertEquals("6", ws.weeklyCiggaretsSmoked);
 	}

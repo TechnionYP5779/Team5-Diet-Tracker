@@ -27,10 +27,10 @@ public class WeeklyStatistics {
 			waterCups += Integer.valueOf(ds.cupsOfWater);
 			ciggaretsSmoked += Integer.valueOf(ds.ciggaretesSmoked);
 		}
-		weeklyCalories = calories.toString();
-		weeklyProteins = proteins.toString();
-		weeklyCarbs = carbs.toString();
-		weeklyFats = fats.toString();
+		weeklyCalories = String.format("%.2f", Double.valueOf(calories.toString()));
+		weeklyProteins = String.format("%.2f", Double.valueOf(proteins.toString()));
+		weeklyCarbs = String.format("%.2f", Double.valueOf(carbs.toString()));
+		weeklyFats = String.format("%.2f", Double.valueOf(fats.toString()));
 		weeklyWaterCups = waterCups.toString();
 		weeklyCiggaretsSmoked = ciggaretsSmoked.toString();
 	}

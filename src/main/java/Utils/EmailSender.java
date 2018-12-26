@@ -135,10 +135,10 @@ public class EmailSender {
 		int dayIndex=0;
 		for (DailyStatistics ds : s.dailyStatistics) {
 			messegeText += "<tr><td>" +dates[dayIndex] + "</td>\r\n   <td>"
-					+ ds.dailyCalories + "</td>\r\n"
-					+ "    <td>" + ds.dailyProteins
-					+ "</td>\r\n    <td>" + ds.dailyCarbs
-					+ "</td>\r\n    <td>" + ds.dailyFats
+					+ String.format("%.2f", Double.valueOf(ds.dailyCalories)) + "</td>\r\n"
+					+ "    <td>" +String.format("%.2f", Double.valueOf( ds.dailyProteins))
+					+ "</td>\r\n    <td>" + String.format("%.2f", Double.valueOf(ds.dailyCarbs))
+					+ "</td>\r\n    <td>" + String.format("%.2f", Double.valueOf(ds.dailyFats))
 					+ "</td>\r\n  </tr>\r\n";
 			dayIndex++;
 		}

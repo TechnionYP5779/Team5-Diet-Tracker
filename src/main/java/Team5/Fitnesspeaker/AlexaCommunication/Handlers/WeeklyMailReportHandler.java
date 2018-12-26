@@ -177,7 +177,7 @@ public class WeeklyMailReportHandler implements RequestHandler {
 		this.weeklyStatistics.calculateWeeklyData();
 
 		try {
-			(new EmailSender()).designedWeeklyStatisticsEmail("Daily Statistics", this.UserMail.replace("_dot_", "."),
+			(new EmailSender()).designedWeeklyStatisticsEmail("Weekly Statistics", this.UserMail.replace("_dot_", "."),
 					UserName, this.weeklyStatistics);
 		} catch (Exception e) {
 			// e.printStackTrace();
