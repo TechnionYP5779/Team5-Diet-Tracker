@@ -55,7 +55,7 @@ public class HowManyIDrankIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child(UserMail).child("Dates").child(getDate()).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
