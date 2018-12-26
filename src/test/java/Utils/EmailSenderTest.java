@@ -1,5 +1,8 @@
 package Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import Utils.EmailSender;
 
@@ -14,7 +17,15 @@ public class EmailSenderTest {
 	}
 	@Test
 	public void designedEmail() {
-		new EmailSender().designedEmail("test", "ororfeldman4@gmail.com",null,null,null, null, null, null, null, null);
+		List<Portion> ps=new ArrayList();
+		Portion p=new Portion();
+		p.setAmount(50);
+		p.setCalories_per_100_grams(100);
+		p.setCarbs_per_100_grams(100);
+		p.setFats_per_100_grams(100);
+		p.setProteins_per_100_grams(100);
+		ps.add(p);
+		new EmailSender().designedEmail("test2", "team5.yearlyproject@gmail.com","Team","3",ps, "50", "50", "50", "50", "2");
 	}
 	
 }
