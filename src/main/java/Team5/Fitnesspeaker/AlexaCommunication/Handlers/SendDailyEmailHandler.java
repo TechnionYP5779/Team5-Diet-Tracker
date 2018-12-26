@@ -24,7 +24,7 @@ import java.util.concurrent.CountDownLatch;
 import Utils.EmailSender;
 import Utils.Portion;
 
-public class SendEmailHandler implements RequestHandler {
+public class SendDailyEmailHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;
@@ -170,7 +170,7 @@ public class SendEmailHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("SendMailIntent"));
+		return i.matches(intentName("SendDailyMailIntent"));
 
 	}
 
@@ -184,8 +184,8 @@ public class SendEmailHandler implements RequestHandler {
 		getCurrentDayTotalInfo();
 
 		try {
-			(new EmailSender()).designedEmail("Daily Statistics", UserMail, UserName, cupsOfWater, foodPortions,
-					dailyCalories, dailyProteins, dailyCarbs, dailyFats, ciggaretesSmoked);
+			(new EmailSender()).designedEmail("Daily Statistics", this.UserMail.replace("_dot_", "."), UserName,
+					cupsOfWater, foodPortions, dailyCalories, dailyProteins, dailyCarbs, dailyFats, ciggaretesSmoked);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
