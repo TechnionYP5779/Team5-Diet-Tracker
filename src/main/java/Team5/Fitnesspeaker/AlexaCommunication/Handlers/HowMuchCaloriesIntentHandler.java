@@ -123,29 +123,34 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
+		// TODO: say the goal even if i didn't eat anything today.
+		// meaning the second else will be executed.
 		if (total_measure.get(0) == 0)
 			speechText = String.format("you didn't eat anything today");
-		else if ("calories".equals(measure_str)) {
-			speechText = String.format("You ate %d %s today.", total_measure.get(0), measure_str);
-			speechText += String.format("There are %d %s left for your goal! Keep going!",
-					userInfo.get(0).getDailyCaloriesGoal() - total_measure.get(0), measure_str);
-		} else {
-			double fats = userInfo.get(0).getDailyFatsGoal();
-			double carbs = userInfo.get(0).getDailyCarbsGoal();
-			double proteins = userInfo.get(0).getDailyProteinGramsGoal();
-			speechText = String.format("you ate %d grams of %s today", total_measure.get(0), measure_str);
-	
+		else if ("calories".equals(measure_str))
+			speechText = String.format("You ate %d %s today. There are %d %s left for your goal! Keep going!",
+					total_measure.get(0), measure_str,
+					(int) userInfo.get(0).getDailyCaloriesGoal() - total_measure.get(0), measure_str);
+		else {
+			int fats = (int) userInfo.get(0).getDailyFatsGoal();
+			int carbs = (int) userInfo.get(0).getDailyCarbsGoal();
+			int proteins = (int) userInfo.get(0).getDailyProteinGramsGoal();
 			if ("proteins".equals(measure_str) && proteins != -1)
-				speechText += String.format("There are %d %s left for your goal! Keep going!",
-						proteins - total_measure.get(0), measure_str);
+				speechText = String.format(
+						"you ate %d grams of %s today. There are %d %s left for your goal! Keep going!",
+						total_measure.get(0), measure_str, proteins - total_measure.get(0), measure_str);
 			else if ("carbs".equals(measure_str) && carbs != -1)
-				speechText += String.format("There are %d %s left for your goal! Keep going!",
-						carbs - total_measure.get(0), measure_str);
+				speechText = String.format(
+						"you ate %d grams of %s today. There are %d %s left for your goal! Keep going!",
+						total_measure.get(0), measure_str, carbs - total_measure.get(0), measure_str);
 			else if ("fats".equals(measure_str) && fats != -1)
-				speechText += String.format("There are %d %s left for your goal! Keep going!",
-						fats - total_measure.get(0), measure_str);
-			else 
-				speechText += String.format("Please notice you didn't tell me your %s goal.", measure_str);
+				speechText = String.format(
+						"you ate %d grams of %s today. There are %d %s left for your goal! Keep going!",
+						total_measure.get(0), measure_str, fats - total_measure.get(0), measure_str);
+			else
+				speechText = String.format(
+						"you ate %d grams of %s today. Please notice you didn't tell me your %s goal.",
+						total_measure.get(0), measure_str, measure_str);
 
 		}
 
