@@ -38,7 +38,7 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 		return i.matches(intentName("HowMuchMeasureIntent"));
 	}
 
-	@SuppressWarnings({ "boxing" })
+	@SuppressWarnings("boxing")
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		String speechText = "";
@@ -62,11 +62,8 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				speechText += e1.getMessage() + " "; // its ok
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null) {
-				// dbRef =
-				// database.getReference().child(UserMail).child("Dates").child(getDate()).child("Daily-Info");
+			if (database != null)
 				dbRef2 = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Food");
-			}
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
@@ -84,13 +81,13 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				for (final DataSnapshot portionSnapshot : s.getChildren()) {
 					double measure = 0;
 					double amount = portionSnapshot.getValue(Portion.class).getAmount();
-					if (measure_str.equals("fats"))
+					if ("fats".equals(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getFats_per_100_grams();
-					else if (measure_str.equals("carbs"))
+					else if ("carbs".equals(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getCarbs_per_100_grams();
-					else if (measure_str.equals("proteins"))
+					else if ("proteins".equals(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getProteins_per_100_grams();
-					else if (measure_str.equals("calories"))
+					else if ("calories".equals(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getCalories_per_100_grams();
 					total_measure.set(0, (int) (total_measure.get(0) + measure * ((double) amount / 100)));
 				}
@@ -125,11 +122,10 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 
 		if (total_measure.get(0) == 0)
 			speechText = String.format("you didn't eat anything today");
-		else if (measure_str.equals("calories")) {
+		else if ("calories".equals(measure_str))
 			speechText = String.format("you ate %d %s today", total_measure.get(0), measure_str);
-		} else {
+		else
 			speechText = String.format("you ate %d grams of %s today", total_measure.get(0), measure_str);
-		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

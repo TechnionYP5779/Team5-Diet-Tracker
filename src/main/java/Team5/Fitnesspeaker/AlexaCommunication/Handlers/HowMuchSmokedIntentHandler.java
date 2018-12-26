@@ -38,7 +38,7 @@ public class HowMuchSmokedIntentHandler implements RequestHandler{
 
 		// added
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;

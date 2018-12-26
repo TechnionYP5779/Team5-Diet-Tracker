@@ -27,8 +27,7 @@ public class LaunchRequestHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		final String name = i.getServiceClientFactory().getUpsService().getProfileGivenName();
-		final String speechText = "Hey "+name+", Welcome to nutracker! for more information, please say help";
+		final String speechText = "Hey "+i.getServiceClientFactory().getUpsService().getProfileGivenName()+", Welcome to nutracker! for more information, please say help";
 		final String repromptText = "I will repeat, " + speechText;
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).build();

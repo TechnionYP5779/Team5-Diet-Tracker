@@ -65,7 +65,6 @@ public class DBUtilsTest {
 
 		final Portion p_banana = "banana".equals(p1.getName()) ? p1 : p2;
 		final Portion p_avocado = "avocado".equals(p1.getName()) ? p1 : p2;
-
 		assertEquals(Integer.valueOf(48), Integer.valueOf((int) p_avocado.getAmount()));
 		assertEquals(Integer.valueOf(100), Integer.valueOf((int) p_banana.getAmount()));
 

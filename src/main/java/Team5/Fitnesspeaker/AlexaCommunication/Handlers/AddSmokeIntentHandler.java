@@ -45,7 +45,7 @@ public class AddSmokeIntentHandler implements RequestHandler{
 
 		// added database
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
