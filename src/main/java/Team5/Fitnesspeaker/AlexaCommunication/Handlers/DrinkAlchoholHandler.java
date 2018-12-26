@@ -72,7 +72,7 @@ public class DrinkAlchoholHandler implements RequestHandler {
 					.withSpeech("This is not an alchohol drink").withShouldEndSession(Boolean.FALSE).build();
 
 		String speechText = "", repromptText;
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;

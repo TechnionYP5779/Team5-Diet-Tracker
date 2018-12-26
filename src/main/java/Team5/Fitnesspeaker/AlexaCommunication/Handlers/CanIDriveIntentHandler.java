@@ -37,7 +37,7 @@ public class CanIDriveIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
