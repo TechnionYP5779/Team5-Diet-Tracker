@@ -107,7 +107,8 @@ public class AddAgeIntentHandler implements RequestHandler {
 							.setValueAsync(new UserInfo(UserList.get(0).getGender(), age,
 									UserList.get(0).getHeight(),
 									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyLimitCigarettes()))
+									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
+									UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
 							.get();
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
