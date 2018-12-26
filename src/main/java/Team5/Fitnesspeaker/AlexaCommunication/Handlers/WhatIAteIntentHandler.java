@@ -13,6 +13,7 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,12 @@ import Utils.Portion;
 public class WhatIAteIntentHandler implements RequestHandler {
 	public static final String FOOD_SLOT = "Food";
 	public static final int START_INDEX_OF_FOOD = 5;
-
+	
+	public static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
+	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("WhatIAteIntent"));
@@ -45,7 +51,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 	public Optional<Response> handle(final HandlerInput i) {
 		// Get a reference to our posts
 
-		final String UserMail = "shalev@gmail";
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -62,7 +68,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 			// empty block
 
 		}
-		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Food");
+		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates").child(getDate()).child("Food");
 
 		final List<Portion> FoodList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
