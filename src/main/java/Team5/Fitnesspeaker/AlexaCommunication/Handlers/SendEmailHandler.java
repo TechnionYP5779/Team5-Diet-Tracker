@@ -119,7 +119,7 @@ public class SendEmailHandler implements RequestHandler {
 		mailToSend += foods_eaten;
 
 		try {
-			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status", "igor731996@gmail.com");
+			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status", i.getServiceClientFactory().getUpsService().getProfileEmail());
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
