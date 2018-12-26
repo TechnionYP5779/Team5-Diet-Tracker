@@ -12,4 +12,9 @@ public class EmailSenderTest {
 		(new EmailSender()).sendMail(String.format("You ate %s.", "pasta and potatoes"), "test subject",
 				"donotreplay.team5.fitnessspeaker@gmail.com");
 	}
+	@Test
+	public void designedEmail() {
+		//new EmailSender().designedEmail("test", "ororfeldman4@gmail.com");
+	}
+	
 }
