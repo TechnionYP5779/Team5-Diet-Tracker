@@ -26,7 +26,7 @@ public class HelpIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		final String speechText = "You can tell me what you ate, for example, i ate pasta."
+		final String speechText = "You can tell me what you ate, for example, i ate twenty grams of pasta "
 				+ "or you can tell me everytime you drink, for example, i drank 3 cups of water.";
 		final String repromptText = "I will repeat, " + speechText;
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)

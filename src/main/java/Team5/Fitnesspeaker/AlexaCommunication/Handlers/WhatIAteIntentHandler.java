@@ -111,7 +111,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 			speechText = String.format("You ate %s.", foods_eaten);
 		
 		else
-			speechText = "you ate nothing. you can tell me what you ate, for example, i ate pasta.";
+			speechText = "you haven't eaten nothing today yet. you can tell me what you ate, for example, i ate pasta.";
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

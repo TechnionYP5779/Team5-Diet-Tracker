@@ -109,14 +109,14 @@ public class AddDrinkIntent implements RequestHandler {
 
 			if (added_num_of_glasses == 1)
 				speechText = String.format(
-						"you added one glass of water. You can ask me how many glasses you drank so far saying, "
+						"you added one glass of water. You can ask me how many glasses you have drank so far saying, "
 								+ "how many glasses of water i drank so far?");
 			else
 				speechText = String.format(
-						"you added %d glasses of water. You can ask me how many glasses you drank so far saying, "
+						"you added %d glasses of water. You can ask me how many glasses you have drank so far saying, "
 								+ "how many glasses of water i drank so far?",
 						Integer.valueOf(added_num_of_glasses));
-			repromptText = "I will repeat, You can ask me how many you drank so far saying, how many glasses of water i drank so far?";
+			repromptText = "I will repeat, You can ask me how many you have drank so far saying, how many glasses of water i drank so far?";
 
 		}
 
