@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 
+import Utils.DailyStatistics;
 import Utils.EmailSender;
 import Utils.Portion;
 
@@ -28,13 +29,7 @@ public class SendDailyEmailHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;
-	String cupsOfWater;
-	List<Portion> foodPortions;
-	String ciggaretesSmoked;
-	String dailyCalories;
-	String dailyProteins;
-	String dailyCarbs;
-	String dailyFats;
+	DailyStatistics dailyStatistics = new DailyStatistics();
 
 	private String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
@@ -90,9 +85,9 @@ public class SendDailyEmailHandler implements RequestHandler {
 		}
 
 		if (DrinkCount.isEmpty())
-			this.cupsOfWater = "0";
+			this.dailyStatistics.cupsOfWater = "0";
 		else
-			this.cupsOfWater = DrinkCount.get(0).toString();
+			this.dailyStatistics.cupsOfWater = DrinkCount.get(0).toString();
 	}
 
 	private void getFoodInfo() {
@@ -119,7 +114,7 @@ public class SendDailyEmailHandler implements RequestHandler {
 		} catch (final InterruptedException e) {
 			// empty block
 		}
-		this.foodPortions = FoodList;
+		this.dailyStatistics.foodPortions = FoodList;
 	}
 
 	private void getCiggaretsInfo() {
@@ -148,30 +143,29 @@ public class SendDailyEmailHandler implements RequestHandler {
 		}
 
 		if (ciggaretesCount.isEmpty())
-			this.ciggaretesSmoked = "0";
+			this.dailyStatistics.ciggaretesSmoked = "0";
 		else
-			this.ciggaretesSmoked = ciggaretesCount.get(0).toString();
+			this.dailyStatistics.ciggaretesSmoked = ciggaretesCount.get(0).toString();
 	}
 
 	private void getCurrentDayTotalInfo() {
 		// strings
 		Double calories = 0.0, proteins = 0.0, carbs = 0.0, fats = 0.0;
-		for (Portion portion : foodPortions) {
+		for (Portion portion : dailyStatistics.foodPortions) {
 			calories += portion.amount * portion.calories_per_100_grams / 100;
 			proteins += portion.amount * portion.proteins_per_100_grams / 100;
 			carbs += portion.amount * portion.carbs_per_100_grams / 100;
 			fats += portion.amount * portion.fats_per_100_grams / 100;
 		}
-		this.dailyCalories = calories.toString();
-		this.dailyProteins = proteins.toString();
-		this.dailyCarbs = carbs.toString();
-		this.dailyFats = fats.toString();
+		this.dailyStatistics.dailyCalories = calories.toString();
+		this.dailyStatistics.dailyProteins = proteins.toString();
+		this.dailyStatistics.dailyCarbs = carbs.toString();
+		this.dailyStatistics.dailyFats = fats.toString();
 	}
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
 		return i.matches(intentName("SendDailyMailIntent"));
-
 	}
 
 	@Override
@@ -184,8 +178,7 @@ public class SendDailyEmailHandler implements RequestHandler {
 		getCurrentDayTotalInfo();
 
 		try {
-			(new EmailSender()).designedEmail("Daily Statistics", this.UserMail.replace("_dot_", "."), UserName,
-					cupsOfWater, foodPortions, dailyCalories, dailyProteins, dailyCarbs, dailyFats, ciggaretesSmoked);
+			(new EmailSender()).designedDailyStatisticsEmail("Daily Statistics", this.UserMail.replace("_dot_", "."), UserName, dailyStatistics);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
