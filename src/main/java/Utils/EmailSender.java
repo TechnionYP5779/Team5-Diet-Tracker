@@ -50,9 +50,9 @@ public class EmailSender {
 	}
 
 	public void designedEmail(final String subject, final String toMail, final String name, String waterCups,
-			List<Portion> foods, String calories, String proteins, String carbs, String fats) {
-		String messegeText = "<h1>This is heading 1</h1>\r\n" + "<h2>This is heading 2</h2>\r\n"
-				+ "<h3>This is heading 3</h3>";
+			List<Portion> foods, String calories, String proteins, String carbs, String fats,String cigarettes) {
+		String messegeText = "<body><h1>This is heading 1</h1>\r\n" + "<h2>This is heading 2</h2>\r\n"
+				+ "<h3>This is heading 3</h3></body>";
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(username, password);

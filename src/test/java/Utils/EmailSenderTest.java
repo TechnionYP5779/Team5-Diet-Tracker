@@ -14,7 +14,7 @@ public class EmailSenderTest {
 	}
 	@Test
 	public void designedEmail() {
-		//new EmailSender().designedEmail("test", "ororfeldman4@gmail.com");
+		new EmailSender().designedEmail("test", "ororfeldman4@gmail.com",null,null,null, null, null, null, null);
 	}
 	
 }
