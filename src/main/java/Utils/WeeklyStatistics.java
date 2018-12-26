@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WeeklyStatistics {
-	List<DailyStatistics> dailyStatistics = new ArrayList<>();
+	public List<DailyStatistics> dailyStatistics = new ArrayList<>();
 	public String weeklyCalories = "0.0";
 	public String weeklyProteins = "0.0";
 	public String weeklyCarbs = "0.0";
