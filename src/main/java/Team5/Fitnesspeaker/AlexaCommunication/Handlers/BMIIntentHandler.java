@@ -112,25 +112,25 @@ public class BMIIntentHandler implements RequestHandler{
 
 		if (DailyInfoList.isEmpty() || ((int)(DailyInfoList.get(0).getWeight()))==-1) {
 			if(UserList.isEmpty() || UserList.get(0).getHeight()==-1) {
-				speechText = String.format("Please Tell me what is your weight and height, So i will can calculate your BMI");
+				speechText = String.format("Please Tell me your weight and height, So i can calculate your BMI");
 			}
 			else {
-				speechText = String.format("Please Tell me what is your weight, So i will can calculate your BMI");
+				speechText = String.format("Please Tell me your weight, So i can calculate your BMI");
 			}
 		}
 		else {
 			final int weight = (int)(DailyInfoList.get(0).getWeight());
 			if (weight == -1)
-				speechText = String.format("Please Tell me what is your weight, So i will can calculate your BMI");
+				speechText = String.format("Please Tell me your weight, So i can calculate your BMI");
 			else {
 				// Get the height
 
 				if (UserList.isEmpty())
-					speechText = String.format("Please Tell me what is your height, So i will can calculate your BMI");
+					speechText = String.format("Please Tell me your height, So i can calculate your BMI");
 				else {
 					final int height = UserList.get(0).getHeight();
 					if (height == -1)
-						speechText = String.format("Please Tell me what is your height, So i will can calculate your BMI");
+						speechText = String.format("Please Tell me your height, So i can calculate your BMI");
 					else {
 						double heightInMeters = ((double) height) / 100.0;
 						double bmi = ((double) weight) / (heightInMeters*heightInMeters);
