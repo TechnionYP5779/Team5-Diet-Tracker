@@ -63,8 +63,8 @@ public class GetGoalIntentHandler implements RequestHandler{
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
 		if (MeasureSlot == null) {
-			speechText = "I'm not sure which goal you want. Please tell me again";
-			repromptText = "I will repeat, I'm not sure which goal you want. Please tell me again";
+			speechText = "I'm not sure which goal do you want. Please tell me again";
+			repromptText = "I will repeat, I'm not sure which goal do you want. Please tell me again";
 		} else {
 			final String measure_str = MeasureSlot.getValue();
 			
