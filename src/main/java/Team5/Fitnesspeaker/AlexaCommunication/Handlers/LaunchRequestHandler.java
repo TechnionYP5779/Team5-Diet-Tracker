@@ -53,11 +53,14 @@ public class LaunchRequestHandler implements RequestHandler {
 		String partOfDay="morning";
 		String meal="breakfast";
 		
-		if(hour>=14&&hour<=20) {
+		if(hour>=10&&hour<=16) {
 			partOfDay="afternoon";
 			meal="lunch";
-		}else if(hour>=20&&hour<=23||hour>=0&&hour<=7) {
+		}else if(hour>=19&&hour<=23||hour>=0&&hour<=3) {
 			partOfDay="night";
+			meal="dinner";
+		}else if(hour>=16&&hour<=19) {
+			partOfDay="evening";
 			meal="dinner";
 		}
 		int lastHour=getLastHour(i);
