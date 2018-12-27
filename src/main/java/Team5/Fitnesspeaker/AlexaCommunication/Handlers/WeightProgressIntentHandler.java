@@ -120,7 +120,7 @@ public class WeightProgressIntentHandler implements RequestHandler {
 			if(w!=-1) {
 				wts.add(w);
 				Calendar c=Calendar.getInstance();
-				c.add(Calendar.DAY_OF_YEAR, MAX_DAYS-day);
+				c.add(Calendar.DAY_OF_YEAR, MAX_DAYS-day-1);
 				dts.add(c);
 			}
 			
