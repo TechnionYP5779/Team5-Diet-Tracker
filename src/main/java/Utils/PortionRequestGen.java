@@ -72,11 +72,9 @@ public class PortionRequestGen {
 	}
 
 	public static Portion queryItem(final String id, final String food_name, final Portion.Type t) throws Exception {
-		final String urlitem = "https://api.nal.usda.gov/ndb/reports/?ndbno=" + id
-				+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul";
-
 		// Read JSON response and print
-		final JSONObject myResponse = readJsonFromUrl(urlitem);
+		final JSONObject myResponse = readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=" + id
+				+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		/** get (from json) the array that stores the nutritional values we want **/
 		final JSONArray nut_arr = myResponse.getJSONObject("report").getJSONObject("food").getJSONArray("nutrients");

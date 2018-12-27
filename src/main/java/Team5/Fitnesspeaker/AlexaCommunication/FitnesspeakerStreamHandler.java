@@ -28,6 +28,7 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddNameIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddSmokeIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowOldIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddAgeIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddBloodPressureIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddCoffeeIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddDrinkIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddFoodIntentHandler;
@@ -36,13 +37,15 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkAlchoholHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.FallbackIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetCigarLimitIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetGoalIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetBloodPressureIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HelpIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowManyIDrankIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.LaunchRequestHandler;
-import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SendEmailHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SendDailyEmailHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SessionEndedRequestHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SetCigarLimitIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SetGoalIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeeklyMailReportHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler;
 
 public class FitnesspeakerStreamHandler extends SkillStreamHandler {
@@ -56,11 +59,10 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent(), new AddAgeIntentHandler(),
 						new HowOldIntentHandler(), new WhatIsMyNameIntentHandler(), new AddNameIntentHandler(),
 						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
-						new HowMuchHeightIntent(), new SendEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
-                            new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler(), new AddCoffeeIntentHandler(),
-                            new HowMuchCoffeeIntent(), new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),
-                            new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler()).
-                              withSkillId(skillID).build();
+						new HowMuchHeightIntent(), new SendDailyEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
+            new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler(), new AddCoffeeIntentHandler(), new HowMuchCoffeeIntent(),
+            new WeeklyMailReportHandler(),new AddBloodPressureIntentHandler(), new GetBloodPressureIntentHandler(),
+            new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler()).withSkillId(skillID).build();
 	}
 
 	public FitnesspeakerStreamHandler() {

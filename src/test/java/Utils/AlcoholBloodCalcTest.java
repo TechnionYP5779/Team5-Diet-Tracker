@@ -6,8 +6,9 @@ import org.junit.Test;
 
 
 import static org.junit.Assert.*;
-
+@SuppressWarnings("static-method")
 public class AlcoholBloodCalcTest {
+
 
 	@Test
 	public void testByWikipediaExample1() {
@@ -69,6 +70,6 @@ public class AlcoholBloodCalcTest {
 	
 	@Test
 	public void trivialTest() {
-		assertEquals(0,new AlcoholBloodCalc().CalcForNow(new ArrayList()),0);
+		assertEquals(0,new AlcoholBloodCalc().CalcForNow(new ArrayList<Portion>()),0);
 	}
 }
