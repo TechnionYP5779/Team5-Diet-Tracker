@@ -84,7 +84,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 		if (favoriteFoodSlot == null || favoriteFoodSlot.getResolutions() == null
 				|| !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_MATCH")
 						&& !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_NO_MATCH")) {
-			speechText = "You need to provide a valid food. Please try again.";
+			speechText = "You have to provide a valid food. Please try again.";
 			repromptText = "I will repeat, I'm not sure what you ate. Please tell me what you ate, for example, i ate twenty grams of pasta.";
 		} else {
 			final String added_food = favoriteFoodSlot.getValue();
