@@ -1,9 +1,10 @@
 
 package Utils;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 
@@ -41,7 +42,9 @@ public class AlcoholBloodCalc {
 	public double CalcForNow(List<Portion> drinks){
 		
 		
-		Date now=new Date();
+		Calendar nowC=Calendar.getInstance();
+		nowC.setTimeZone(TimeZone.getTimeZone("GMT+2:00"));
+		Date now=nowC.getTime();
 		List<Portion> relevantDrinks=drinks.stream().filter(p->diffInHours(now,p.getTime())<=10).collect(Collectors.toList()); 
 		
 		for(Portion p : relevantDrinks)

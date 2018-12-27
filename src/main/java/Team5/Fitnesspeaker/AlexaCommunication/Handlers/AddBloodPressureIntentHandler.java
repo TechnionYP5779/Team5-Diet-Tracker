@@ -4,6 +4,7 @@ import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -11,68 +12,38 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.model.Slot;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import Utils.BloodPressure;
 
-import Utils.Portion;
-@SuppressWarnings("static-method")
-public class DrinkAlchoholHandler implements RequestHandler {
-
-
-	private double getAlcoholPrecentage(final String alcoholDrink) {
-		switch (alcoholDrink) {
-		case "beer":
-			return 5.0;
-		case "wine":
-			return 12.0;
-		case "vodka":
-			return 40.0;
-		case "whiskey":
-			return 40.0;
-		default:
-			return 0.0;
-		}
-	}
-
-	private double getAlcoholAmount(final String alcoholDrink) {
-		switch (alcoholDrink) {
-		case "beer":
-			return 500.0;
-		case "wine":
-			return 175.0;
-		case "vodka":
-			return 30.0;
-		case "whiskey":
-			return 30.0;
-		default:
-			return 0.0;
-		}
-	}
-
-	private static String getDate() {
+public class AddBloodPressureIntentHandler implements RequestHandler{
+	public static final String NUMBER_SLOT = "Number";
+	public static final String NUMBER_SLOT2 = "NumberTwo";
+	
+	public static String getDate()  {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
-
+	
 	@Override
-	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("DrinkAlchohol"));
+	public boolean canHandle(final HandlerInput i) {
+		return i.matches(intentName("AddBloodPressureIntent"));
 	}
 
 	@Override
-	public Optional<Response> handle(HandlerInput i) {
-		final String alcoholName = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get("alchohol").getValue();
-		final double alcoholPrecentage = getAlcoholPrecentage(alcoholName);
-		final double alcoholAmount = getAlcoholAmount(alcoholName);
-		if (alcoholPrecentage == 0)
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "This is not an alchohol drink")
-					.withSpeech("This is not an alchohol drink").withShouldEndSession(Boolean.FALSE).build();
-
+	public Optional<Response> handle(final HandlerInput i) {
+		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(NUMBER_SLOT);
+		
+		final Slot NumberSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(NUMBER_SLOT2);
+		
 		String speechText = "", repromptText;
+		
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
@@ -88,23 +59,25 @@ public class DrinkAlchoholHandler implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Alcohol");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("BloodPressure");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 
-		try {
-			if (dbRef != null)
-				dbRef.push().setValueAsync(
-						new Portion(Portion.Type.DRINK, alcoholName, alcoholAmount, 0, 0, 0, 0, alcoholPrecentage))
-						.get();
-		} catch (InterruptedException | ExecutionException e) {
-			speechText += e.getMessage() + " ";
-		}
-
-		speechText = String.format("Cheers! you drank %s", alcoholName);
-		repromptText = "You can drink again with saying cheers and the alchohol drink name";
-
+	
+			Integer systolic = Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
+			Integer diastolic = Integer.valueOf(Integer.parseInt(NumberSlot2.getValue()));
+			try {
+				dbRef.push().setValueAsync(new BloodPressure(systolic,diastolic,new Date())).get();
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+			} catch (final ExecutionException e) {
+				e.printStackTrace();
+			}
+			
+			speechText = String.format("blood pressure's measure was logged successfully");
+			repromptText = "I'll repeat, blood pressure's measure was logged successfully";
+		
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 	}

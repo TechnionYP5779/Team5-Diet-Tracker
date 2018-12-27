@@ -27,12 +27,14 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddNameIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddSmokeIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowOldIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddAgeIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddBloodPressureIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddCoffeeIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddDrinkIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddFoodIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CancelandStopIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkAlchoholHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.FallbackIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetBloodPressureIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HelpIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowManyIDrankIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.LaunchRequestHandler;
@@ -52,7 +54,8 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new HowOldIntentHandler(), new WhatIsMyNameIntentHandler(), new AddNameIntentHandler(),
 						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
 						new HowMuchHeightIntent(), new SendEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
-                            new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler(), new AddCoffeeIntentHandler(), new HowMuchCoffeeIntent()).
+                            new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler(), new AddCoffeeIntentHandler(),
+                            new HowMuchCoffeeIntent(), new AddBloodPressureIntentHandler(), new GetBloodPressureIntentHandler()).
                               withSkillId(skillID).build();
 	}
 
