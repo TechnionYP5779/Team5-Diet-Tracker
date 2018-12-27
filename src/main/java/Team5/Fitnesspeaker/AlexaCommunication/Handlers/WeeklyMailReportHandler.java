@@ -175,16 +175,15 @@ public class WeeklyMailReportHandler implements RequestHandler {
 			this.weeklyStatistics.dailyStatistics.add(dailyStatistics);
 		}
 		this.weeklyStatistics.calculateWeeklyData();
-
 		try {
 			(new EmailSender()).designedWeeklyStatisticsEmail("Weekly Statistics", this.UserMail.replace("_dot_", "."),
 					UserName, this.weeklyStatistics);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
-
+		weeklyStatistics = new WeeklyStatistics();
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with weekly report Sent")
-				.withSpeech("Mail with weekly report Sent").withShouldEndSession(Boolean.FALSE).build();
+				.withSpeech("Mail with weekly report Sent ").withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }
