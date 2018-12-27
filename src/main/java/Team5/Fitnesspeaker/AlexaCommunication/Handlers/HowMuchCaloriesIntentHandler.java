@@ -132,10 +132,10 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				|| (userInfo.get(0).getDailyFatsGoal() == -1 && "fats".equals(measure_str)))
 			speechText2 = String.format("You didn't tell me your goal yet!");
 		else if ("calories".equals(measure_str))
-			speechText2 = String.format("There are %d grams %s left for your goal! Keep going!",
+			speechText2 = String.format(" There are %d grams %s left for your goal! Keep going!",
 					(int) userInfo.get(0).getDailyCaloriesGoal() - total_measure.get(0), measure_str);
 		else
-			speechText2 = String.format("There are %d %s left for your goal! Keep going!",
+			speechText2 = String.format(" There are %d %s left for your goal! Keep going!",
 					"proteins".equals(measure_str)
 							? (int) userInfo.get(0).getDailyProteinGramsGoal() - total_measure.get(0)
 							: ("carbs".equals(measure_str)

@@ -25,18 +25,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import Utils.UserInfo;
 
-public class AddHeightIntentHandler implements RequestHandler{
+public class SetGoalIntentHandler implements RequestHandler{
+	public static final String MEASURE_SLOT = "Measure";
 	public static final String NUMBER_SLOT = "Number";
-
+	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddHeightIntent"));
+		return i.matches(intentName("SetGoalIntent"));
 	}
-
+	
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
+		
+		final Slot MeasureSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(MEASURE_SLOT);
+		
 		String speechText = "", repromptText;
 
 		// added database
@@ -62,16 +67,24 @@ public class AddHeightIntentHandler implements RequestHandler{
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		if (NumberSlot == null) {
-			speechText = "I'm not sure what is your height. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your height. Please tell me again";
+		if (NumberSlot == null || MeasureSlot == null) {
+			speechText = "I'm not sure what is your goal. Please tell me again";
+			repromptText = "I will repeat, I'm not sure what is your goal. Please tell me again";
 		} else {
-			final int height = Integer.parseInt(NumberSlot.getValue());
+			final String measure_str = MeasureSlot.getValue();
+			final int amount = Integer.parseInt(NumberSlot.getValue());
 
 			final List<UserInfo> UserList = new LinkedList<>();
 			final List<String> UserId = new LinkedList<>();
 			UserInfo u = new UserInfo();
-			u.setHeight(height);
+			if ("fats".equals(measure_str))
+				u.setDailyFatsGoal(amount);
+			else if ("carbs".equals(measure_str))
+				u.setDailyCarbsGoal(amount);
+			else if ("proteins".equals(measure_str))
+				u.setDailyProteinGramsGoal(amount);
+			else if ("calories".equals(measure_str))
+				u.setDailyCaloriesGoal(amount);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
@@ -102,21 +115,45 @@ public class AddHeightIntentHandler implements RequestHandler{
 				}
 			else
 				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
-							.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
-									height,
-									UserList.get(0).getDailyCaloriesGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
-									UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
-							.get();
+					if ("fats".equals(measure_str))
+						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
+						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
+								UserList.get(0).getHeight(),
+								UserList.get(0).getDailyCaloriesGoal(),
+								UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
+								amount, UserList.get(0).getDailyLimitCigarettes()))
+						.get();
+					else if ("carbs".equals(measure_str))
+						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
+						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
+								UserList.get(0).getHeight(),
+								UserList.get(0).getDailyCaloriesGoal(),
+								UserList.get(0).getDailyProteinGramsGoal(), amount,
+								UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
+						.get();
+					else if ("proteins".equals(measure_str))
+						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
+						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
+								UserList.get(0).getHeight(),
+								UserList.get(0).getDailyCaloriesGoal(),
+								amount, UserList.get(0).getDailyCarbsGoal(),
+								UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
+						.get();
+					else if ("calories".equals(measure_str))
+						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
+						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
+								UserList.get(0).getHeight(),amount,
+								UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
+								UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
+						.get();
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
 				} catch (final ExecutionException e) {
 					e.printStackTrace();
 				}
 
-			speechText = String.format("your height is %d centimeters", Integer.valueOf(height));
-			repromptText = "I will repeat, You can ask me what is your height saying, what is my height?";
+			speechText = String.format("logged successfully");
+			repromptText = "I will repeat, logged successfully";
 
 		}
 

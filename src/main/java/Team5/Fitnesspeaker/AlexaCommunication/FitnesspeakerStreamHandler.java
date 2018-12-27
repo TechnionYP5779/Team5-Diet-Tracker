@@ -20,6 +20,7 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchHeightIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchSmokedIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchWeightIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddWeightIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.BMIIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CanIDriveIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddHeightIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIsMyNameIntentHandler;
@@ -34,12 +35,16 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddFoodIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CancelandStopIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkAlchoholHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.FallbackIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetCigarLimitIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetGoalIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetBloodPressureIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HelpIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowManyIDrankIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.LaunchRequestHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SendDailyEmailHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SessionEndedRequestHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SetCigarLimitIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SetGoalIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeeklyMailReportHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler;
 
@@ -56,7 +61,8 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
 						new HowMuchHeightIntent(), new SendDailyEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
             new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler(), new AddCoffeeIntentHandler(), new HowMuchCoffeeIntent(),
-            new WeeklyMailReportHandler(),new AddBloodPressureIntentHandler(), new GetBloodPressureIntentHandler()).withSkillId(skillID).build();
+            new WeeklyMailReportHandler(),new AddBloodPressureIntentHandler(), new GetBloodPressureIntentHandler(),
+            new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler()).withSkillId(skillID).build();
 	}
 
 	public FitnesspeakerStreamHandler() {
