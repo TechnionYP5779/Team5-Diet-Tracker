@@ -34,12 +34,14 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddFoodIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CancelandStopIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkAlchoholHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.FallbackIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetCigarLimitIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GetGoalIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HelpIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowManyIDrankIntent;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.LaunchRequestHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SendEmailHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SessionEndedRequestHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SetCigarLimitIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.SetGoalIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler;
 
@@ -56,7 +58,8 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
 						new HowMuchHeightIntent(), new SendEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
                             new HowMuchCaloriesIntentHandler(),new DrinkAlchoholHandler(), new CanIDriveIntentHandler(), new AddCoffeeIntentHandler(),
-                            new HowMuchCoffeeIntent(), new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler()).
+                            new HowMuchCoffeeIntent(), new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),
+                            new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler()).
                               withSkillId(skillID).build();
 	}
 
