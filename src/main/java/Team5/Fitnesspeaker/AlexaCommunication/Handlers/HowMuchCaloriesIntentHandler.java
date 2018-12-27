@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 //import Utils.DailyInfo;
 import Utils.Portion;
+import Utils.UserInfo;
 
 public class HowMuchCaloriesIntentHandler implements RequestHandler {
 	public static final String MEASURE_SLOT = "Measure";
@@ -47,9 +48,9 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 
 		// added
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		// DatabaseReference dbRef = null, dbRef2 = null;
-		DatabaseReference dbRef2 = null;
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		DatabaseReference dbRef = null, dbRef2 = null;
+		// DatabaseReference dbRef2 = null;
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -62,8 +63,10 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				speechText += e1.getMessage() + " "; // its ok
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
+			if (database != null) {
+				dbRef = database.getReference().child(UserMail).child("User-Info");
 				dbRef2 = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Food");
+			}
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
@@ -99,33 +102,54 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				System.out.println("The read failed: " + e.getCode());
 			}
 		});
+		final List<UserInfo> userInfo = new LinkedList<>();
+		// get the goal
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					userInfo.add(userSnapshot.getValue(UserInfo.class));
+				done.countDown();
+			}
 
-//		// update the calories
-//		dbRef.addValueEventListener(new ValueEventListener() {
-//			@Override
-//			public void onDataChange(final DataSnapshot s) {
-//				for (final DataSnapshot userSnapshot : s.getChildren())
-//					DailyInfoList.add(userSnapshot.getValue(DailyInfo.class));
-//				done.countDown();
-//			}
-//
-//			@Override
-//			public void onCancelled(final DatabaseError e) {
-//				System.out.println("The read failed: " + e.getCode());
-//			}
-//		});
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
 		try {
 			done.await();
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
 
+		// TODO: say the goal even if i didn't eat anything today.
+		// meaning the second else will be executed.
+		String speechText2 = "";
+		if (userInfo.isEmpty() || (userInfo.get(0).getDailyCaloriesGoal() == -1 && "calories".equals(measure_str))
+				|| (userInfo.get(0).getDailyProteinGramsGoal() == -1 && "proteins".equals(measure_str))
+				|| (userInfo.get(0).getDailyCarbsGoal() == -1 && "carbs".equals(measure_str))
+				|| (userInfo.get(0).getDailyFatsGoal() == -1 && "fats".equals(measure_str)))
+			speechText2 = String.format("You didn't tell me your goal yet!");
+		else {
+			int calories = (int) userInfo.get(0).getDailyCaloriesGoal();
+			int fats = (int) userInfo.get(0).getDailyFatsGoal();
+			int carbs = (int) userInfo.get(0).getDailyCarbsGoal();
+			int proteins = (int) userInfo.get(0).getDailyProteinGramsGoal();
+			if ("calories".equals(measure_str)) {
+				speechText2 = String.format("There are %d grams %s left for your goal! Keep going!", calories - total_measure.get(0), measure_str);
+			} else {
+				int amount = ("proteins".equals(measure_str) ? proteins - total_measure.get(0)
+						: ("carbs".equals(measure_str) ? carbs - total_measure.get(0)
+								: (!"fats".equals(measure_str) ? 0 : fats - total_measure.get(0))));
+				speechText2 = String.format("There are %d %s left for your goal! Keep going!", amount, measure_str);
+			}
+		}
 		if (total_measure.get(0) == 0)
-			speechText = String.format("you didn't eat anything today");
-		else if ("calories".equals(measure_str))
-			speechText = String.format("you ate %d %s today", total_measure.get(0), measure_str);
-		else
-			speechText = String.format("you ate %d grams of %s today", total_measure.get(0), measure_str);
+			speechText = String.format("you didn't eat anything today.") + speechText2;
+		else {
+			speechText = String.format("You ate %d %s today.", total_measure.get(0), measure_str) + speechText2;
+		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

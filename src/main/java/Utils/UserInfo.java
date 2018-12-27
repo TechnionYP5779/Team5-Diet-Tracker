@@ -10,6 +10,8 @@ public class UserInfo {
 	public double dailyCaloriesGoal=-1;
 	public double dailyLitresOfWaterGoal=-1;
 	public double dailyProteinGramsGoal=-1;
+	public double dailyCarbsGoal = -1;
+	public double dailyFatsGoal = -1;
 	public int dailyLimitCigarettes = -1;
 	
 	/*
@@ -17,13 +19,17 @@ public class UserInfo {
 	 */
 	public UserInfo(Gender gender, int age, int height,
 			double dailyCaloriesGoal,double dailyLitresOfWaterGoal,
-			double dailyProteinGramsGoal, int dailyLimitCigarettes) {
+			double dailyProteinGramsGoal, double dailyCarbsGoal,
+			double dailyFatsGoal, int dailyLimitCigarettes) {
 		this.gender=gender;
 		this.age=age;
 		this.height=height;
 		this.dailyCaloriesGoal=dailyCaloriesGoal;
 		this.dailyLitresOfWaterGoal=dailyLitresOfWaterGoal;
 		this.dailyProteinGramsGoal=dailyProteinGramsGoal;
+		this.dailyCarbsGoal = dailyCarbsGoal;
+		this.dailyFatsGoal = dailyFatsGoal;
+		this.dailyLimitCigarettes = dailyLimitCigarettes;
 	}
 	
 	/*
@@ -94,6 +100,22 @@ public class UserInfo {
 
 	public void setDailyProteinGramsGoal(double dailyProteinGramsGoal) {
 		this.dailyProteinGramsGoal = dailyProteinGramsGoal;
+	}
+	
+	public double getDailyCarbsGoal() {
+		return dailyCarbsGoal;
+	}
+
+	public void setDailyCarbsGoal(double dailyCarbsGoal) {
+		this.dailyCarbsGoal = dailyCarbsGoal;
+	}
+	
+	public double getDailyFatsGoal() {
+		return dailyFatsGoal;
+	}
+
+	public void setDailyFatsGoal(double dailyFatsGoal) {
+		this.dailyFatsGoal = dailyFatsGoal;
 	}
 	
 	public int getDailyLimitCigarettes() {

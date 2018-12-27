@@ -1,8 +1,12 @@
+/**this module handle coffee consumption: you can add coffee cups
+ * @author Shaked Sapir
+ * @since 2018-12-26*/
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +27,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.UserInfo;
-
-public class AddAgeIntentHandler implements RequestHandler {
+public class AddCoffeeIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
+	
+	public static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
+	
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddAgeIntent"));
+		return i.matches(intentName("addCoffeeIntent"));
 	}
 
 	@Override
@@ -56,31 +64,27 @@ public class AddAgeIntentHandler implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User-Info");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Coffee");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 		if (NumberSlot == null) {
-			speechText = "I'm not sure how old are you. Please tell me again";
-			repromptText = "I will repeat, I'm not sure how old are you. Please tell me again";
+			speechText = "I'm not sure how many glasses of coffee you drank. Please tell me again";
+			repromptText = "I will repeat, I'm not sure how many glasses of coffee you drank. Please tell me again";
 		} else {
-			final int age = Integer.parseInt(NumberSlot.getValue());
+			final int added_num_of_glasses = Integer.parseInt(NumberSlot.getValue());
 
-			final List<UserInfo> UserList = new LinkedList<>();
-			final List<String> UserId = new LinkedList<>();
-			UserInfo u = new UserInfo();
-			u.setAge(age);
-			// UserList.add(u);
+			final List<Long> CoffeeCount = new LinkedList<>();
+			CoffeeCount.add(Long.valueOf(added_num_of_glasses));
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
-					for (final DataSnapshot userSnapshot : s.getChildren()) {
-						UserList.add(userSnapshot.getValue(UserInfo.class));
-						UserId.add(userSnapshot.getKey());
-					}
+					final Long count = s.getValue(Long.class);
+					if (count != null)
+						CoffeeCount.set(0, Long.valueOf(count.longValue() + CoffeeCount.get(0).longValue()));
 					done.countDown();
 				}
 
@@ -94,34 +98,33 @@ public class AddAgeIntentHandler implements RequestHandler {
 			} catch (final InterruptedException e) {
 				// TODO Auto-generated catch block
 			}
-			if (UserList.isEmpty())
+
+			if (dbRef != null)
 				try {
-					if (dbRef != null)
-						dbRef.push().setValueAsync(u).get();
-				} catch (InterruptedException | ExecutionException e) {
-					speechText += e.getMessage() + " ";
-				}
-			else
-				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
-							.setValueAsync(new UserInfo(UserList.get(0).getGender(), age,
-									UserList.get(0).getHeight(),
-									UserList.get(0).getDailyCaloriesGoal(), UserList.get(0).getDailyLitresOfWaterGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
-									UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
-							.get();
+					dbRef.setValueAsync(CoffeeCount.get(0)).get();
 				} catch (final InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (final ExecutionException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-			speechText = String.format("logged succesfully", Integer.valueOf(age));
-			repromptText = "I will repeat, You can ask me how old are you saying, how older am i?";
+			if (added_num_of_glasses == 1)
+				speechText = String.format(
+						"you added one glass of coffee. You can ask me how many glasses of coffee you have drank so far saying, "
+								+ "how many glasses of coffee i drank so far?");
+			else
+				speechText = String.format(
+						"you added %d glasses of coffee. You can ask me how many glasses of coffee you have drank so far saying, "
+								+ "how many glasses of coffee i drank so far?",
+						Integer.valueOf(added_num_of_glasses));
+			repromptText = "I will repeat, You can ask me how many glasses of coffee you have drank so far saying, how many glasses of water i drank so far?";
 
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 	}
+
 }
