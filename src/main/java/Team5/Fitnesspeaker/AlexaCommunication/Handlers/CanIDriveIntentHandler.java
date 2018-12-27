@@ -25,6 +25,7 @@ import Utils.Portion;
 @SuppressWarnings("static-method")
 public class CanIDriveIntentHandler implements RequestHandler {
 
+	
 
 	private String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
