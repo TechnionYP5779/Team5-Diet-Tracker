@@ -83,7 +83,7 @@ public class GetCigarLimitIntentHandler implements RequestHandler{
 			if (cigarLimit == -1)
 				speechText = String.format("you didn't tell me what is your cigarettes limit");
 			else
-				speechText = String.format("you can smoke %d cigarettes every day", Integer.valueOf(cigarLimit));
+				speechText = String.format("you are allowed to smoke %d cigarettes every day", Integer.valueOf(cigarLimit));
 
 		}
 
