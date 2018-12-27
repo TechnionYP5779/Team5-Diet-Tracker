@@ -91,9 +91,9 @@ public class HowMuchCoffeeIntent implements RequestHandler {
 		else {
 			final Integer count = CoffeeCount.get(0);
 			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single glass of coffee");
+				speechText = String.format("so far, you have drank a single cup of coffee");
 			else
-				speechText = String.format("so far, you have drank %d glasses of coffee", count);
+				speechText = String.format("so far, you have drank %d cups of coffee", count);
 
 		}
 
