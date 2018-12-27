@@ -71,8 +71,8 @@ public class AddCoffeeIntentHandler implements RequestHandler {
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 		if (NumberSlot == null) {
-			speechText = "I'm not sure how many glasses of coffee you drank. Please tell me again";
-			repromptText = "I will repeat, I'm not sure how many glasses of coffee you drank. Please tell me again";
+			speechText = "I'm not sure how many cups of coffee you drank. Please tell me again";
+			repromptText = "I will repeat, I'm not sure how many cups of coffee you drank. Please tell me again";
 		} else {
 			final int added_num_of_glasses = Integer.parseInt(NumberSlot.getValue());
 
@@ -112,14 +112,14 @@ public class AddCoffeeIntentHandler implements RequestHandler {
 
 			if (added_num_of_glasses == 1)
 				speechText = String.format(
-						"you added one glass of coffee. You can ask me how many glasses of coffee you have drank so far saying, "
-								+ "how many glasses of coffee i drank so far?");
+						"you added one cup of coffee. You can ask me how many cups of coffee you have drank so far saying, "
+								+ "how many cups of coffee i drank so far?");
 			else
 				speechText = String.format(
-						"you added %d glasses of coffee. You can ask me how many glasses of coffee you have drank so far saying, "
-								+ "how many glasses of coffee i drank so far?",
+						"you added %d cups of coffee. You can ask me how many cups of coffee you have drank so far saying, "
+								+ "how many cups of coffee i drank so far?",
 						Integer.valueOf(added_num_of_glasses));
-			repromptText = "I will repeat, You can ask me how many glasses of coffee you have drank so far saying, how many glasses of water i drank so far?";
+			repromptText = "I will repeat, You can ask me how many cups of coffee you have drank so far saying, how many cups of coffee i drank so far?";
 
 		}
 
