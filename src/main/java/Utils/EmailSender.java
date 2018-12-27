@@ -1,14 +1,24 @@
 package Utils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
+import GraphsMaker.simpleGraph;
 
 public class EmailSender {
 
@@ -22,7 +32,7 @@ public class EmailSender {
 	}
 
 	public EmailSender() {
-		this.username = "donotreplay.team5.fitnessspeaker@gmail.com";
+		this.username = "donotreplay.nutracker@gmail.com";
 		this.password = "Team5.FitnessSpeaker";
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
@@ -172,4 +182,44 @@ public class EmailSender {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public void sendWeightStatistics( final String subject, final String toMail,final String name ,ArrayList<Calendar> dates,ArrayList<Integer> weights)  {
+		simpleGraph g=new simpleGraph();
+		String graphName=new String(toMail).replace(".", "_dot_");
+		g.setDates(dates).setWeights(weights).make().save(500, 300, graphName);
+		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+
+		Message msg = new MimeMessage(session);
+	    try {
+	        msg.setFrom(new InternetAddress(username));
+	        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
+	        msg.setSubject(subject);
+
+	        Multipart multipart;
+				multipart = new MimeMultipart();
+
+	        MimeBodyPart textBodyPart = new MimeBodyPart();
+	        textBodyPart.setText("A graph describing your weight progress is attached.");
+
+	        MimeBodyPart attachmentBodyPart= new MimeBodyPart();
+	        DataSource source = new FileDataSource(graphName+".jpg"); // ex : "C:\\test.pdf"
+	        attachmentBodyPart.setDataHandler(new DataHandler(source));
+	        attachmentBodyPart.setFileName("weightProgress"+".jpg"); // ex : "test.pdf"
+
+	        multipart.addBodyPart(textBodyPart);  // add the text part
+	        multipart.addBodyPart(attachmentBodyPart); // add the attachement part
+
+	        msg.setContent(multipart);
+
+	        Transport.send(msg);
+	    } catch (MessagingException e) {
+	        //e.printStackTrace();
+	    }
+	    g.delete();
+	}
+	
 }

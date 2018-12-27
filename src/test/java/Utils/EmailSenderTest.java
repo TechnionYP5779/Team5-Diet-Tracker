@@ -1,6 +1,7 @@
 package Utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.Test;
@@ -46,6 +47,24 @@ public class EmailSenderTest {
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
 		new EmailSender().designedWeeklyStatisticsEmail("test3", "team5.yearlyproject@gmail.com", "Team", w);	
+	}
+	
+	@Test
+	public void sendWeightStatistics() {
+		
+		ArrayList<Calendar> dates=new ArrayList();
+		ArrayList<Integer> weights=new ArrayList();
+		
+		for(int i=0;i<7;i++) {
+			Calendar c=Calendar.getInstance();
+			c.add(Calendar.DAY_OF_YEAR, -i);
+			dates.add(c);
+			weights.add(70-i);
+		}
+		
+		
+			new EmailSender().sendWeightStatistics("test4", "team5.yearlyproject@gmail.com", "team", dates, weights);
+		
 	}
 
 }

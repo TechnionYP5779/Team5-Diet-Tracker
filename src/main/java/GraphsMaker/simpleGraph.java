@@ -19,18 +19,30 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-public class simpleGraph {
-
-
-    public static class LineChartEx extends JFrame {
+public class simpleGraph  extends JFrame{
 
         JFreeChart chart;
-
-        public LineChartEx() {
-
-            initUI();
+        ArrayList<Calendar> dates;
+        ArrayList<Integer> weights;
+        String imageName="";
+        
+        public simpleGraph make() {
+        	XYDataset dataset = createDataset();
+            chart = createChart(dataset);
+            return this;
+        }
+        
+        public simpleGraph setDates(ArrayList<Calendar> d) {
+        	dates=d;
+        	return this;
+        }
+        
+        public simpleGraph setWeights(ArrayList<Integer> w) {
+        	weights=w;
+        	return this;
         }
 
         private void initUI() {
@@ -50,16 +62,14 @@ public class simpleGraph {
 
         private XYDataset createDataset() {
 
-            //XYSeries series = new XYSeries("");
-            TimeSeries series = new TimeSeries("Dates");
-            Calendar c = Calendar.getInstance();
-
-            series.add(new Day(c.get(Calendar.DAY_OF_MONTH), +c.get(Calendar.MONTH), c.get(Calendar.YEAR)), 65);
-            c.add(Calendar.DAY_OF_YEAR, -1);
-            series.add(new Day(c.get(Calendar.DAY_OF_MONTH), +c.get(Calendar.MONTH), c.get(Calendar.YEAR)), 60);
-            c.add(Calendar.DAY_OF_YEAR, -1);
-            series.add(new Day(c.get(Calendar.DAY_OF_MONTH), +c.get(Calendar.MONTH), c.get(Calendar.YEAR)), 58);
-
+            TimeSeries series = new TimeSeries("Weights");
+             
+            for(int i=0;i<dates.size();i++) {
+            	Calendar currentDate=dates.get(i);
+            	Integer currentWeight=weights.get(i);
+            	series.add(new Day(currentDate.get(Calendar.DAY_OF_MONTH), +currentDate.get(Calendar.MONTH), currentDate.get(Calendar.YEAR)), currentWeight);
+            }
+            
             TimeSeriesCollection dataset = new TimeSeriesCollection();
             dataset.addSeries(series);
             return dataset;
@@ -105,19 +115,13 @@ public class simpleGraph {
             return chart;
         }
 
-        protected void save(int width, int height)
-
-        {
+        public void save(int width, int height,String imageName){
+        	this.imageName=imageName;
             BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
             Graphics2D g2 = img.createGraphics();
-
-
             chart.draw(g2, new Rectangle2D.Double(0, 0, width, height));
-
             g2.dispose();
-
-            File outputfile = new File("C:\\Users\\Or Feldman\\eclipse-workspace\\Team5-Fitnesspeaker\\image.jpg");
+            File outputfile = new File(imageName+".jpg");
             try {
                 ImageIO.write(img, "jpg", outputfile);
             } catch (IOException e) {
@@ -125,13 +129,10 @@ public class simpleGraph {
             }
 
         }
-    }
-        public static void main(String[] args) {
-
-            //SwingUtilities.invokeLater(() -> {
-                LineChartEx ex = new LineChartEx();
-                ex.save(500,300);
-               // ex.setVisible(true);
-            //});
+        
+        public void delete() {
+        	 File file = new File(imageName+".jpg");
+        	 file.delete();
         }
+        
     }
