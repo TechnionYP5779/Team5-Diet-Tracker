@@ -20,25 +20,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.AlcoholBloodCalc;
-import Utils.Portion;
-@SuppressWarnings("static-method")
-public class CanIDriveIntentHandler implements RequestHandler {
+import Utils.BloodPressure;
 
+public class GetBloodPressureIntentHandler implements RequestHandler{
 
-	private String getDate() {
+	
+	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
-
+	
 	@Override
-	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("CanIDriveIntent"));
+	public boolean canHandle(final HandlerInput i) {
+		return i.matches(intentName("GetBloodPressureIntent"));
 	}
 
 	@Override
-	public Optional<Response> handle(HandlerInput i) {
+	public Optional<Response> handle(final HandlerInput i) {
+		
+		
+		String speechText = "";
+		
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -48,25 +52,24 @@ public class CanIDriveIntentHandler implements RequestHandler {
 						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
 				FirebaseApp.initializeApp(options);
 			} catch (final Exception e1) {
-				// empty block
-
+				speechText += e1.getMessage() + " ";// its ok
 			}
+			final FirebaseDatabase database = FirebaseDatabase.getInstance();
+			if (database != null)
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("BloodPressure");
 		} catch (final Exception e) {
-			// empty block
-
+			speechText += e.getMessage() + " ";// its ok
 		}
-		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
-				.child(getDate()).child("Alcohol");
 
-		final List<Portion> todaysAlchohol = new LinkedList<>();
+
+		final List<BloodPressure> logListDB = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot portionSnapshot : s.getChildren())
-					todaysAlchohol.add(portionSnapshot.getValue(Portion.class));
+				for (final DataSnapshot bloodPressureSnapshot : s.getChildren())
+					logListDB.add(bloodPressureSnapshot.getValue(BloodPressure.class));
 				done.countDown();
-
 			}
 
 			@Override
@@ -79,16 +82,16 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
-
-		String speechText = "";
-
-		if (new AlcoholBloodCalc().CalcForNow(todaysAlchohol) >= 0.05)
-			speechText = "you can't drive right now, you drank too much";
+		
+		speechText="";
+		if(logListDB.isEmpty()) speechText="you did not log any blood pressure measure today";
 		else
-			speechText = "you are allowed to drive, go safely";
-
+			for (BloodPressure log : logListDB)
+				speechText += log.toString() + ", ";
+		
+		
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withShouldEndSession(Boolean.FALSE).build();
-
+				.withReprompt(speechText).withShouldEndSession(Boolean.FALSE).build();
 	}
+
 }
