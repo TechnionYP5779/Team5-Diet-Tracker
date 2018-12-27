@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
@@ -21,27 +20,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
+import Utils.AlcoholBloodCalc;
+import Utils.Portion;
+@SuppressWarnings("static-method")
+public class CanIDriveIntentHandler implements RequestHandler {
+
 	
-	public static String getDate() {
+
+	private String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
-	
 
 	@Override
-	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+	public boolean canHandle(HandlerInput i) {
+		return i.matches(intentName("CanIDriveIntent"));
 	}
 
 	@Override
-	public Optional<Response> handle(final HandlerInput i) {
-		String speechText = "";
-
-		// added
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	public Optional<Response> handle(HandlerInput i) {
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		DatabaseReference dbRef = null;
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -51,25 +49,25 @@ public class HowManyIDrankIntent implements RequestHandler {
 						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
 				FirebaseApp.initializeApp(options);
 			} catch (final Exception e1) {
-				speechText += e1.getMessage() + " ";// its ok
-			}
-			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
-		} catch (final Exception e) {
-			speechText += e.getMessage() + " ";// its ok
-		}
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				// empty block
 
-		final List<Integer> DrinkCount = new LinkedList<>();
+			}
+		} catch (final Exception e) {
+			// empty block
+
+		}
+		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
+				.child(getDate()).child("Alcohol");
+
+		final List<Portion> todaysAlchohol = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
+				for (final DataSnapshot portionSnapshot : s.getChildren())
+					todaysAlchohol.add(portionSnapshot.getValue(Portion.class));
 				done.countDown();
+
 			}
 
 			@Override
@@ -83,16 +81,12 @@ public class HowManyIDrankIntent implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
-		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
-			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
+		String speechText = "";
 
-		}
+		if (new AlcoholBloodCalc().CalcForNow(todaysAlchohol) >= 0.05)
+			speechText = "you can't drive right now, you drank too much";
+		else
+			speechText = "you are allowed to drive, go safely";
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

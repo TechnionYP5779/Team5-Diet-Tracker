@@ -3,12 +3,10 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
@@ -24,28 +22,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class AddDrinkIntent implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
-	
-	public static String getDate() {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
-	
+import Utils.UserInfo;
 
+public class GetGoalIntentHandler implements RequestHandler{
+	public static final String MEASURE_SLOT = "Measure";
+	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("addDrinkIntent"));
+		return i.matches(intentName("GetGoalIntent"));
 	}
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
-		String speechText = "", repromptText;
+		
+		final Slot MeasureSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(MEASURE_SLOT);
+		String speechText = "", repromptText="";
 
-		// added database
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		// added
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
@@ -61,27 +56,25 @@ public class AddDrinkIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("User-Info");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-		if (NumberSlot == null) {
-			speechText = "I'm not sure how many cups you drank. Please tell me again";
-			repromptText = "I will repeat, I'm not sure how many cups you drank. Please tell me again";
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
+		if (MeasureSlot == null) {
+			speechText = "I'm not sure which goal do you want. Please tell me again";
+			repromptText = "I will repeat, I'm not sure which goal do you want. Please tell me again";
 		} else {
-			final int added_num_of_glasses = Integer.parseInt(NumberSlot.getValue());
-
-			final List<Long> DrinkCount = new LinkedList<>();
-			DrinkCount.add(Long.valueOf(added_num_of_glasses));
+			final String measure_str = MeasureSlot.getValue();
+			
+			final List<UserInfo> UserList = new LinkedList<>();
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(final DataSnapshot s) {
-					final Long count = s.getValue(Long.class);
-					if (count != null)
-						DrinkCount.set(0, Long.valueOf(count.longValue() + DrinkCount.get(0).longValue()));
+					for (final DataSnapshot userSnapshot : s.getChildren())
+						UserList.add(userSnapshot.getValue(UserInfo.class));
 					done.countDown();
 				}
 
@@ -96,32 +89,32 @@ public class AddDrinkIntent implements RequestHandler {
 				// TODO Auto-generated catch block
 			}
 
-			if (dbRef != null)
-				try {
-					dbRef.setValueAsync(DrinkCount.get(0)).get();
-				} catch (final InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (final ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			if (UserList.isEmpty())
+				speechText = String.format("you didn't tell me what is your goal");
+			else {
+				int amount=0;
+				if ("fats".equals(measure_str))
+					amount = (int)UserList.get(0).getDailyFatsGoal();
+				else if ("carbs".equals(measure_str))
+					amount = (int)UserList.get(0).getDailyCarbsGoal();
+				else if ("proteins".equals(measure_str))
+					amount = (int)UserList.get(0).getDailyProteinGramsGoal();
+				else if ("calories".equals(measure_str))
+					amount = (int)UserList.get(0).getDailyCaloriesGoal();
+				if (amount == -1)
+					speechText = String.format("you didn't tell me what is your " + measure_str + " goal");
+				else if ("carbs".equals(measure_str))
+					speechText = String.format("your " + measure_str + " goal is %d calories", Integer.valueOf(amount));
+				else
+					speechText = String.format("your " + measure_str + " goal is %d grams", Integer.valueOf(amount));
+				
 
-			if (added_num_of_glasses == 1)
-				speechText = String.format(
-						"you added one cup of water. You can ask me how many cups of water you have drank so far saying, "
-								+ "how many cups of water i drank so far?");
-			else
-				speechText = String.format(
-						"you added %d cups of water. You can ask me how many cups of water you have drank so far saying, "
-								+ "how many cups of water i drank so far?",
-						Integer.valueOf(added_num_of_glasses));
-			repromptText = "I will repeat, You can ask me how many cups of water you have drank so far saying, how many cups of water i drank so far?";
-
+			}
 		}
-
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
-	}
 
+		
+
+	}
 }

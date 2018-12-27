@@ -3,7 +3,6 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -21,17 +20,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
-	
-	public static String getDate() {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
-	
+import Utils.UserInfo;
 
+public class HowOldIntentHandler implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+		return i.matches(intentName("HowOldIntent"));
 	}
 
 	@Override
@@ -55,20 +49,19 @@ public class HowManyIDrankIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("User-Info");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<Integer> DrinkCount = new LinkedList<>();
+		final List<UserInfo> UserList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					UserList.add(userSnapshot.getValue(UserInfo.class));
 				done.countDown();
 			}
 
@@ -83,14 +76,14 @@ public class HowManyIDrankIntent implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
+		if (UserList.isEmpty())
+			speechText = String.format("you didn't tell me what is your age");
 		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
+			final int age = UserList.get(0).getAge();
+			if (age == -1)
+				speechText = String.format("you didn't tell me what is your age");
 			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
+				speechText = String.format("you are %d years old", Integer.valueOf(age));
 
 		}
 
@@ -98,4 +91,5 @@ public class HowManyIDrankIntent implements RequestHandler {
 				.withShouldEndSession(Boolean.FALSE).build();
 
 	}
+
 }

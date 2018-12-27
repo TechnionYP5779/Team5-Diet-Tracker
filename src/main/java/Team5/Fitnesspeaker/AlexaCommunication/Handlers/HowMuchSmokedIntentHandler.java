@@ -21,17 +21,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
+public class HowMuchSmokedIntentHandler implements RequestHandler{
+	@Override
+	public boolean canHandle(final HandlerInput i) {
+		return i.matches(intentName("HowMuchSmokedIntent"));
+	}
 	
 	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
-	
-
-	@Override
-	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
 	}
 
 	@Override
@@ -55,20 +53,20 @@ public class HowManyIDrankIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Cigarettes");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<Integer> DrinkCount = new LinkedList<>();
+		final List<Integer> SmokeCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
 				final Integer count = s.getValue(Integer.class);
 				if (count != null)
-					DrinkCount.add(count);
+					SmokeCount.add(count);
 				done.countDown();
 			}
 
@@ -83,14 +81,14 @@ public class HowManyIDrankIntent implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
+		if (SmokeCount.isEmpty())
+			speechText = String.format("you did not smoke today, Well Done");
 		else {
-			final Integer count = DrinkCount.get(0);
+			final Integer count = SmokeCount.get(0);
 			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
+				speechText = String.format("you have already smoked one cigarette today");
 			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
+				speechText = String.format("you have already smoked %d cigarettes today ", count);
 
 		}
 

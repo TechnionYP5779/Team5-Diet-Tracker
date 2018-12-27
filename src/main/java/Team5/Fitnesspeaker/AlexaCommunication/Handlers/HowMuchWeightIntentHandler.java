@@ -21,17 +21,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
-	
+import Utils.DailyInfo;
+
+public class HowMuchWeightIntentHandler implements RequestHandler{
 	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
 	
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+		return i.matches(intentName("HowMuchWeightIntent"));
 	}
 
 	@Override
@@ -55,20 +55,19 @@ public class HowManyIDrankIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Daily-Info");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<Integer> DrinkCount = new LinkedList<>();
+		final List<DailyInfo> DailyInfoList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					DailyInfoList.add(userSnapshot.getValue(DailyInfo.class));
 				done.countDown();
 			}
 
@@ -83,14 +82,14 @@ public class HowManyIDrankIntent implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
+		if (DailyInfoList.isEmpty())
+			speechText = String.format("you didn't tell me what is your weight");
 		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
+			final int weight = (int)(DailyInfoList.get(0).getWeight());
+			if (weight == -1)
+				speechText = String.format("you didn't tell me what is your weight");
 			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
+				speechText = String.format("you weight %d kilograms", Integer.valueOf(weight));
 
 		}
 
