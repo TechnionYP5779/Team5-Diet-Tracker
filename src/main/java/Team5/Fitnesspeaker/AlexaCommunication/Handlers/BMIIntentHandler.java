@@ -87,47 +87,54 @@ public class BMIIntentHandler implements RequestHandler{
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
+		
+		final List<UserInfo> UserList = new LinkedList<>();
+		final CountDownLatch done2 = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					UserList.add(userSnapshot.getValue(UserInfo.class));
+				done2.countDown();
+			}
 
-		if (DailyInfoList.isEmpty())
-			speechText = String.format("you didn't tell me what is your weight");
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done2.await();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+		}
+
+
+		if (DailyInfoList.isEmpty() || ((int)(DailyInfoList.get(0).getWeight()))==-1) {
+			if(UserList.isEmpty() || UserList.get(0).getHeight()==-1) {
+				speechText = String.format("Please Tell me what is your weight and height, So i will can calculate your BMI");
+			}
+			else {
+				speechText = String.format("Please Tell me what is your weight, So i will can calculate your BMI");
+			}
+		}
 		else {
 			final int weight = (int)(DailyInfoList.get(0).getWeight());
 			if (weight == -1)
-				speechText = String.format("you didn't tell me what is your weight");
+				speechText = String.format("Please Tell me what is your weight, So i will can calculate your BMI");
 			else {
 				// Get the height
 
-				final List<UserInfo> UserList = new LinkedList<>();
-				final CountDownLatch done2 = new CountDownLatch(1);
-				dbRef.addValueEventListener(new ValueEventListener() {
-					@Override
-					public void onDataChange(final DataSnapshot s) {
-						for (final DataSnapshot userSnapshot : s.getChildren())
-							UserList.add(userSnapshot.getValue(UserInfo.class));
-						done2.countDown();
-					}
-
-					@Override
-					public void onCancelled(final DatabaseError e) {
-						System.out.println("The read failed: " + e.getCode());
-					}
-				});
-				try {
-					done2.await();
-				} catch (final InterruptedException e) {
-					// TODO Auto-generated catch block
-				}
-
 				if (UserList.isEmpty())
-					speechText = String.format("you didn't tell me what is your height");
+					speechText = String.format("Please Tell me what is your height, So i will can calculate your BMI");
 				else {
 					final int height = UserList.get(0).getHeight();
 					if (height == -1)
-						speechText = String.format("you didn't tell me what is your height");
+						speechText = String.format("Please Tell me what is your height, So i will can calculate your BMI");
 					else {
 						double heightInMeters = ((double) height) / 100.0;
 						double bmi = ((double) weight) / (heightInMeters*heightInMeters);
-						speechText = String.format("your BMI is %f", Double.valueOf(bmi));
+						speechText = String.format("your BMI is %.2f", Double.valueOf(bmi));
 					}
 
 				}
