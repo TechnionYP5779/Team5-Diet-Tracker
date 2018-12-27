@@ -34,7 +34,7 @@ public class BloodPressure {
 	}
 	
 	public String toString() {
-		String[] splited2 =this.date.toString().split(" ")[2].split(":");
+		String[] splited2 =this.date.toString().split(" ")[3].split(":");
 		return "at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1]) + " the measure was "
 				+ this.systolic.toString() + " by " + this.diastolic.toString();
 	}

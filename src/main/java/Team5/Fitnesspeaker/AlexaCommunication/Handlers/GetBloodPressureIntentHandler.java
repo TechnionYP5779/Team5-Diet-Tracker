@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
@@ -63,7 +61,6 @@ public class GetBloodPressureIntentHandler implements RequestHandler{
 			speechText += e.getMessage() + " ";// its ok
 		}
 
-		dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates").child(getDate()).child("BloodPressure");
 
 		final List<BloodPressure> logListDB = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -86,11 +83,10 @@ public class GetBloodPressureIntentHandler implements RequestHandler{
 			// TODO Auto-generated catch block
 		}
 		
-		final List<BloodPressure> logList=logListDB.stream().sorted((a,b)->a.date.compareTo(b.date)).collect(Collectors.toList());
 		speechText="";
-		if(logList.isEmpty()) speechText="you did not log any blood pressure measure today";
+		if(logListDB.isEmpty()) speechText="you did not log any blood pressure measure today";
 		else
-			for (BloodPressure log : logList)
+			for (BloodPressure log : logListDB)
 				speechText += log.toString() + ", ";
 		
 		
