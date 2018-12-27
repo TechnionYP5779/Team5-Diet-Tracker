@@ -88,9 +88,9 @@ public class HowManyIDrankIntent implements RequestHandler {
 		else {
 			final Integer count = DrinkCount.get(0);
 			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single glass of water");
+				speechText = String.format("so far, you have drank a single cup of water");
 			else
-				speechText = String.format("so far, you have drank %d glasses of water", count);
+				speechText = String.format("so far, you have drank %d cups of water", count);
 
 		}
 
