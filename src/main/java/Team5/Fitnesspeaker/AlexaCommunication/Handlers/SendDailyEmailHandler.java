@@ -14,26 +14,34 @@ import com.google.firebase.database.ValueEventListener;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 
+import Utils.DailyStatistics;
 import Utils.EmailSender;
 import Utils.Portion;
 
-public class SendEmailHandler implements RequestHandler {
+public class SendDailyEmailHandler implements RequestHandler {
 
-	@Override
-	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("SendMailIntent"));
+	String UserMail;
+	String UserName;
+	DailyStatistics dailyStatistics = new DailyStatistics();
 
+	private String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
 
-	@Override
-	public Optional<Response> handle(HandlerInput i) {
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		String mailToSend = "";
+	private void getUserInfo(HandlerInput i) {
+		this.UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
+	}
+
+	private void openDatabase() {
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -48,11 +56,12 @@ public class SendEmailHandler implements RequestHandler {
 			}
 		} catch (final Exception e) {
 			// empty block
-
 		}
-		// Get Drink
-		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail).
-				child("Dates").child(AddFoodIntentHandler.getDate()).child("Drink");
+	}
+
+	private void getDrinkInfo() {
+		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
+				.child("Dates").child(getDate()).child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch doneDrink = new CountDownLatch(1);
 		dbRefDrink.addValueEventListener(new ValueEventListener() {
@@ -72,23 +81,19 @@ public class SendEmailHandler implements RequestHandler {
 		try {
 			doneDrink.await();
 		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
+			// empty block
 		}
 
 		if (DrinkCount.isEmpty())
-			mailToSend += String.format("You haven't drink anything today\n");
-		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				mailToSend += String.format("You drank one glass of water today\n");
-			else
-				mailToSend += String.format("You drank %d glasses of water today\n", count);
-		}
+			this.dailyStatistics.cupsOfWater = "0";
+		else
+			this.dailyStatistics.cupsOfWater = DrinkCount.get(0).toString();
+	}
 
-		// Get Food
-		final DatabaseReference dbRefFood = FirebaseDatabase.getInstance().getReference().child(UserMail).
-				child("Dates").child(AddFoodIntentHandler.getDate()).child("Food");
-		final List<Portion> FoodList = new LinkedList<>();
+	private void getFoodInfo() {
+		final DatabaseReference dbRefFood = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
+				.child(getDate()).child("Food");
+		final List<Portion> FoodList = new ArrayList<>();
 		final CountDownLatch doneFood = new CountDownLatch(1);
 		dbRefFood.addValueEventListener(new ValueEventListener() {
 			@Override
@@ -107,20 +112,58 @@ public class SendEmailHandler implements RequestHandler {
 		try {
 			doneFood.await();
 		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
+			// empty block
 		}
-		String foods_eaten = "";
-		for (final Portion p : FoodList)
-			foods_eaten += p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams \n";
-		if (!foods_eaten.isEmpty())
-			foods_eaten = String.format("You ate: %s.\n", foods_eaten);
-		else
-			foods_eaten = "You haven't eaten nothing today.\n";
+		this.dailyStatistics.foodPortions = FoodList;
+	}
 
-		mailToSend += foods_eaten;
+	private void getCiggaretsInfo() {
+		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
+				.child("Dates").child(getDate()).child("Cigarettes");
+		final List<Integer> ciggaretesCount = new LinkedList<>();
+		final CountDownLatch doneCiggaretes = new CountDownLatch(1);
+		dbRefDrink.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				final Integer count = s.getValue(Integer.class);
+				if (count != null)
+					ciggaretesCount.add(count);
+				doneCiggaretes.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			doneCiggaretes.await();
+		} catch (final InterruptedException e) {
+			// empty block
+		}
+
+		if (ciggaretesCount.isEmpty())
+			this.dailyStatistics.ciggaretesSmoked = "0";
+		else
+			this.dailyStatistics.ciggaretesSmoked = ciggaretesCount.get(0).toString();
+	}
+
+	@Override
+	public boolean canHandle(HandlerInput i) {
+		return i.matches(intentName("SendDailyMailIntent"));
+	}
+
+	@Override
+	public Optional<Response> handle(HandlerInput i) {
+		getUserInfo(i);
+		openDatabase();
+		getDrinkInfo();
+		getFoodInfo();
+		getCiggaretsInfo();
+		dailyStatistics.calculateDailyNutritions();
 
 		try {
-			(new EmailSender()).sendMail(mailToSend, "FitnessSpeaker - status", i.getServiceClientFactory().getUpsService().getProfileEmail());
+			(new EmailSender()).designedDailyStatisticsEmail("Daily Statistics", this.UserMail.replace("_dot_", "."), UserName, dailyStatistics);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
