@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class simpleGraph  extends JFrame{
+public class simpleGraph  { //extends JFrame
 
         JFreeChart chart;
         ArrayList<Calendar> dates;
@@ -30,8 +30,7 @@ public class simpleGraph  extends JFrame{
         String imageName="";
         
         public simpleGraph make() {
-        	XYDataset dataset = createDataset();
-            chart = createChart(dataset);
+        	chart = createChart(createDataset());
             return this;
         }
         
@@ -44,11 +43,10 @@ public class simpleGraph  extends JFrame{
         	weights=w;
         	return this;
         }
-
+        /*
         private void initUI() {
 
-            XYDataset dataset = createDataset();
-            chart = createChart(dataset);
+            chart = createChart(createDataset());
             ChartPanel chartPanel = new ChartPanel(chart, false);
             //chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
             chartPanel.setBackground(Color.white);
@@ -59,15 +57,15 @@ public class simpleGraph  extends JFrame{
             setLocationRelativeTo(null);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
-
+		*/
         private XYDataset createDataset() {
 
             TimeSeries series = new TimeSeries("Weights");
              
-            for(int i=0;i<dates.size();i++) {
+            for(int i=0;i<dates.size();++i) {
             	Calendar currentDate=dates.get(i);
-            	Integer currentWeight=weights.get(i);
-            	series.add(new Day(currentDate.get(Calendar.DAY_OF_MONTH), +currentDate.get(Calendar.MONTH), currentDate.get(Calendar.YEAR)), currentWeight);
+            	series.add(new Day(currentDate.get(Calendar.DAY_OF_MONTH), currentDate.get(Calendar.MONTH)+1,
+						currentDate.get(Calendar.YEAR)), weights.get(i));
             }
             
             TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -75,13 +73,13 @@ public class simpleGraph  extends JFrame{
             return dataset;
         }
 
-        private JFreeChart createChart(XYDataset dataset) {
+        private JFreeChart createChart(XYDataset d) {
 
             JFreeChart chart = ChartFactory.createTimeSeriesChart(
                     "Weight per day",
                     "Date",
                     "Weight",
-                    dataset,
+                    d,
                     true,
                     true,
                     false
@@ -131,8 +129,7 @@ public class simpleGraph  extends JFrame{
         }
         
         public void delete() {
-        	 File file = new File(imageName+".jpg");
-        	 file.delete();
+        	 (new File(imageName + ".jpg")).delete();
         }
         
     }
