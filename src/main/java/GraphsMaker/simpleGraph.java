@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -113,19 +114,33 @@ public class simpleGraph  { //extends JFrame
             return chart;
         }
 
-        public void save(int width, int height,String imageName){
+        public byte[] save(int width, int height,String imageName){
         	this.imageName=imageName;
             BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2 = img.createGraphics();
             chart.draw(g2, new Rectangle2D.Double(0, 0, width, height));
             g2.dispose();
-            File outputfile = new File(imageName+".jpg");
+            // outputfile = new File(imageName+".jpg");
+            ByteArrayOutputStream baos=new ByteArrayOutputStream();
             try {
-                ImageIO.write(img, "jpg", outputfile);
+                ImageIO.write(img, "jpg", baos);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            try {
+				baos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            byte[] byteImage=baos.toByteArray();
+            try {
+				baos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            return byteImage;
         }
         
         public void delete() {

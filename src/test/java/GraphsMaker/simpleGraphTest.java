@@ -1,6 +1,8 @@
 package GraphsMaker;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -40,7 +42,7 @@ public class simpleGraphTest {
 		dates.add(c);
 		weights.add(60);
 		g.setDates(dates).setWeights(weights).make().save(800, 300, "test");
-		g.delete(); // set as command if needed
+		//g.delete(); // set as command if needed
 	}
 	/*
 	private String[] getDates() {
@@ -141,5 +143,16 @@ public class simpleGraphTest {
 		
 	}
 	*/
+	
+	@Test
+	public void testFile() {
+		File outputfile = new File("testingg.jpg");
+		try {
+			outputfile.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

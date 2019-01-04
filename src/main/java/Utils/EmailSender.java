@@ -17,6 +17,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import GraphsMaker.simpleGraph;
 
@@ -183,10 +184,10 @@ public class EmailSender {
 		}
 	}
 	
-	public void sendWeightStatistics( final String subject, final String toMail,final String name ,ArrayList<Calendar> dates,ArrayList<Integer> weights)  {
+	public void sendWeightStatistics( final String subject, final String toMail,final String name ,ArrayList<Calendar> dates,ArrayList<Integer> weights) throws MessagingException  {
 		simpleGraph g=new simpleGraph();
 		String graphName=new String(toMail).replace(".", "_dot_");
-		g.setDates(dates).setWeights(weights).make().save(500, 300, graphName);
+		byte[] byteImage=g.setDates(dates).setWeights(weights).make().save(800, 300, graphName);
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(username, password);
@@ -206,7 +207,7 @@ public class EmailSender {
 	        textBodyPart.setText("A graph describing your weight progress is attached.");
 
 	        MimeBodyPart attachmentBodyPart= new MimeBodyPart();
-	        DataSource source = new FileDataSource(graphName+".jpg"); // ex : "C:\\test.pdf"
+	        ByteArrayDataSource source = new ByteArrayDataSource(byteImage,"image/jpg"); // ex : "C:\\test.pdf"
 	        attachmentBodyPart.setDataHandler(new DataHandler(source));
 	        attachmentBodyPart.setFileName("weightProgress"+".jpg"); // ex : "test.pdf"
 
@@ -217,9 +218,9 @@ public class EmailSender {
 
 	        Transport.send(msg);
 	    } catch (MessagingException e) {
-	        //e.printStackTrace();
+	        throw e;
 	    }
-	    g.delete();
+	    //g.delete();
 	}
 	
 }

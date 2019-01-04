@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.junit.Test;
 import Utils.EmailSender;
 
@@ -63,7 +65,12 @@ public class EmailSenderTest {
 		}
 		
 		
-			new EmailSender().sendWeightStatistics("test4", "team5.yearlyproject@gmail.com", "team", dates, weights);
+			try {
+				new EmailSender().sendWeightStatistics("test4", "team5.yearlyproject@gmail.com", "team", dates, weights);
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 	}
 

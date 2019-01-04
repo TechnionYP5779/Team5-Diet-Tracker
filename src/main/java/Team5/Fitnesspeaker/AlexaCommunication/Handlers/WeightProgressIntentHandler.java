@@ -2,6 +2,7 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import GraphsMaker.simpleGraph;
 import Utils.DailyInfo;
 import Utils.DailyStatistics;
 import Utils.EmailSender;
@@ -73,7 +75,7 @@ public class WeightProgressIntentHandler implements RequestHandler {
 	private int getWeightByDate(String date) {
 		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail)
 				.child("Dates").child(date).child("Daily-Info");
-		DailyInfo d=null;
+		
 		
 		final List<DailyInfo> UserList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -109,18 +111,21 @@ public class WeightProgressIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
+		ArrayList<Calendar> dts=new ArrayList();
+		ArrayList<Integer> wts=new ArrayList();
+		String s="";
+		try {
 		getUserInfo(i);
 		openDatabase();
 		String[] dates = getDates();
-		ArrayList<Calendar> dts=new ArrayList();
-		ArrayList<Integer> wts=new ArrayList();;
+		
 		int w=-1;
 		for (int day = 0; day < MAX_DAYS; ++day) {
 			w=getWeightByDate(dates[day]);
 			if(w!=-1) {
 				wts.add(w);
 				Calendar c=Calendar.getInstance();
-				c.add(Calendar.DAY_OF_YEAR, MAX_DAYS-day-1);
+				c.add(Calendar.DAY_OF_YEAR, -MAX_DAYS+day);
 				dts.add(c);
 			}
 			
@@ -129,13 +134,17 @@ public class WeightProgressIntentHandler implements RequestHandler {
 			if( wts.size()>=5) 
 				(new EmailSender()).sendWeightStatistics("weight progess", this.UserMail.replace("_dot_", "."), UserName, dts, wts);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			//s+=e.toString();
 		}
+		} catch(Exception e) {
+			//s+=" "+e.toString();
+		}
+		//s+=" "+String.valueOf(dts.size())+" "+String.valueOf(wts.size());
 		if( wts.size()>=5)
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with weight progess Sent")
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with weight progess Sent"+s)
 				.withSpeech("Mail with weight progess Sent").withShouldEndSession(Boolean.FALSE).build();
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough mesurements")
-				.withSpeech("I don't have enough mesurements").withShouldEndSession(Boolean.FALSE).build();
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough mesurements"+s)
+				.withSpeech("I don't have enough mesurements"+s).withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }
