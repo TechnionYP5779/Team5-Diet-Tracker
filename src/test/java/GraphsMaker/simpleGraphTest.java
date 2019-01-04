@@ -142,7 +142,7 @@ public class simpleGraphTest {
 		
 		
 	}
-	*/
+	
 	
 	@Test
 	public void testFile() {
@@ -154,5 +154,6 @@ public class simpleGraphTest {
 			e.printStackTrace();
 		}
 	}
+	*/
 
 }

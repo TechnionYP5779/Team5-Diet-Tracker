@@ -21,7 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import Utils.AlcoholBloodCalc;
+import Utils.DailyInfo;
 import Utils.Portion;
+import Utils.UserInfo;
 
 public class CanIDriveIntentHandler implements RequestHandler {
 
@@ -54,18 +56,18 @@ public class CanIDriveIntentHandler implements RequestHandler {
 			// empty block
 
 		}
-		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
-				.child(getDate()).child("Alcohol");
+		
+		String speechText = "";
 
-		final List<Portion> todaysAlchohol = new LinkedList<>();
+		final DatabaseReference UIRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info");
+		final List<UserInfo> UserList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
-		dbRef.addValueEventListener(new ValueEventListener() {
+		UIRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot portionSnapshot : s.getChildren())
-					todaysAlchohol.add(portionSnapshot.getValue(Portion.class));
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					UserList.add(userSnapshot.getValue(UserInfo.class));
 				done.countDown();
-
 			}
 
 			@Override
@@ -79,9 +81,71 @@ public class CanIDriveIntentHandler implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
-		String speechText = "";
+		if (UserList.isEmpty()) {
+			speechText = String.format("you didn't tell me what is your gender");
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withShouldEndSession(Boolean.FALSE).build();
+		}
+		
+		final DatabaseReference DIRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates").child(getDate()).child("Daily-Info");
+		final List<DailyInfo> DailyList = new LinkedList<>();
+		final CountDownLatch donee = new CountDownLatch(1);
+		DIRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					DailyList.add(userSnapshot.getValue(DailyInfo.class));
+				donee.countDown();
+			}
 
-		if (new AlcoholBloodCalc().CalcForNow(todaysAlchohol) >= 0.05)
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			donee.await();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+		}
+
+		if (DailyList.isEmpty()||DailyList.get(0).weight==-1) {
+			speechText = String.format("you didn't tell me what is your weight");
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withShouldEndSession(Boolean.FALSE).build();
+		}
+			
+		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
+				.child(getDate()).child("Alcohol");
+
+		final List<Portion> todaysAlchohol = new LinkedList<>();
+		final CountDownLatch done2 = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot portionSnapshot : s.getChildren())
+					todaysAlchohol.add(portionSnapshot.getValue(Portion.class));
+				done2.countDown();
+
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done2.await();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+		}
+
+		double alcInblood=0;
+		if(UserList.get(0).gender==UserInfo.Gender.MALE)
+			alcInblood=new AlcoholBloodCalc().setForMale().setWeight(DailyList.get(0).getWeight()).CalcForNow(todaysAlchohol);
+		else
+			alcInblood=new AlcoholBloodCalc().setForFemale().setWeight(DailyList.get(0).getWeight()).CalcForNow(todaysAlchohol);
+		if ( alcInblood>= 0.05)
 			speechText = "you can't drive right now, you drank too much";
 		else
 			speechText = "you are allowed to drive, go safely";
