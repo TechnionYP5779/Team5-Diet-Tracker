@@ -109,13 +109,13 @@ public class AddSmokeIntentHandler implements RequestHandler{
 			if (added_num_of_cigarettes == 1)
 				speechText = String.format(
 						"you added one cigarette. You can ask me how many cigarettes you have smoked so far saying, "
-								+ "how many cigarettes i smoked so far?");
+								+ "how many cigarettes i smoked?");
 			else
 				speechText = String.format(
 						"you added %d cigarettes. You can ask me how many cigarettes you have smoked so far saying, "
-								+ "how many cigarettes i smoked so far?",
+								+ "how many cigarettes i smoked?",
 						Integer.valueOf(added_num_of_cigarettes));
-			repromptText = "I will repeat, You can ask me how many you have smoked so far saying, how many cigarettes i smoked so far?";
+			repromptText = "I will repeat, You can ask me how many you have smoked so far saying, how many cigarettes i smoked?";
 
 		}
 

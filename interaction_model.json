@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "fitnesspeaker",
+            "invocationName": "nutracker",
             "intents": [
                 {
                     "name": "AMAZON.FallbackIntent",
@@ -38,14 +38,9 @@
                         }
                     ],
                     "samples": [
+                        "I just ate {Number} grams of {Food} ",
                         "i ate {Number} gram of {Food}",
-                        "i ate {Number} grams of {Food}",
-                        "i also ate {Food}",
-                        "yes also {Food}",
-                        "also add {Food}",
-                        "to add {Food}",
-                        "please add {Food}",
-                        "i ate {Food}"
+                        "i ate {Number} grams of {Food}"
                     ]
                 },
                 {
@@ -66,23 +61,295 @@
                         }
                     ],
                     "samples": [
+                        "i just drank {Number} cup of water",
+                        "i just drank {Number} glass of water",
+                        "i just drank {Number} glasses of water",
+                        "i just drank {Number} cups of water",
                         "i drank {Number}  cup of water",
                         "i drank {Number}  glass of water",
                         "i drank {Number} glasses of water",
-                        "i drank {Number} cups of water",
-                        "i drank glass of water",
-                        "i drank cup of water"
+                        "i drank {Number} cups of water"
                     ]
                 },
                 {
                     "name": "HowMuchIDrankIntent",
                     "slots": [],
                     "samples": [
+                        "how much water have I drank so far",
                         "how many glasses of water i drank so far",
                         "how many glasses of water i drank",
                         "how many cups of water i drank so far",
                         "how many cups of water i drank",
                         "how much i drank so far"
+                    ]
+                },
+                {
+                    "name": "AddAgeIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "I am {Number} years old",
+                        "My age is {Number}"
+                    ]
+                },
+                {
+                    "name": "SendDailyMailIntent",
+                    "slots": [],
+                    "samples": [
+                        "email me",
+                        "what is my daily statistics",
+                        "send me an email"
+                    ]
+                },
+                {
+                    "name": "HowOldIntent",
+                    "slots": [],
+                    "samples": [
+                        "how old am i",
+                        "what is my age"
+                    ]
+                },
+                {
+                    "name": "AddHeightIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "my height is {Number} centimeters"
+                    ]
+                },
+                {
+                    "name": "AddWeightIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "my weight is {Number} Kilograms",
+                        "I weight {Number} kilograms "
+                    ]
+                },
+                {
+                    "name": "HowMuchWeightIntent",
+                    "slots": [],
+                    "samples": [
+                        "what is my weight",
+                        "How much i weight"
+                    ]
+                },
+                {
+                    "name": "HowMuchHeightIntent",
+                    "slots": [],
+                    "samples": [
+                        "what is my height"
+                    ]
+                },
+                {
+                    "name": "CanIDriveIntent",
+                    "slots": [],
+                    "samples": [
+                        "Am I allowed to drive",
+                        "Am I able to drive",
+                        "Can I drive"
+                    ]
+                },
+                {
+                    "name": "DrinkAlchohol",
+                    "slots": [
+                        {
+                            "name": "alchohol",
+                            "type": "AMAZON.Drink"
+                        }
+                    ],
+                    "samples": [
+                        "cheers with {alchohol}",
+                        "cheers {alchohol}"
+                    ]
+                },
+                {
+                    "name": "AddSmokeIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "i smoked {Number} cigarette",
+                        "i smoked {Number} cigarettes",
+                        "i smoke {Number} cigarette",
+                        "i smoke {Number} cigarettes"
+                    ]
+                },
+                {
+                    "name": "HowMuchSmokedIntent",
+                    "slots": [],
+                    "samples": [
+                        "How much i smoked so far",
+                        "How much cigarettes i smoked so far",
+                        "How much have i smoked",
+                        "How much i smoked",
+                        "How much cigarettes have i smoked",
+                        "How much cigarettes i smoked"
+                    ]
+                },
+                {
+                    "name": "HowMuchMeasureIntent",
+                    "slots": [
+                        {
+                            "name": "Measure",
+                            "type": "Measure"
+                        }
+                    ],
+                    "samples": [
+                        "Please report my daily {Measure}",
+                        "Report my daily {Measure}",
+                        "How many {Measure}",
+                        "How much {Measure}",
+                        "how much {Measure} I had today"
+                    ]
+                },
+                {
+                    "name": "addCoffeeIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "i drank {Number} glass of coffee",
+                        "i drank {Number} glasses of coffee",
+                        "i just drank {Number} glass of coffee",
+                        "i just drank {Number} glasses of coffee",
+                        "i just drank {Number} cup of coffee",
+                        "i just drank {Number} cups of coffee",
+                        "i drank {Number} cup of coffee",
+                        "i drank {Number} cups of coffee"
+                    ]
+                },
+                {
+                    "name": "HowMuchCoffeeIntent",
+                    "slots": [],
+                    "samples": [
+                        "how many glasses of coffee have i drank so far",
+                        "how many cups of coffee have i drank so far",
+                        "how many glasses of coffee did i drink",
+                        "how many cups of coffee did i drink",
+                        "how much coffee have i drank so far"
+                    ]
+                },
+                {
+                    "name": "WeeklyMailReport",
+                    "slots": [],
+                    "samples": [
+                        "send me report of the week",
+                        "Send me an email for the week",
+                        "Send me weekly report"
+                    ]
+                },
+                {
+                    "name": "AddBloodPressureIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "NumberTwo",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "to log blood pressure of {Number} by {NumberTwo}",
+                        "log blood pressure of {Number} by {NumberTwo}"
+                    ]
+                },
+                {
+                    "name": "GetBloodPressureIntent",
+                    "slots": [],
+                    "samples": [
+                        "please tell my blood pressure reports",
+                        "please tell me  my blood pressure reports",
+                        "please report my blood pressure"
+                    ]
+                },
+                {
+                    "name": "weightProgressIntent",
+                    "slots": [],
+                    "samples": [
+                        "give me a graph",
+                        "send weight statistics",
+                        "send me my weight statistics",
+                        "how am i doing with my weight"
+                    ]
+                },
+                {
+                    "name": "BMIIntent",
+                    "slots": [],
+                    "samples": [
+                        "which BMI do i have",
+                        "calculate my BMI",
+                        "what is my BMI"
+                    ]
+                },
+                {
+                    "name": "SetGoalIntent",
+                    "slots": [
+                        {
+                            "name": "Measure",
+                            "type": "Measure"
+                        },
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "set my {Measure} goal to {Number} grams",
+                        "set my {Measure} goal to {Number} "
+                    ]
+                },
+                {
+                    "name": "GetGoalIntent",
+                    "slots": [
+                        {
+                            "name": "Measure",
+                            "type": "Measure"
+                        }
+                    ],
+                    "samples": [
+                        "what is my {Measure} goal"
+                    ]
+                },
+                {
+                    "name": "SetCigarLimitIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "set my cigarette limit to {Number} every day",
+                        "set my cigarette limit to {Number} "
+                    ]
+                },
+                {
+                    "name": "GetCigarLimitIntent",
+                    "slots": [],
+                    "samples": [
+                        "how much cigarettes i can smoke every day",
+                        "what is my cigarette limit"
                     ]
                 }
             ],
@@ -93,6 +360,31 @@
                         {
                             "name": {
                                 "value": "kuba"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Measure",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "fats"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "carbs"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "proteins"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "calories"
                             }
                         }
                     ]

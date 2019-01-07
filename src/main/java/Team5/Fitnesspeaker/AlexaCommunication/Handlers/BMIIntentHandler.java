@@ -21,17 +21,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
+import Utils.DailyInfo;
+import Utils.UserInfo;
+
+public class BMIIntentHandler implements RequestHandler{
 	
 	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
 	
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+		return i.matches(intentName("BMIIntent"));
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class HowManyIDrankIntent implements RequestHandler {
 		// added
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		DatabaseReference dbRef = null;
+		DatabaseReference dbRef = null, dbRef2 = null;
 		try {
 			FileInputStream serviceAccount;
 			FirebaseOptions options = null;
@@ -54,21 +56,24 @@ public class HowManyIDrankIntent implements RequestHandler {
 				speechText += e1.getMessage() + " ";// its ok
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
+			if (database != null) {
+				dbRef = database.getReference().child(UserMail).child("User-Info");
+				dbRef2 = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Daily-Info");
+			}
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-		final List<Integer> DrinkCount = new LinkedList<>();
+		
+		// Get the Weight
+		
+		final List<DailyInfo> DailyInfoList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
-		dbRef.addValueEventListener(new ValueEventListener() {
+		dbRef2.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					DailyInfoList.add(userSnapshot.getValue(DailyInfo.class));
 				done.countDown();
 			}
 
@@ -82,17 +87,62 @@ public class HowManyIDrankIntent implements RequestHandler {
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
+		
+		final List<UserInfo> UserList = new LinkedList<>();
+		final CountDownLatch done2 = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot userSnapshot : s.getChildren())
+					UserList.add(userSnapshot.getValue(UserInfo.class));
+				done2.countDown();
+			}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
-		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
-			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
-
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done2.await();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
 		}
+
+
+		if (DailyInfoList.isEmpty() || ((int)(DailyInfoList.get(0).getWeight()))==-1) {
+			if(UserList.isEmpty() || UserList.get(0).getHeight()==-1) {
+				speechText = String.format("Please Tell me your weight and height, So i can calculate your BMI");
+			}
+			else {
+				speechText = String.format("Please Tell me your weight, So i can calculate your BMI");
+			}
+		}
+		else {
+			final int weight = (int)(DailyInfoList.get(0).getWeight());
+			if (weight == -1)
+				speechText = String.format("Please Tell me your weight, So i can calculate your BMI");
+			else {
+				// Get the height
+
+				if (UserList.isEmpty())
+					speechText = String.format("Please Tell me your height, So i can calculate your BMI");
+				else {
+					final int height = UserList.get(0).getHeight();
+					if (height == -1)
+						speechText = String.format("Please Tell me your height, So i can calculate your BMI");
+					else {
+						double heightInMeters = ((double) height) / 100.0;
+						double bmi = ((double) weight) / (heightInMeters*heightInMeters);
+						speechText = String.format("your BMI is %.2f", Double.valueOf(bmi));
+					}
+
+				}
+			}
+		}
+		
+		
+		
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

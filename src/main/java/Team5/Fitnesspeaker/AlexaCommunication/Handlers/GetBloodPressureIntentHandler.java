@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
@@ -21,25 +20,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
+import Utils.BloodPressure;
+
+public class GetBloodPressureIntentHandler implements RequestHandler{
+
 	
 	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
 	
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+		return i.matches(intentName("GetBloodPressureIntent"));
 	}
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
+		
+		
 		String speechText = "";
-
-		// added
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DatabaseReference dbRef = null;
 		try {
@@ -55,20 +56,19 @@ public class HowManyIDrankIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("BloodPressure");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<Integer> DrinkCount = new LinkedList<>();
+
+		final List<BloodPressure> logListDB = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
+				for (final DataSnapshot bloodPressureSnapshot : s.getChildren())
+					logListDB.add(bloodPressureSnapshot.getValue(BloodPressure.class));
 				done.countDown();
 			}
 
@@ -82,20 +82,16 @@ public class HowManyIDrankIntent implements RequestHandler {
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
-
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
-		else {
-			final Integer count = DrinkCount.get(0);
-			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
-			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
-
-		}
-
+		
+		speechText="";
+		if(logListDB.isEmpty()) speechText="you did not log any blood pressure measure today";
+		else
+			for (BloodPressure log : logListDB)
+				speechText += log.toString() + ", ";
+		
+		
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withShouldEndSession(Boolean.FALSE).build();
-
+				.withReprompt(speechText).withShouldEndSession(Boolean.FALSE).build();
 	}
+
 }

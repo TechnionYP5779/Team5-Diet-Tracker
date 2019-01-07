@@ -25,12 +25,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import Utils.UserInfo;
 
-public class AddHeightIntentHandler implements RequestHandler{
+public class SetCigarLimitIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddHeightIntent"));
+		return i.matches(intentName("SetCigarLimitIntent"));
 	}
 
 	@Override
@@ -63,15 +63,15 @@ public class AddHeightIntentHandler implements RequestHandler{
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 		if (NumberSlot == null) {
-			speechText = "I'm not sure what is your height. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your height. Please tell me again";
+			speechText = "I'm not sure what is your cigarettes limit. Please tell me again";
+			repromptText = "I will repeat, I'm not sure what is your cigarettes limit. Please tell me again";
 		} else {
-			final int height = Integer.parseInt(NumberSlot.getValue());
+			final int cigarettesLimit = Integer.parseInt(NumberSlot.getValue());
 
 			final List<UserInfo> UserList = new LinkedList<>();
 			final List<String> UserId = new LinkedList<>();
 			UserInfo u = new UserInfo();
-			u.setHeight(height);
+			u.setDailyLimitCigarettes(cigarettesLimit);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
 				@Override
@@ -104,10 +104,10 @@ public class AddHeightIntentHandler implements RequestHandler{
 				try {
 					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
 							.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
-									height,
+									UserList.get(0).getHeight(),
 									UserList.get(0).getDailyCaloriesGoal(),
 									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
-									UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
+									UserList.get(0).getDailyFatsGoal(),cigarettesLimit))
 							.get();
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
@@ -115,8 +115,8 @@ public class AddHeightIntentHandler implements RequestHandler{
 					e.printStackTrace();
 				}
 
-			speechText = String.format("your height is %d centimeters", Integer.valueOf(height));
-			repromptText = "I will repeat, You can ask me what is your height saying, what is my height?";
+			speechText = String.format("logged successfully");
+			repromptText = "I will repeat, logged successfully";
 
 		}
 

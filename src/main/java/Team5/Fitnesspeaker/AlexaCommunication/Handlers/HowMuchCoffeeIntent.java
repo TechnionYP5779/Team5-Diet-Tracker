@@ -1,3 +1,6 @@
+/**this module allows the user to know how much coffee has he consumed .
+ * @author Shaked Sapir
+ * @since 2018-26-12*/
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
@@ -21,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HowManyIDrankIntent implements RequestHandler {
+public class HowMuchCoffeeIntent implements RequestHandler {
 	
 	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
@@ -31,7 +34,7 @@ public class HowManyIDrankIntent implements RequestHandler {
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+		return i.matches(intentName("HowMuchCoffeeIntent"));
 	}
 
 	@Override
@@ -55,20 +58,20 @@ public class HowManyIDrankIntent implements RequestHandler {
 			}
 			final FirebaseDatabase database = FirebaseDatabase.getInstance();
 			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
+				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Coffee");
 		} catch (final Exception e) {
 			speechText += e.getMessage() + " ";// its ok
 		}
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		final List<Integer> DrinkCount = new LinkedList<>();
+		final List<Integer> CoffeeCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
 				final Integer count = s.getValue(Integer.class);
 				if (count != null)
-					DrinkCount.add(count);
+					CoffeeCount.add(count);
 				done.countDown();
 			}
 
@@ -83,14 +86,14 @@ public class HowManyIDrankIntent implements RequestHandler {
 			// TODO Auto-generated catch block
 		}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
+		if (CoffeeCount.isEmpty())
+			speechText = String.format("you haven't drink coffee today yet");
 		else {
-			final Integer count = DrinkCount.get(0);
+			final Integer count = CoffeeCount.get(0);
 			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
+				speechText = String.format("so far, you have drank a single cup of coffee");
 			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
+				speechText = String.format("so far, you have drank %d cups of coffee", count);
 
 		}
 
