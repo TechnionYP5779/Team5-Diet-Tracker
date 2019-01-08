@@ -137,18 +137,21 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 					int carbs = (int) userInfo.get(0).getDailyCarbsGoal();
 					int proteins = (int) userInfo.get(0).getDailyProteinGramsGoal();
 					if ("calories".equals(measure_str)) {
-						speechText2 = String.format(" There are %d grams %s left for your goal! Keep going!", calories - total_measure.get(0), measure_str);
+						speechText2 = String.format(" There are %d %s left for your goal! Keep going!", calories - total_measure.get(0), measure_str);
 					} else {
 						int amount = ("proteins".equals(measure_str) ? proteins - total_measure.get(0)
 								: ("carbs".equals(measure_str) ? carbs - total_measure.get(0)
 										: (!"fats".equals(measure_str) ? 0 : fats - total_measure.get(0))));
-						speechText2 = String.format(" There are %d %s left for your goal! Keep going!", amount, measure_str);
+						speechText2 = String.format(" There are %d grams of %s left for your goal! Keep going!", amount, measure_str);
 					}
 				}
 				if (total_measure.get(0) == 0)
 					speechText = String.format("you didn't eat anything today. ") + speechText2;
 				else {
-					speechText = String.format("You ate %d %s today. ", total_measure.get(0), measure_str) + speechText2;
+					if("calories".equals(measure_str))
+						speechText = String.format("You ate %d %s today. ", total_measure.get(0), measure_str) + speechText2;
+					else
+						speechText = String.format("You ate %d grams of %s today. ", total_measure.get(0), measure_str) + speechText2;
 				}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
