@@ -77,13 +77,13 @@ public class SetGoalIntentHandler implements RequestHandler{
 			final List<UserInfo> UserList = new LinkedList<>();
 			final List<String> UserId = new LinkedList<>();
 			UserInfo u = new UserInfo();
-			if ("fats".equals(measure_str))
+			if ("fats".contains(measure_str))
 				u.setDailyFatsGoal(amount);
-			else if ("carbs".equals(measure_str))
+			else if ("carbs".contains(measure_str))
 				u.setDailyCarbsGoal(amount);
-			else if ("proteins".equals(measure_str))
+			else if ("proteins".contains(measure_str))
 				u.setDailyProteinGramsGoal(amount);
-			else if ("calories".equals(measure_str))
+			else if ("calories".contains(measure_str))
 				u.setDailyCaloriesGoal(amount);
 			final CountDownLatch done = new CountDownLatch(1);
 			dbRef.addValueEventListener(new ValueEventListener() {
@@ -115,7 +115,7 @@ public class SetGoalIntentHandler implements RequestHandler{
 				}
 			else
 				try {
-					if ("fats".equals(measure_str))
+					if ("fats".contains(measure_str))
 						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
 						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
 								UserList.get(0).getHeight(),
@@ -123,7 +123,7 @@ public class SetGoalIntentHandler implements RequestHandler{
 								UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
 								amount, UserList.get(0).getDailyLimitCigarettes()))
 						.get();
-					else if ("carbs".equals(measure_str))
+					else if ("carbs".contains(measure_str))
 						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
 						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
 								UserList.get(0).getHeight(),
@@ -131,7 +131,7 @@ public class SetGoalIntentHandler implements RequestHandler{
 								UserList.get(0).getDailyProteinGramsGoal(), amount,
 								UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
 						.get();
-					else if ("proteins".equals(measure_str))
+					else if ("proteins".contains(measure_str))
 						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
 						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
 								UserList.get(0).getHeight(),
@@ -139,7 +139,7 @@ public class SetGoalIntentHandler implements RequestHandler{
 								amount, UserList.get(0).getDailyCarbsGoal(),
 								UserList.get(0).getDailyFatsGoal(), UserList.get(0).getDailyLimitCigarettes()))
 						.get();
-					else if ("calories".equals(measure_str))
+					else if ("calories".contains(measure_str))
 						FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
 						.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
 								UserList.get(0).getHeight(),amount,

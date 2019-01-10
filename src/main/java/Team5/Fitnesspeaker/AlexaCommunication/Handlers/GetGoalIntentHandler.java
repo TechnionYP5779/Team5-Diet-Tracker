@@ -93,17 +93,17 @@ public class GetGoalIntentHandler implements RequestHandler{
 				speechText = String.format("you didn't tell me what is your goal");
 			else {
 				int amount=0;
-				if ("fats".equals(measure_str))
+				if ("fats".contains(measure_str))
 					amount = (int)UserList.get(0).getDailyFatsGoal();
-				else if ("carbs".equals(measure_str))
+				else if ("carbs".contains(measure_str))
 					amount = (int)UserList.get(0).getDailyCarbsGoal();
-				else if ("proteins".equals(measure_str))
+				else if ("proteins".contains(measure_str))
 					amount = (int)UserList.get(0).getDailyProteinGramsGoal();
-				else if ("calories".equals(measure_str))
+				else if ("calories".contains(measure_str))
 					amount = (int)UserList.get(0).getDailyCaloriesGoal();
 				if (amount == -1)
 					speechText = String.format("you didn't tell me what is your " + measure_str + " goal");
-				else if ("carbs".equals(measure_str))
+				else if ("calories".contains(measure_str))
 					speechText = String.format("your " + measure_str + " goal is %d calories", Integer.valueOf(amount));
 				else
 					speechText = String.format("your " + measure_str + " goal is %d grams", Integer.valueOf(amount));
