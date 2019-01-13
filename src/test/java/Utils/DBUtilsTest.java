@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
 
+import Utils.DBUtils.DBException;
 import Utils.Portion.Type;
 import Utils.UserInfo.Gender;
 
@@ -19,7 +20,7 @@ import Utils.UserInfo.Gender;
 public class DBUtilsTest {
 
 	@Test
-	public void testDrinkHandling() {
+	public void testDrinkHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -34,7 +35,7 @@ public class DBUtilsTest {
 	}
 	
 	@Test
-	public void testCoffeeDrinkHandling() {
+	public void testCoffeeDrinkHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -49,7 +50,7 @@ public class DBUtilsTest {
 	}
 	
 	@Test
-	public void testCigarettesHandling() {
+	public void testCigarettesHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -64,7 +65,7 @@ public class DBUtilsTest {
 	}
 
 	@Test
-	public void testFoodHandling() {
+	public void testFoodHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -96,7 +97,7 @@ public class DBUtilsTest {
 	}
 	
 	@Test
-	public void testDailyInfo() {
+	public void testDailyInfo() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -124,7 +125,7 @@ public class DBUtilsTest {
 	}
 	
 	@Test
-	public void testUserInfo() {
+	public void testUserInfo() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -159,7 +160,7 @@ public class DBUtilsTest {
 	}
 	
 	@Test
-	public void testAlcoholHandling() {
+	public void testAlcoholHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -181,7 +182,7 @@ public class DBUtilsTest {
 	}
 	
 	@Test
-	public void testBloodPressureHandling() {
+	public void testBloodPressureHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		assert db.DBGetTodayBloodPressureMeasuresList().isEmpty();

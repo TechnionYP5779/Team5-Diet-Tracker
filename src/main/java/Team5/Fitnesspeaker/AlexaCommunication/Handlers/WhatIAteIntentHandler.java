@@ -12,35 +12,19 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import Utils.DBUtils;
+import Utils.DBUtils.DBException;
 import Utils.Portion;
 
 public class WhatIAteIntentHandler implements RequestHandler {
-	public static final String FOOD_SLOT = "Food";
-	public static final int START_INDEX_OF_FOOD = 5;
-	
-	public static String getDate() {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
 	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -49,72 +33,32 @@ public class WhatIAteIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		// Get a reference to our posts
-
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				// empty block
-
-			}
-		} catch (final Exception e) {
-			// empty block
-
-		}
-		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates").child(getDate()).child("Food");
-
-		final List<Portion> FoodList = new LinkedList<>();
-		final CountDownLatch done = new CountDownLatch(1);
-		dbRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot portionSnapshot : s.getChildren())
-					FoodList.add(portionSnapshot.getValue(Portion.class));
-				done.countDown();
-
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
-		try {
-			done.await();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-		}
-
-		String speechText;
-		// Map<String, Object> items = new TreeMap<String,
-		// Object>(input.getAttributesManager().getSessionAttributes());
-		// final Set<String> food_set = items.keySet();
-		String foods_eaten = "";
-		/*
-		 * int i = 0; for (final String key : food_set) if (key.startsWith("Food-")) {
-		 * String val = key.substring(START_INDEX_OF_FOOD); Integer count =
-		 * (Integer)items.get(key); if(i!=0&&i< food_set.size() - 1) foods_eaten+=", ";
-		 * else if(i==food_set.size() - 1 && i!=0) foods_eaten+=", and ";
-		 * foods_eaten+=val; if (count.intValue()> 1) foods_eaten +=
-		 * String.format(" %d times",count); ++i; }
-		 */
-		for (final Portion p : FoodList)
-			foods_eaten += ", " + p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams ";
-		if (!foods_eaten.isEmpty())
-			speechText = String.format("You ate %s.", foods_eaten);
 		
-		else
-			speechText = "you haven't eaten anything today yet. you can tell me what you ate, for example, i ate twenty grams of pasta.";
+		String speechText = "";
+		
+		// initialize database object with the user mail
+		DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
+		
+		List<Portion> FoodList=new LinkedList<>();
+		
+		//retrieving the information
+		try {
+			FoodList=db.DBGetTodayFoodList().stream().map(p->p.getValue()).collect(Collectors.toList());
+		} catch (DBException e) {
+			// no need to do anything
+		}
+		
+		
+		for (final Portion p : FoodList) {
+			String[] splited2 =p.getTime().toString().split(" ")[3].split(":");
+			speechText += ", at "+Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])+" you ate " + p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams ";
+		}
+		
+		if (speechText.isEmpty())
+			speechText = "you haven't eaten anything today yet. Please Tell me when you do";
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withShouldEndSession(Boolean.FALSE).build();
+				.withShouldEndSession(Boolean.TRUE).build();
 
 	}
 }
