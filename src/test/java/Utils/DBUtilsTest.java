@@ -158,5 +158,27 @@ public class DBUtilsTest {
 		
 		db.DBUtilsRemoveUserDirectory();
 	}
+	
+	@Test
+	public void testAlcoholHandling() {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		assert db.DBGetAlcoholList().isEmpty();
+		db.DBPushAlcohol(new Portion(Type.DRINK,"vodka",40.0,50,0,0,0,40));
+		List<Pair<String, Portion>> portionList=db.DBGetAlcoholList();
+		assertEquals(Integer.valueOf(1), Integer.valueOf(portionList.size()));
+		assertEquals("vodka", portionList.get(0).getValue().getName());
+		assertEquals(Double.valueOf(40), Double.valueOf(portionList.get(0).getValue().
+				getAlchohol_by_volume()));
+		assertEquals(Double.valueOf(0), Double.valueOf(portionList.get(0).getValue().
+				getCarbs_per_100_grams()));
+		db.DBPushAlcohol(new Portion(Type.DRINK,"wine",40.0,50,0,0,0,40));
+		portionList=db.DBGetAlcoholList();
+		assertEquals(Integer.valueOf(2), Integer.valueOf(portionList.size()));
+		assertEquals(Long.valueOf(1), Long.valueOf( portionList.stream().filter(f->f.getValue().getName().contains("vodka")).count()));
+		assertEquals(Long.valueOf(1), Long.valueOf( portionList.stream().filter(f->f.getValue().getName().contains("wine")).count()));
+		db.DBUtilsRemoveUserDirectory();
+	}
 
 }

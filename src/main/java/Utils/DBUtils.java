@@ -398,6 +398,52 @@ public class DBUtils {
 			return Optional.empty();
 		return Optional.ofNullable(SmokeCount.get(0));
 	}
+	
+	/*
+	 * Pushes a given alcohol to user Alcohol directory.
+	 */
+	public void DBPushAlcohol(final Portion p) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Alcohol");
+		try {
+			if (dbRef != null)
+				dbRef.push().setValueAsync(p).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * returns the user's portion list (with their keys) if the user's Alcohol
+	 * directory is empty it returns empty list
+	 */
+	public List<Pair<String, Portion>> DBGetAlcoholList() {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Alcohol");
+		final List<Pair<String, Portion>> portionList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot portionSnapshot : s.getChildren())
+					portionList.add(new Pair<>(portionSnapshot.getKey(), portionSnapshot.getValue(Portion.class)));
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e1.printStackTrace();
+		}
+		return portionList;
+	}
 
 
 }
