@@ -69,11 +69,11 @@ public class DBUtils {
 	}
 
 	/*
-	 * returns the user's portion list (with their keys) if the user's Food
+	 * returns the user's portion list (with their keys) at given date if the user's Food
 	 * directory is empty it returns empty list
 	 */
-	public List<Pair<String, Portion>> DBGetFoodList() {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+	public List<Pair<String, Portion>> DBGetDateFoodList(String date) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(date)
 				.child("Food");
 		final List<Pair<String, Portion>> portionList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -99,10 +99,18 @@ public class DBUtils {
 		}
 		return portionList;
 	}
+	
+	/*
+	 * returns the Today user's portion list (with their keys)  if the user's Food
+	 * directory is empty it returns empty list
+	 */
+	public List<Pair<String, Portion>> DBGetTodayFoodList() {
+		return DBGetDateFoodList(getDate());
+	}
 
 	/*
-	 * returns the stored portion object with the key food_key or null if it doesn't
-	 * exists
+	 * returns the stored portion (which was inserted at the same day) object with the key food_key or null if it doesn't
+	 * exists 
 	 */
 	public Portion DBGetFoodByKey(final String food_key) {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
@@ -143,7 +151,7 @@ public class DBUtils {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
 				.child("Drink");
 		final Integer updatedCount = Integer
-				.valueOf(added_cups.intValue() + DBGetWaterCups().orElse(Integer.valueOf(0)).intValue());
+				.valueOf(added_cups.intValue() + DBGetTodayWaterCups().orElse(Integer.valueOf(0)).intValue());
 		try {
 			dbRef.setValueAsync(updatedCount).get();
 		} catch (ExecutionException | InterruptedException e) {
@@ -153,11 +161,11 @@ public class DBUtils {
 	}
 
 	/*
-	 * returns the current water count of the user or an empty Optional if there is
+	 * returns the current water count of the user at given date or an empty Optional if there is
 	 * no counter for this user
 	 */
-	public Optional<Integer> DBGetWaterCups() {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+	public Optional<Integer> DBGetDateWaterCups(String date) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(date)
 				.child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -184,6 +192,14 @@ public class DBUtils {
 		if (DrinkCount.isEmpty())
 			return Optional.empty();
 		return Optional.ofNullable(DrinkCount.get(0));
+	}
+	
+	/*
+	 * returns the today's current water count of the user  or an empty Optional if there is
+	 * no counter for this user
+	 */
+	public Optional<Integer> DBGetTodayWaterCups() {
+		return DBGetDateWaterCups(getDate());
 	}
 
 	/*
@@ -305,7 +321,7 @@ public class DBUtils {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
 				.child("Coffee");
 		final Integer updatedCount = Integer
-				.valueOf(added_cups.intValue() + DBGetCofeeCups().orElse(Integer.valueOf(0)).intValue());
+				.valueOf(added_cups.intValue() + DBGetTodayCofeeCups().orElse(Integer.valueOf(0)).intValue());
 		try {
 			dbRef.setValueAsync(updatedCount).get();
 		} catch (ExecutionException | InterruptedException e) {
@@ -315,11 +331,11 @@ public class DBUtils {
 	}
 
 	/*
-	 * returns the current coffee count of the user or an empty Optional if there is
+	 * returns the current coffee count of the user at given date or an empty Optional if there is
 	 * no counter for this user
 	 */
-	public Optional<Integer> DBGetCofeeCups() {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+	public Optional<Integer> DBGetDateCofeeCups(String date) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(date)
 				.child("Coffee");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -349,6 +365,14 @@ public class DBUtils {
 	}
 	
 	/*
+	 * returns the current coffee count of the user (today) or an empty Optional if there is
+	 * no counter for this user
+	 */
+	public Optional<Integer> DBGetTodayCofeeCups() {
+		return DBGetDateCofeeCups(getDate());
+	}
+	
+	/*
 	 * add "added_cigarettes" cigarettes to user counter where added_cigarettes is a given
 	 * integer parameter
 	 */
@@ -356,7 +380,7 @@ public class DBUtils {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
 				.child("Cigarettes");
 		final Integer updatedCount = Integer
-				.valueOf(added_cigarettes.intValue() + DBGetCigarettesCount().orElse(Integer.valueOf(0)).intValue());
+				.valueOf(added_cigarettes.intValue() + DBGetTodayCigarettesCount().orElse(Integer.valueOf(0)).intValue());
 		try {
 			dbRef.setValueAsync(updatedCount).get();
 		} catch (ExecutionException | InterruptedException e) {
@@ -366,11 +390,11 @@ public class DBUtils {
 	}
 
 	/*
-	 * returns the current cigarettes count of the user or an empty Optional if there is
+	 * returns the current cigarettes count of the user at given date or an empty Optional if there is
 	 * no counter for this user
 	 */
-	public Optional<Integer> DBGetCigarettesCount() {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+	public Optional<Integer> DBGetDateCigarettesCount(String date) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(date)
 				.child("Cigarettes");
 		final List<Integer> SmokeCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -400,6 +424,14 @@ public class DBUtils {
 	}
 	
 	/*
+	 * returns the current cigarettes count of the user (today) or an empty Optional if there is
+	 * no counter for this user
+	 */
+	public Optional<Integer> DBGetTodayCigarettesCount() {
+		return DBGetDateCigarettesCount(getDate());
+	}
+	
+	/*
 	 * Pushes a given alcohol to user Alcohol directory.
 	 */
 	public void DBPushAlcohol(final Portion p) {
@@ -417,8 +449,16 @@ public class DBUtils {
 	 * returns the user's portion list (with their keys) if the user's Alcohol
 	 * directory is empty it returns empty list
 	 */
-	public List<Pair<String, Portion>> DBGetAlcoholList() {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+	public List<Pair<String, Portion>> DBGetTodayAlcoholList() {
+		return DBGetDateAlcoholList(getDate());
+	}
+	
+	/*
+	 * returns the user's portion list (with their keys) if the user's Alcohol
+	 * directory is empty it returns empty list
+	 */
+	public List<Pair<String, Portion>> DBGetDateAlcoholList(String date) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(date)
 				.child("Alcohol");
 		final List<Pair<String, Portion>> portionList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -444,6 +484,61 @@ public class DBUtils {
 		}
 		return portionList;
 	}
+	
+	/*
+	 * Pushes a given measure to user Blood Pressure directory.
+	 */
+	public void DBPushBloodPressureMeasure(final BloodPressure p) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("BloodPressure");
+		try {
+			if (dbRef != null)
+				dbRef.push().setValueAsync(p).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
 
+	/*
+	 * returns the user's blood pressure measure list (with their keys) if the user's blood pressure
+	 * directory is empty it returns empty list
+	 */
+	public List<Pair<String, BloodPressure>> DBGetTodayBloodPressureMeasuresList() {
+		return DBGetDateBloodPressureMeasuresList(getDate());
+	}
+	
+	/*
+	 * returns the user's blood pressure measure list (with their keys) if the user's blood pressure
+	 * directory is empty it returns empty list
+	 */
+	public List<Pair<String, BloodPressure>> DBGetDateBloodPressureMeasuresList(String date) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(date)
+				.child("BloodPressure");
+		final List<Pair<String, BloodPressure>> BloodpressureList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot portionSnapshot : s.getChildren())
+					BloodpressureList.add(new Pair<>(portionSnapshot.getKey(), portionSnapshot.getValue(BloodPressure.class)));
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e1.printStackTrace();
+		}
+		return BloodpressureList;
+	}
+
+	
 
 }
