@@ -2,6 +2,7 @@ package Utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +19,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.Portion.Type;
-
 /**
  *
  * @author ShalevKuba
@@ -29,6 +28,11 @@ public class DBUtils {
 
 	FirebaseDatabase database;
 	String user_mail;
+
+	private static String getDate() {
+		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
 
 	/*
 	 * database's Constructor. Creates a DBUtils instance for user_mail which is the
@@ -51,37 +55,17 @@ public class DBUtils {
 	}
 
 	/*
-	 * Pushes a given portion to user Food directory if this portion already exists,
-	 * this function only adds the given amount to the current portion's consumption
-	 * amount.
+	 * Pushes a given portion to user Food directory.
 	 */
 	public void DBPushFood(final Portion p) {
-		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Food");
-		final String added_food = p.getName();
-		final List<Pair<String, Portion>> portionList = this.DBGetFoodList();
-		boolean updated = false;
-		for (final Pair<String, Portion> pair : portionList)
-			if (pair.getValue().getName().equals(added_food)) {
-				try {
-					dbRef.child(pair.getName()).setValueAsync(new Portion(Type.FOOD, added_food,
-							p.getAmount() + pair.getValue().getAmount(), pair.getValue().getCalories_per_100_grams(),
-							pair.getValue().getProteins_per_100_grams(), pair.getValue().getCarbs_per_100_grams(),
-							pair.getValue().getFats_per_100_grams())).get();
-					updated = true;
-				} catch (InterruptedException | ExecutionException e) {
-					// should not get here unless there is database error
-					e.printStackTrace();
-				}
-				break;
-			}
-		if (!updated)
-			try {
-				if (dbRef != null)
-					dbRef.push().setValueAsync(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
-							Integer.valueOf((int) p.getAmount()))).get();
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-			}
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Food");
+		try {
+			if (dbRef != null)
+				dbRef.push().setValueAsync(p).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -89,16 +73,15 @@ public class DBUtils {
 	 * directory is empty it returns empty list
 	 */
 	public List<Pair<String, Portion>> DBGetFoodList() {
-		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Food");
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Food");
 		final List<Pair<String, Portion>> portionList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
-
 			@Override
 			public void onDataChange(final DataSnapshot s) {
 				for (final DataSnapshot portionSnapshot : s.getChildren())
-					portionList.add(new Pair<>(portionSnapshot.getKey(),
-							portionSnapshot.getValue(Portion.class)));
+					portionList.add(new Pair<>(portionSnapshot.getKey(), portionSnapshot.getValue(Portion.class)));
 				done.countDown();
 			}
 
@@ -118,16 +101,40 @@ public class DBUtils {
 	}
 
 	/*
-	 * returns the stored portion object with the name food_name or null if it
-	 * doesn't exists
+	 * returns the stored portion object with the key food_key or null if it doesn't
+	 * exists
 	 */
-	public Portion DBGetFood(final String food_name) {
-		final List<Pair<String, Portion>> portionList = this.DBGetFoodList();
-		for (final Pair<String, Portion> pair : portionList)
-			if (pair.getValue().getName().equals(food_name))
-				return pair.getValue();
+	public Portion DBGetFoodByKey(final String food_key) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Food").child(food_key);
+		final List<Portion> portionList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		if (dbRef != null) {
+			dbRef.addValueEventListener(new ValueEventListener() {
+				@Override
+				public void onDataChange(final DataSnapshot s) {
+					portionList.add(s.getValue(Portion.class));
+					done.countDown();
+				}
+
+				@Override
+				public void onCancelled(final DatabaseError e) {
+					System.out.println("The read failed: " + e.getCode());
+				}
+			});
+			try {
+				done.await();
+			} catch (final InterruptedException e1) {
+				// should not get here, if it does, it is database error- nothing we can do
+				e1.printStackTrace();
+			}
+		}
+
+		if (!portionList.isEmpty())
+			return portionList.get(0);
 		return null;
 	}
+	
 
 	/*
 	 * add "added_cups" water cups to user counter where added_cups is a given

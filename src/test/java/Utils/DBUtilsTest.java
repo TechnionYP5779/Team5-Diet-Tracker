@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -35,39 +36,30 @@ public class DBUtilsTest {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
-		assertNull(db.DBGetFood("banana"));
+		assertNull(db.DBGetFoodByKey("123"));
 		assert db.DBGetFoodList().isEmpty();
 		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Integer.valueOf(52)));
-		Portion p = db.DBGetFood("banana");
+		Portion p = db.DBGetFoodByKey(db.DBGetFoodList().get(0).getName());
 		assertNotNull(p);
 		assertEquals("banana", p.getName());
 		assertEquals(Integer.valueOf(52), Integer.valueOf((int) p.getAmount()));
+		
 		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Integer.valueOf(48)));
-		p = db.DBGetFood("banana");
+		List<Pair<String, Portion>> portionList=db.DBGetFoodList();
+		p = db.DBGetFoodByKey(portionList.get(0).getName());
 		assertNotNull(p);
 		assertEquals("banana", p.getName());
-		assertEquals(Integer.valueOf(100), Integer.valueOf((int) p.getAmount()));
-		p = db.DBGetFood("avocado");
+		p = db.DBGetFoodByKey(portionList.get(1).getName());
+		assertNotNull(p);
+		assertEquals("banana", p.getName());
+		p = db.DBGetFoodByKey("avocado");
 		assertNull(p);
 		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("avocado", Type.FOOD, Integer.valueOf(48)));
-		p = db.DBGetFood("avocado");
-		assertNotNull(p);
-		assertEquals("avocado", p.getName());
-		assertEquals(Integer.valueOf(48), Integer.valueOf((int) p.getAmount()));
-
-		final List<Pair<String, Portion>> portionList = db.DBGetFoodList();
-		assertEquals(2, portionList.size());
-
-		assert portionList.get(0).getName() != null && portionList.get(0).getName().length() > 0
-				&& portionList.get(1).getName() != null && portionList.get(1).getName().length() > 0;
-		final Portion p1 = portionList.get(0).getValue();
-		final Portion p2 = portionList.get(1).getValue();
-
-		final Portion p_banana = "banana".equals(p1.getName()) ? p1 : p2;
-		final Portion p_avocado = "avocado".equals(p1.getName()) ? p1 : p2;
-		assertEquals(Integer.valueOf(48), Integer.valueOf((int) p_avocado.getAmount()));
-		assertEquals(Integer.valueOf(100), Integer.valueOf((int) p_banana.getAmount()));
-
+		portionList=db.DBGetFoodList();
+		assertEquals(1, portionList.stream().filter(s->s.getValue().getName().contains("avocado")).count());
+		assertEquals(Integer.valueOf(48), Integer.valueOf((int) portionList.stream().filter(s->s.getValue().getName().contains("avocado")).
+				collect(Collectors.toList()).get(0).getValue().getAmount()));
+		assertEquals(3, portionList.size());
 		db.DBUtilsRemoveUserDirectory();
 	}
 

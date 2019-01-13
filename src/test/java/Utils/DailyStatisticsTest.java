@@ -5,9 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import Utils.Portion.Type;
-
+@SuppressWarnings("static-method")
 public class DailyStatisticsTest {
 
+	
 	@Test
 	public void testCalculateDailyNutritions() {
 		DailyStatistics ds = new DailyStatistics();

@@ -2,7 +2,6 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,14 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import GraphsMaker.simpleGraph;
 import Utils.DailyInfo;
-import Utils.DailyStatistics;
 import Utils.EmailSender;
-import Utils.Portion;
-import Utils.UserInfo;
-import Utils.WeeklyStatistics;
-
+@SuppressWarnings("static-method")
 public class WeightProgressIntentHandler implements RequestHandler {
 
 	String UserMail;
@@ -54,6 +48,7 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
 
+	
 	private void openDatabase() {
 		try {
 			FileInputStream serviceAccount;
@@ -111,8 +106,8 @@ public class WeightProgressIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
-		ArrayList<Calendar> dts=new ArrayList();
-		ArrayList<Integer> wts=new ArrayList();
+		ArrayList<Calendar> dts=new ArrayList<>();
+		ArrayList<Integer> wts=new ArrayList<>();
 		String s="";
 		try {
 		getUserInfo(i);
@@ -123,7 +118,7 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		for (int day = 0; day < MAX_DAYS; ++day) {
 			w=getWeightByDate(dates[day]);
 			if(w!=-1) {
-				wts.add(w);
+				wts.add(Integer.valueOf(w));
 				Calendar c=Calendar.getInstance();
 				c.add(Calendar.DAY_OF_YEAR, -MAX_DAYS+day);
 				dts.add(c);

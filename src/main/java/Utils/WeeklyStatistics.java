@@ -11,8 +11,9 @@ public class WeeklyStatistics {
 	public String weeklyFats = "0.0";
 	public String weeklyWaterCups = "0";
 	public String weeklyCiggaretsSmoked = "0";
-
+	@SuppressWarnings("boxing")
 	public void calculateWeeklyData() {
+		
 		Double calories = 0.0;
 		Double proteins = 0.0;
 		Double carbs = 0.0;

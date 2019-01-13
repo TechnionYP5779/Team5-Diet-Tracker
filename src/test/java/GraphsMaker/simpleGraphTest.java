@@ -1,46 +1,28 @@
 package GraphsMaker;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
 import org.junit.Test;
-
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import Utils.DailyInfo;
-
+@SuppressWarnings("static-method")
 public class simpleGraphTest {
 
+	
 	@Test
 	public void test() {
 		simpleGraph g=new simpleGraph();
-		ArrayList<Calendar> dates=new ArrayList();
-		ArrayList<Integer> weights=new ArrayList();
+		ArrayList<Calendar> dates=new ArrayList<>();
+		ArrayList<Integer> weights=new ArrayList<>();
 		
 		for(int i=0;i<7;i++) {
 			Calendar c=Calendar.getInstance();
 			c.add(Calendar.DAY_OF_YEAR, -i);
 			dates.add(c);
-			weights.add(70-i);
+			weights.add(Integer.valueOf(70-i));
 		}
 		Calendar c=Calendar.getInstance();
 		c.add(Calendar.DAY_OF_YEAR, -12);
 		dates.add(c);
-		weights.add(60);
+		weights.add(Integer.valueOf(60));
 		g.setDates(dates).setWeights(weights).make().save(800, 300, "test");
 		//g.delete(); // set as command if needed
 	}

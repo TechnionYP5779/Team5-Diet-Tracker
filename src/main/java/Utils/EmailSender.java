@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -20,7 +18,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 import GraphsMaker.simpleGraph;
-
+@SuppressWarnings("static-method")
 public class EmailSender {
 
 	final String username;
@@ -66,6 +64,7 @@ public class EmailSender {
 		}
 	}
 
+	@SuppressWarnings("boxing")
 	public void designedDailyStatisticsEmail(final String subject, final String toMail, final String name,
 			DailyStatistics s) {
 		String messegeText = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
@@ -116,6 +115,7 @@ public class EmailSender {
 			throw new RuntimeException(e);
 		}
 	}
+	
 	
 	private String[] getDates() {
 		String[] dates = new String[7];

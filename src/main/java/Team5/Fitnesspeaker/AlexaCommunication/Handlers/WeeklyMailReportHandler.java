@@ -26,13 +26,14 @@ import Utils.DailyStatistics;
 import Utils.EmailSender;
 import Utils.Portion;
 import Utils.WeeklyStatistics;
-
+@SuppressWarnings("static-method")
 public class WeeklyMailReportHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;
 	WeeklyStatistics weeklyStatistics = new WeeklyStatistics();
 
+	
 	private String[] getDates() {
 		String[] dates = new String[7];
 		Calendar weekDay = Calendar.getInstance();
