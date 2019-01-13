@@ -141,7 +141,7 @@ public class DBUtils {
 	 * integer parameter
 	 */
 	public void DBAddWaterCups(final Integer added_cups) {
-		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate()).child("Drink");
 		final Integer updatedCount = Integer
 				.valueOf(added_cups.intValue() + DBGetWaterCups().orElse(Integer.valueOf(0)).intValue());
 		try {
@@ -157,7 +157,7 @@ public class DBUtils {
 	 * no counter for this user
 	 */
 	public Optional<Integer> DBGetWaterCups() {
-		final DatabaseReference dbRef = this.database.getReference().child(this.user_mail).child("Drink");
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate()).child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
