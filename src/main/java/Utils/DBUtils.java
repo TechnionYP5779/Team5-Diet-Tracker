@@ -296,6 +296,108 @@ public class DBUtils {
 			return null;
 		return user_info.get(0);
 	}
+	
+	/*
+	 * add "added_cups" coffee cups to user counter where added_cups is a given
+	 * integer parameter
+	 */
+	public void DBAddCoffeeCups(final Integer added_cups) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Coffee");
+		final Integer updatedCount = Integer
+				.valueOf(added_cups.intValue() + DBGetCofeeCups().orElse(Integer.valueOf(0)).intValue());
+		try {
+			dbRef.setValueAsync(updatedCount).get();
+		} catch (ExecutionException | InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * returns the current coffee count of the user or an empty Optional if there is
+	 * no counter for this user
+	 */
+	public Optional<Integer> DBGetCofeeCups() {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Coffee");
+		final List<Integer> DrinkCount = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				final Integer count = s.getValue(Integer.class);
+				if (count != null)
+					DrinkCount.add(count);
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+		if (DrinkCount.isEmpty())
+			return Optional.empty();
+		return Optional.ofNullable(DrinkCount.get(0));
+	}
+	
+	/*
+	 * add "added_cigarettes" cigarettes to user counter where added_cigarettes is a given
+	 * integer parameter
+	 */
+	public void DBAddCigarettes(final Integer added_cigarettes) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Cigarettes");
+		final Integer updatedCount = Integer
+				.valueOf(added_cigarettes.intValue() + DBGetCigarettesCount().orElse(Integer.valueOf(0)).intValue());
+		try {
+			dbRef.setValueAsync(updatedCount).get();
+		} catch (ExecutionException | InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * returns the current cigarettes count of the user or an empty Optional if there is
+	 * no counter for this user
+	 */
+	public Optional<Integer> DBGetCigarettesCount() {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Cigarettes");
+		final List<Integer> SmokeCount = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				final Integer count = s.getValue(Integer.class);
+				if (count != null)
+					SmokeCount.add(count);
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+		if (SmokeCount.isEmpty())
+			return Optional.empty();
+		return Optional.ofNullable(SmokeCount.get(0));
+	}
 
 
 }

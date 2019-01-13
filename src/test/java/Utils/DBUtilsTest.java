@@ -31,6 +31,36 @@ public class DBUtilsTest {
 		assertEquals(Integer.valueOf(20), db.DBGetWaterCups().orElse(null));
 		db.DBUtilsRemoveUserDirectory();
 	}
+	
+	@Test
+	public void testCoffeeDrinkHandling() {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		assertNull(db.DBGetCofeeCups().orElse(null));
+		db.DBAddCoffeeCups(Integer.valueOf(5));
+		assertEquals(Integer.valueOf(5), db.DBGetCofeeCups().orElse(null));
+		db.DBAddCoffeeCups(Integer.valueOf(7));
+		assertEquals(Integer.valueOf(12), db.DBGetCofeeCups().orElse(null));
+		db.DBAddCoffeeCups(Integer.valueOf(8));
+		assertEquals(Integer.valueOf(20), db.DBGetCofeeCups().orElse(null));
+		db.DBUtilsRemoveUserDirectory();
+	}
+	
+	@Test
+	public void testCigarettesHandling() {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		assertNull(db.DBGetCigarettesCount().orElse(null));
+		db.DBAddCigarettes(Integer.valueOf(5));
+		assertEquals(Integer.valueOf(5), db.DBGetCigarettesCount().orElse(null));
+		db.DBAddCigarettes(Integer.valueOf(7));
+		assertEquals(Integer.valueOf(12), db.DBGetCigarettesCount().orElse(null));
+		db.DBAddCigarettes(Integer.valueOf(8));
+		assertEquals(Integer.valueOf(20), db.DBGetCigarettesCount().orElse(null));
+		db.DBUtilsRemoveUserDirectory();
+	}
 
 	@Test
 	public void testFoodHandling() {
