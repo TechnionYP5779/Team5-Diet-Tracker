@@ -465,8 +465,8 @@ public class DBUtils {
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot portionSnapshot : s.getChildren())
-					portionList.add(new Pair<>(portionSnapshot.getKey(), portionSnapshot.getValue(Portion.class)));
+				for (final DataSnapshot Snapshot : s.getChildren())
+					portionList.add(new Pair<>(Snapshot.getKey(), Snapshot.getValue(Portion.class)));
 				done.countDown();
 			}
 
@@ -519,8 +519,8 @@ public class DBUtils {
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot portionSnapshot : s.getChildren())
-					BloodpressureList.add(new Pair<>(portionSnapshot.getKey(), portionSnapshot.getValue(BloodPressure.class)));
+				for (final DataSnapshot Snapshot : s.getChildren())
+					BloodpressureList.add(new Pair<>(Snapshot.getKey(), Snapshot.getValue(BloodPressure.class)));
 				done.countDown();
 			}
 
@@ -537,6 +537,36 @@ public class DBUtils {
 			e1.printStackTrace();
 		}
 		return BloodpressureList;
+	}
+	
+	/*
+	 * Get the User day List
+	 */
+	public List<String> DBGetDates() {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates");
+		final List<String> dayList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot Snapshot : s.getChildren())
+					dayList.add(Snapshot.getKey());
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e1.printStackTrace();
+		}
+		return dayList;
 	}
 
 	

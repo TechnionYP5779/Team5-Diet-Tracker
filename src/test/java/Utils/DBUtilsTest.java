@@ -196,8 +196,6 @@ public class DBUtilsTest {
 		assertEquals(Long.valueOf(1), Long.valueOf( bloodPressureList.stream().filter(f->f.getValue().getSystolic().equals(Integer.valueOf(120))).count()));
 		assertEquals(Long.valueOf(1), Long.valueOf( bloodPressureList.stream().filter(f->f.getValue().getSystolic().equals(Integer.valueOf(150))).count()));
 		db.DBUtilsRemoveUserDirectory();
-	}
-	
-	
+	}	
 
 }
