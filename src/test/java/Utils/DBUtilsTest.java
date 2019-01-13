@@ -62,5 +62,28 @@ public class DBUtilsTest {
 		assertEquals(3, portionList.size());
 		db.DBUtilsRemoveUserDirectory();
 	}
+	
+	@Test
+	public void testDailyInfo() {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		
+		assertNull(db.DBGetTodayDailyInfo());
+		db.DBUpdateTodayDailyInfo(new DailyInfo(52.5,1000.0,2,100.0));
+		assertNotNull(db.DBGetTodayDailyInfo());
+		assertEquals(Double.valueOf(52.5), Double.valueOf(db.DBGetTodayDailyInfo().getWeight()));
+		assertEquals(Double.valueOf(1000), Double.valueOf(db.DBGetTodayDailyInfo().getDailyCalories()));
+		assertEquals(Double.valueOf(2), Double.valueOf(db.DBGetTodayDailyInfo().getDailyLitresOfWater()));
+		assertEquals(Double.valueOf(100), Double.valueOf(db.DBGetTodayDailyInfo().getDailyProteinGrams()));
+		
+		assertNull(db.DBGetDateDailyInfo("27-Dec-2018"));
+		assertNotNull(db.DBGetDateDailyInfo("13-Jan-2019"));
+		assertEquals(Double.valueOf(52.5), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getWeight()));
+		assertEquals(Double.valueOf(1000), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyCalories()));
+		assertEquals(Double.valueOf(2), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyLitresOfWater()));
+		assertEquals(Double.valueOf(100), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyProteinGrams()));
+		db.DBUtilsRemoveUserDirectory();
+	}
 
 }

@@ -51,7 +51,7 @@ public class DBUtils {
 				e.printStackTrace();
 		}
 		database = FirebaseDatabase.getInstance();
-		this.user_mail = String.valueOf(user_mail);
+		this.user_mail = String.valueOf(user_mail).replace(".", "_dot_");
 	}
 
 	/*
@@ -134,14 +134,14 @@ public class DBUtils {
 			return portionList.get(0);
 		return null;
 	}
-	
 
 	/*
 	 * add "added_cups" water cups to user counter where added_cups is a given
 	 * integer parameter
 	 */
 	public void DBAddWaterCups(final Integer added_cups) {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate()).child("Drink");
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Drink");
 		final Integer updatedCount = Integer
 				.valueOf(added_cups.intValue() + DBGetWaterCups().orElse(Integer.valueOf(0)).intValue());
 		try {
@@ -157,7 +157,8 @@ public class DBUtils {
 	 * no counter for this user
 	 */
 	public Optional<Integer> DBGetWaterCups() {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate()).child("Drink");
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(getDate())
+				.child("Drink");
 		final List<Integer> DrinkCount = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
@@ -194,6 +195,64 @@ public class DBUtils {
 		} catch (ExecutionException | InterruptedException e) {
 			// should not happen
 		}
+	}
+
+	/*
+	 * update dailyInfo of current day to the given object
+	 */
+	public void DBUpdateTodayDailyInfo(final DailyInfo daily_info) {
+		DBUpdateDateDailyInfo(daily_info, getDate());
+	}
+
+	/*
+	 * update dailyInfo of given day to the given object
+	 */
+	public void DBUpdateDateDailyInfo(final DailyInfo daily_info, final String day) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(day)
+				.child("Daily-Info");
+		try {
+			dbRef.setValueAsync(daily_info).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * returns dailyInfo of current day
+	 */
+	public DailyInfo DBGetTodayDailyInfo() {
+		return DBGetDateDailyInfo(getDate());
+	}
+
+	/*
+	 * returns dailyInfo of given day
+	 */
+	public DailyInfo DBGetDateDailyInfo(final String day) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("Dates").child(day)
+				.child("Daily-Info");
+		final List<DailyInfo> daily_info = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				daily_info.add(s.getValue(DailyInfo.class));
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+		if (daily_info.isEmpty())
+			return null;
+		return daily_info.get(0);
 	}
 
 }
