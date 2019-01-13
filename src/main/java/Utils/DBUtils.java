@@ -254,5 +254,48 @@ public class DBUtils {
 			return null;
 		return daily_info.get(0);
 	}
+	
+	/*
+	 * update UserInfo of to the given object
+	 */
+	public void DBUpdateUserInfo(final UserInfo user_info) {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("User-Info");
+		try {
+			dbRef.setValueAsync(user_info).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * returns UserInfo
+	 */
+	public UserInfo DBGetUserInfo() {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("User-Info");
+		final List<UserInfo> user_info = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				user_info.add(s.getValue(UserInfo.class));
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			e.printStackTrace();
+		}
+		if (user_info.isEmpty())
+			return null;
+		return user_info.get(0);
+	}
+
 
 }

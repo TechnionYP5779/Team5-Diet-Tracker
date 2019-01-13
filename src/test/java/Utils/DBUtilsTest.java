@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.amazon.ask.model.services.Pair;
 
 import Utils.Portion.Type;
+import Utils.UserInfo.Gender;
 
 @SuppressWarnings("static-method")
 public class DBUtilsTest {
@@ -83,6 +84,48 @@ public class DBUtilsTest {
 		assertEquals(Double.valueOf(1000), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyCalories()));
 		assertEquals(Double.valueOf(2), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyLitresOfWater()));
 		assertEquals(Double.valueOf(100), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyProteinGrams()));
+		
+		db.DBUpdateTodayDailyInfo(new DailyInfo(53.0,1000.0,2,100.0));
+		
+		assertNull(db.DBGetDateDailyInfo("27-Dec-2018"));
+		assertNotNull(db.DBGetDateDailyInfo("13-Jan-2019"));
+		assertEquals(Double.valueOf(53), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getWeight()));
+		assertEquals(Double.valueOf(1000), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyCalories()));
+		assertEquals(Double.valueOf(2), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyLitresOfWater()));
+		assertEquals(Double.valueOf(100), Double.valueOf(db.DBGetDateDailyInfo("13-Jan-2019").getDailyProteinGrams()));
+		db.DBUtilsRemoveUserDirectory();
+	}
+	
+	@Test
+	public void testUserInfo() {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		
+		assertNull(db.DBGetUserInfo());
+		db.DBUpdateUserInfo(new UserInfo(Gender.MALE, 22, 180, 2000, 120, 60, 5, 0));
+		assertNotNull(db.DBGetUserInfo());
+		assertEquals(Gender.MALE, db.DBGetUserInfo().getGender());
+		assertEquals( Integer.valueOf(22), Integer.valueOf(db.DBGetUserInfo().getAge()));
+		assertEquals( Integer.valueOf(180), Integer.valueOf(db.DBGetUserInfo().getHeight()));
+		assertEquals( Double.valueOf(2000), Double.valueOf(db.DBGetUserInfo().getDailyCaloriesGoal()));
+		assertEquals( Double.valueOf(60), Double.valueOf(db.DBGetUserInfo().getDailyCarbsGoal()));
+		assertEquals( Double.valueOf(120), Double.valueOf(db.DBGetUserInfo().getDailyProteinGramsGoal()));
+		assertEquals( Double.valueOf(5), Double.valueOf(db.DBGetUserInfo().getDailyFatsGoal()));
+		assertEquals( Double.valueOf(0), Double.valueOf(db.DBGetUserInfo().getDailyLimitCigarettes()));
+		
+		db.DBUpdateUserInfo(new UserInfo(Gender.MALE, 22, 180, 1500, 120, 60, 5, 0));
+		assertNotNull(db.DBGetUserInfo());
+		assertEquals(Gender.MALE, db.DBGetUserInfo().getGender());
+		assertEquals( Integer.valueOf(22), Integer.valueOf(db.DBGetUserInfo().getAge()));
+		assertEquals( Integer.valueOf(180), Integer.valueOf(db.DBGetUserInfo().getHeight()));
+		assertEquals( Double.valueOf(1500), Double.valueOf(db.DBGetUserInfo().getDailyCaloriesGoal()));
+		assertEquals( Double.valueOf(60), Double.valueOf(db.DBGetUserInfo().getDailyCarbsGoal()));
+		assertEquals( Double.valueOf(120), Double.valueOf(db.DBGetUserInfo().getDailyProteinGramsGoal()));
+		assertEquals( Double.valueOf(5), Double.valueOf(db.DBGetUserInfo().getDailyFatsGoal()));
+		assertEquals( Double.valueOf(0), Double.valueOf(db.DBGetUserInfo().getDailyLimitCigarettes()));
+		
+		
 		db.DBUtilsRemoveUserDirectory();
 	}
 
