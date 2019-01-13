@@ -2,32 +2,20 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import Utils.BloodPressure;
+import Utils.DBUtils;
+import Utils.DBUtils.DBException;
 
 public class AddBloodPressureIntentHandler implements RequestHandler{
-	public static final String NUMBER_SLOT = "Number";
-	public static final String NUMBER_SLOT2 = "NumberTwo";
-	
-	public static String getDate()  {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
+	public static final String SYSTOLIC = "Number";
+	public static final String DIASTOLIC = "NumberTwo";
 	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -36,50 +24,39 @@ public class AddBloodPressureIntentHandler implements RequestHandler{
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
+		final Slot systolicSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(SYSTOLIC);
 		
-		final Slot NumberSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT2);
+		final Slot diastolicSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(DIASTOLIC);
+		if(systolicSlot==null||diastolicSlot==null) 
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "there was a problem with the blood pressure's logging, Please tell me again").
+					withSpeech("there was a problem with the blood pressure's logging, Please tell me again")
+				.withReprompt("there was a problem with the blood pressure's logging, Please tell me again").withShouldEndSession(Boolean.FALSE).build();
 		
-		String speechText = "", repromptText;
+		Integer systolic = Integer.valueOf(Integer.parseInt(systolicSlot.getValue()));
+		Integer diastolic = Integer.valueOf(Integer.parseInt(diastolicSlot.getValue()));
+		String speechText , repromptText="";
 		
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		DatabaseReference dbRef = null;
+		//initialize database object with the user mail
+		DBUtils db=new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
+		
+		//log the new blood pressure measure
 		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				speechText += e1.getMessage() + " ";// its ok
-			}
-			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("BloodPressure");
-		} catch (final Exception e) {
-			speechText += e.getMessage() + " ";// its ok
-		}
+			db.DBPushBloodPressureMeasure(new BloodPressure(systolic,diastolic,new Date()));
 
-	
-			Integer systolic = Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
-			Integer diastolic = Integer.valueOf(Integer.parseInt(NumberSlot2.getValue()));
-			try {
-				dbRef.push().setValueAsync(new BloodPressure(systolic,diastolic,new Date())).get();
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			} catch (final ExecutionException e) {
-				e.printStackTrace();
-			}
-			
-			speechText = String.format("blood pressure's measure was logged successfully");
-			repromptText = "I'll repeat, blood pressure's measure was logged successfully";
+		} catch (DBException e) {
+			speechText = String.format("There was a problem with the blood pressure's logging, Please tell me again");
+			repromptText = String.format("I'll repeat, there was a problem with the blood pressure's logging, Please tell me again");
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+		}
 		
+		speechText = String.format("blood pressure's measure was logged successfully");
+		
+		//the Boolean.TRUE says that the Alexa will end the session 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+				.withReprompt(repromptText).withShouldEndSession(Boolean.TRUE).build();
 	}
 
 }

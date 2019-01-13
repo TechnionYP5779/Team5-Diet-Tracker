@@ -1,9 +1,7 @@
 package GraphsMaker;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.TextTitle;
@@ -12,7 +10,6 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -22,7 +19,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+@SuppressWarnings("static-method")
 public class simpleGraph  { //extends JFrame
 
         JFreeChart chart;
@@ -74,7 +71,8 @@ public class simpleGraph  { //extends JFrame
             return dataset;
         }
 
-        private JFreeChart createChart(XYDataset d) {
+        
+		private JFreeChart createChart(XYDataset d) {
 
             JFreeChart chart = ChartFactory.createTimeSeriesChart(
                     "Weight per day",
@@ -121,7 +119,8 @@ public class simpleGraph  { //extends JFrame
             chart.draw(g2, new Rectangle2D.Double(0, 0, width, height));
             g2.dispose();
             // outputfile = new File(imageName+".jpg");
-            ByteArrayOutputStream baos=new ByteArrayOutputStream();
+            @SuppressWarnings("resource")
+			ByteArrayOutputStream baos=new ByteArrayOutputStream();
             try {
                 ImageIO.write(img, "jpg", baos);
             } catch (IOException e) {

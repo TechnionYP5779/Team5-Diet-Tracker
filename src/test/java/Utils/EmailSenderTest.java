@@ -8,7 +8,7 @@ import javax.mail.MessagingException;
 
 import org.junit.Test;
 import Utils.EmailSender;
-
+@SuppressWarnings("static-method")
 public class EmailSenderTest {
 
 	// checking there are no exceptions and that the mail is sent
@@ -51,17 +51,18 @@ public class EmailSenderTest {
 		new EmailSender().designedWeeklyStatisticsEmail("test3", "team5.yearlyproject@gmail.com", "Team", w);	
 	}
 	
+	
 	@Test
 	public void sendWeightStatistics() {
 		
-		ArrayList<Calendar> dates=new ArrayList();
-		ArrayList<Integer> weights=new ArrayList();
+		ArrayList<Calendar> dates=new ArrayList<>();
+		ArrayList<Integer> weights=new ArrayList<>();
 		
 		for(int i=0;i<7;i++) {
 			Calendar c=Calendar.getInstance();
 			c.add(Calendar.DAY_OF_YEAR, -i);
 			dates.add(c);
-			weights.add(70-i);
+			weights.add(Integer.valueOf(70-i));
 		}
 		
 		

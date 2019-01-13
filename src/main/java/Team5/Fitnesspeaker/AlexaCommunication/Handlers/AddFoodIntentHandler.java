@@ -10,43 +10,23 @@
 
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
-import static Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler.FOOD_SLOT;
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import Utils.Portion;
+import Utils.DBUtils;
+import Utils.DBUtils.DBException;
 import Utils.Portion.Type;
 import Utils.PortionRequestGen;
 
 public class AddFoodIntentHandler implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
-	
-	public static String getDate() {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
-	
+	public static final String AMOUNT_SLOT = "Number";
+	public static final String FOOD_SLOT = "Food";
+
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("AddFoodIntent"));
@@ -54,96 +34,49 @@ public class AddFoodIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		final Slot favoriteFoodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+		final Slot foodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(FOOD_SLOT);
+
+		final Slot AmountSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(AMOUNT_SLOT);
+
+		String speechText, repromptText="";
+
+		if (foodSlot == null) {
+			speechText = "I'm not sure what you ate. Please tell me again";
+			repromptText = "I will repeat, I'm not sure what you ate. Please tell me again";
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+		}
+
+		if (AmountSlot == null) {
+			speechText = "I'm not sure how much you ate. Please tell me again";
+			repromptText = "I will repeat, I'm not sure how much you ate. Please tell me again";
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+		}
+
+		Integer amountInGrams = Integer.valueOf(Integer.parseInt(AmountSlot.getValue()));
+		String added_food = foodSlot.getValue();
+
+		// initialize database object with the user mail
+		DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
 		
-		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
-		Integer grams=NumberSlot == null ? Integer.valueOf(100) : Integer.valueOf(Integer.parseInt(NumberSlot.getValue()));
-		String speechText = "", repromptText;
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		DatabaseReference dbRef = null;
+		//insert the portion to the DB
 		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				speechText += e1.getMessage() + " ";// its ok
-			}
-			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Food");
-		} catch (final Exception e) {
-			speechText += e.getMessage() + " ";// its ok
+			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD, amountInGrams));
+		} catch (DBException e) {
+			speechText = String.format("There was a problem with the portion logging, Please tell me again");
+			repromptText = String.format("I'll repeat, there was a problem with the portion logging,  Please tell me again");
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
+		
+		speechText = String.format("You logged %d grams of %s, bon appetit!", amountInGrams, added_food);
 
-		if (favoriteFoodSlot == null || favoriteFoodSlot.getResolutions() == null
-				|| !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_MATCH")
-						&& !favoriteFoodSlot.getResolutions().toString().contains("ER_SUCCESS_NO_MATCH")) {
-			speechText = "You have to provide a valid food. Please try again.";
-			repromptText = "I will repeat, I'm not sure what you ate. Please tell me what you ate, for example, i ate twenty grams of pasta.";
-		} else {
-			final String added_food = favoriteFoodSlot.getValue();
-			final List<Portion> FoodList = new LinkedList<>();
-			final List<String> FoodId = new LinkedList<>();
-			final CountDownLatch done = new CountDownLatch(1);
-			dbRef.addValueEventListener(new ValueEventListener() {
-				@Override
-				public void onDataChange(final DataSnapshot s) {
-					for (final DataSnapshot portionSnapshot : s.getChildren()) {
-						final Portion portion = portionSnapshot.getValue(Portion.class);
-						if (portion.getName().equals(added_food)) {
-							FoodList.add(portion);
-							FoodId.add(portionSnapshot.getKey());
-
-						}
-
-					}
-					done.countDown();
-				}
-
-				@Override
-				public void onCancelled(final DatabaseError e) {
-					System.out.println("The read failed: " + e.getCode());
-				}
-			});
-			try {
-				done.await();
-			} catch (final InterruptedException e) {
-				// TODO Auto-generated catch block
-			}
-
-			if (FoodList.isEmpty())
-				try {
-					if (dbRef != null)
-						dbRef.push().setValueAsync(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,grams)).get();
-				} catch (InterruptedException | ExecutionException e) {
-					speechText += e.getMessage() + " ";
-				}
-			else
-				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates").child(getDate()).child("Food").child(FoodId.get(0))
-							.setValueAsync(new Portion(Type.FOOD, added_food,Double.valueOf(grams.intValue()).doubleValue() + FoodList.get(0).getAmount(),
-									FoodList.get(0).getCalories_per_100_grams(),
-									FoodList.get(0).getProteins_per_100_grams(),
-									FoodList.get(0).getCarbs_per_100_grams(), FoodList.get(0).getFats_per_100_grams()))
-							.get();
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
-				} catch (final ExecutionException e) {
-					e.printStackTrace();
-				}
-			speechText = String.format("you added %s, You can ask me what you have eaten so far saying, what did i eat?",
-					added_food);
-			repromptText = "You can ask me what you have eaten so far saying, what did i eat?";
-		}
-
+		//the Boolean.TRUE says that the Alexa will end the session 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+				.withReprompt(repromptText).withShouldEndSession(Boolean.TRUE).build();
 	}
 
 }

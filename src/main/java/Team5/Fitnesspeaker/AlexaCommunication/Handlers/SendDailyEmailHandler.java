@@ -24,13 +24,14 @@ import java.util.concurrent.CountDownLatch;
 import Utils.DailyStatistics;
 import Utils.EmailSender;
 import Utils.Portion;
-
+@SuppressWarnings("static-method")
 public class SendDailyEmailHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;
 	DailyStatistics dailyStatistics = new DailyStatistics();
 
+	
 	private String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
