@@ -111,7 +111,6 @@ public class DBUtilsTest {
 		assertEquals(Double.valueOf(100), Double.valueOf(db.DBGetTodayDailyInfo().getDailyProteinGrams()));
 		
 		assertNull(db.DBGetDateDailyInfo("27-Dec-2018"));
-		assertNotNull(db.DBGetDateDailyInfo("13-Jan-2019"));
 
 		db.DBUpdateTodayDailyInfo(new DailyInfo(53.0,1000.0,2,100.0));
 		
