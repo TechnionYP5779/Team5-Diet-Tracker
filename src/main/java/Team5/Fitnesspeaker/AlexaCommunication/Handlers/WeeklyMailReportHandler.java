@@ -2,38 +2,30 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-
+import java.util.stream.Collectors;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import com.amazon.ask.model.services.Pair;
+import Utils.DBUtils;
 import Utils.DailyStatistics;
 import Utils.EmailSender;
 import Utils.Portion;
 import Utils.WeeklyStatistics;
+import Utils.DBUtils.DBException;
+
 @SuppressWarnings("static-method")
 public class WeeklyMailReportHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;
 	WeeklyStatistics weeklyStatistics = new WeeklyStatistics();
+	DBUtils db;
 
-	
 	private String[] getDates() {
 		String[] dates = new String[7];
 		Calendar weekDay = Calendar.getInstance();
@@ -52,109 +44,45 @@ public class WeeklyMailReportHandler implements RequestHandler {
 	}
 
 	private void openDatabase() {
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				// empty block
-
-			}
-		} catch (final Exception e) {
-			// empty block
-		}
+		db = new DBUtils(this.UserMail);
 	}
 
 	private String getDrinkInfo(String date) {
-		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
-				.child("Dates").child(date).child("Drink");
-		final List<Integer> DrinkCount = new LinkedList<>();
-		final CountDownLatch doneDrink = new CountDownLatch(1);
-		dbRefDrink.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
-				doneDrink.countDown();
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
+		Optional<Integer> drinks = Optional.empty();
 		try {
-			doneDrink.await();
-		} catch (final InterruptedException e) {
-			// empty block
+			drinks = this.db.DBGetDateWaterCups(date);
+		} catch (DBException e1) {
+			// e1.printStackTrace();
 		}
 
-		if (DrinkCount.isEmpty())
+		if (!drinks.isPresent())
 			return "0";
 		else
-			return DrinkCount.get(0).toString();
+			return drinks.get().toString();
 	}
 
 	private List<Portion> getFoodInfo(String date) {
-		final DatabaseReference dbRefFood = FirebaseDatabase.getInstance().getReference().child(UserMail).child("Dates")
-				.child(date).child("Food");
-		final List<Portion> FoodList = new ArrayList<>();
-		final CountDownLatch doneFood = new CountDownLatch(1);
-		dbRefFood.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot portionSnapshot : s.getChildren())
-					FoodList.add(portionSnapshot.getValue(Portion.class));
-				doneFood.countDown();
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
+		List<Pair<String, Portion>> foods = new ArrayList<Pair<String, Portion>>();
 		try {
-			doneFood.await();
-		} catch (final InterruptedException e) {
-			// empty block
+			foods = this.db.DBGetDateFoodList(date);
+		} catch (DBException e1) {
+			// e1.printStackTrace();
 		}
-		return FoodList;
+		return foods.stream().map(p -> p.getValue()).collect(Collectors.toList());
 	}
 
 	private String getCiggaretsInfo(String date) {
-		final DatabaseReference dbRefDrink = FirebaseDatabase.getInstance().getReference().child(UserMail)
-				.child("Dates").child(date).child("Cigarettes");
-		final List<Integer> ciggaretesCount = new LinkedList<>();
-		final CountDownLatch doneCiggaretes = new CountDownLatch(1);
-		dbRefDrink.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					ciggaretesCount.add(count);
-				doneCiggaretes.countDown();
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
+		Optional<Integer> cigs = Optional.empty();
 		try {
-			doneCiggaretes.await();
-		} catch (final InterruptedException e) {
-			// empty block
+			cigs = this.db.DBGetDateCigarettesCount(date);
+		} catch (DBException e1) {
+			// e1.printStackTrace();
 		}
 
-		if (ciggaretesCount.isEmpty())
+		if (!cigs.isPresent())
 			return "0";
 		else
-			return ciggaretesCount.get(0).toString();
+			return cigs.get().toString();
 	}
 
 	@Override
