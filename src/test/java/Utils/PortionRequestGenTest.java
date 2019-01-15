@@ -19,17 +19,19 @@ public class PortionRequestGenTest {
 //						+ "Nutritional Values per 100 grams:\nCalories: 346.0\nProteins: 3.89\n"
 //						+ "Carbohydrates: 88.28\nFats: 1.81");
 		/** this should pass through all options till it gets to the converter **/
-		String s1 = PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, Double.valueOf(50), "grams").toString();
+		Portion p = PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, Double.valueOf(50), "milligrams");
+		String s1 = p.toString();
 //		assert s1.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 //						+ "Nutritional Values per 100 grams:\nCalories: 44.5\nProteins: 0.545\n"
 //						+ "Carbohydrates: 11.42\nFats: 0.165\n");
 		contained.add("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
-						+ "Nutritional Values per 100 grams:\nCalories: 44.5\nProteins: 0.545\n"
-						+ "Carbohydrates: 11.42\nFats: 0.165\n");
+						+ "Nutritional Values per 100 grams:\nCalories: 89\nProteins: 1.09\n"
+						+ "Carbohydrates: 22.84\nFats: 0.33\n");
 //		System.out.println(s1);
 		strings.add(s1);
-		assert s1.contains("Nutritional Values per 100 grams:\nCalories: 44.5\nProteins: 0.545\n"
-				+ "Carbohydrates: 11.42\nFats: 0.165\n");
+		assert s1.contains("Nutritional Values per 100 grams:\nCalories: 89.0\nProteins: 1.09\n"
+				+ "Carbohydrates: 22.84\nFats: 0.33\n");
+		assert p.getAmount() == 0.05;
 		
 	}
 	
@@ -44,15 +46,16 @@ public class PortionRequestGenTest {
 				+ "Carbohydrates: 102.78\nFats: 1.48\n");
 		strings.add(s2);
 //		System.out.println(s2);
-		assert s2.contains("Nutritional Values per 100 grams:\nCalories: 400.5\nProteins: 4.905\n"
-				+ "Carbohydrates: 102.78\nFats: 1.485\n");
+		assert s2.contains("Nutritional Values per 100 grams:\nCalories: 89.0\nProteins: 1.09\n"
+				+ "Carbohydrates: 22.84\nFats: 0.33\n");
 
 	}
 	
 	@Test
 	public void test_cup2() {
 		/**this should return the value for cup of rice, as appears in the usda JSON*/
-		String s =  PortionRequestGen.generatePortionWithAmount("rice", Portion.Type.FOOD, Double.valueOf(2), "cups").toString();
+		Portion p = PortionRequestGen.generatePortionWithAmount("rice", Portion.Type.FOOD, Double.valueOf(2), "cups");
+		String s = p.toString();
 //		assert s2.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 //				+ "Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
 //				+ "Carbohydrates: 102.78\nFats: 1.48\n");
@@ -60,8 +63,9 @@ public class PortionRequestGenTest {
 //				+ "Carbohydrates: 102.78\nFats: 1.48\n");
 		strings.add(s);
 //		System.out.println(s);
-		assert s.contains("Nutritional Values per 100 grams:\nCalories: 1142.4\nProteins: 47.136\n"
-				+ "Carbohydrates: 239.68\nFats: 3.456\n");
+		assert s.contains("Nutritional Values per 100 grams:\nCalories: 357.0\nProteins: 14.73\n"
+				+ "Carbohydrates: 74.9\nFats: 1.08\n");
+		assert p.getAmount() == 320.0;
 
 	}
 	@Test 
@@ -74,8 +78,8 @@ public class PortionRequestGenTest {
 //				+ "Carbohydrates: 102.78\nFats: 1.48\n");
 		strings.add(s);
 //		System.out.println(s);
-		assert s.contains("Nutritional Values per 100 grams:\nCalories: 71.5\nProteins: 6.28\n"
-				+ "Carbohydrates: 0.36\nFats: 4.755\n");
+		assert s.contains("Nutritional Values per 100 grams:\nCalories: 143.0\nProteins: 12.56\n"
+				+ "Carbohydrates: 0.72\nFats: 9.51\n");
 
 	}
 	
