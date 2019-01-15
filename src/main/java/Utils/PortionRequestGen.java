@@ -58,17 +58,6 @@ public class PortionRequestGen {
 		return null;
 	}
 
-//	public static Portion generatePortionWithAmount(final String portion_name, final Portion.Type t,
-//			final Double amount, final String units) {
-//		try {
-//			final Portion p = PortionRequestGen.generatePortion(portion_name, t, amount, units);
-////			p.setAmount(amount.doubleValue());
-//			return p;
-//		} catch (final Exception e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
 
 	public static Portion generatePortionHandler(final String food_name, final Portion.Type t, final double amount, final String units) throws Exception {
 
@@ -76,10 +65,10 @@ public class PortionRequestGen {
 		 * first, try to search for "raw" portion: grains, fruits, vegetables...
 		 * if this returns a valid JSON object, then search for the wanted amount and get its values
 		 */
-		String raw_food_name = food_name + ", raw";
-		JSONObject portion_search = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + raw_food_name.replace(' ', '_')
+		String raw_food_name = food_name + " raw";
+		String raw_food_suffix = "raw "+food_name;
+		JSONObject portion_search = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + raw_food_name.replace(" ", "%20")
 		+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
-//		System.out.println("before check errors");
 		/** if no errors occurred, then we have the raw portion */
 		if(!portion_search.has("errors")) {
 //			System.out.println("no errors, it's raw");
@@ -87,13 +76,25 @@ public class PortionRequestGen {
 			
 		}
 			
-		/** otherwise, there isn't a "raw" version of the wanted portion. look for it regularly**/
 		else {
-			System.out.println("it's not raw.. check regular");
-		
+//			System.out.println("it's not raw.. check regular");
+			portion_search = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + raw_food_suffix.replace(" ","%20")
+			+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
+			System.out.println("https://api.nal.usda.gov/ndb/search/?format=json&q=" + raw_food_suffix.replace(' ', '_')
+			+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
+			/** if no errors occurred, then we have the raw portion in second search */
+			if(!portion_search.has("errors")) {
+				System.out.println("no errors, it's raw");
+				return queryItem(portion_search.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"), food_name, t, amount, units);
+				
+			}else {
+				System.out.println("NOT raw");
+
+				/** otherwise, there isn't a "raw" version of the wanted portion. look for it regularly**/	
 			return queryItem(readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + food_name.replace(' ', '_')
 						+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul")
 				.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"), food_name, t, amount, units);
+			}
 		}
 	}
 
@@ -141,7 +142,10 @@ public class PortionRequestGen {
 							/** check for a label that contains the units**/
 	//						System.out.println("label: "+measures_arr.getJSONObject(j).getString("label"));
 							if(measures_arr.getJSONObject(j).getString("label").contains(post_processed_units)) {
-								double unit_to_g = Double.valueOf(Double.parseDouble(measures_arr.getJSONObject(j).getString("value")))*amount;
+								double value_per_100_g = Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value")));
+								double unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv")/100)*value_per_100_g*amount;
+								/**limit result to 3 decimal digits**/
+								unit_to_g = ((double)((int)(unit_to_g*1000.0)))/1000.0;
 								nutritions.add(unit_to_g);
 								label_found = true;
 							}

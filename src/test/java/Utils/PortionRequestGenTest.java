@@ -44,14 +44,14 @@ public class PortionRequestGenTest {
 				+ "Carbohydrates: 102.78\nFats: 1.48\n");
 		strings.add(s2);
 //		System.out.println(s2);
-		assert s2.contains("Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
-				+ "Carbohydrates: 102.78\nFats: 1.48\n");
+		assert s2.contains("Nutritional Values per 100 grams:\nCalories: 400.5\nProteins: 4.905\n"
+				+ "Carbohydrates: 102.78\nFats: 1.485\n");
 
 	}
 	
 	@Test
 	public void test_cup2() {
-		/**this should return the value for cup of sliced banana, as appears in the usda JSON*/
+		/**this should return the value for cup of rice, as appears in the usda JSON*/
 		String s =  PortionRequestGen.generatePortionWithAmount("rice", Portion.Type.FOOD, Double.valueOf(2), "cups").toString();
 //		assert s2.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 //				+ "Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
@@ -59,9 +59,23 @@ public class PortionRequestGenTest {
 //		contained.add("Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
 //				+ "Carbohydrates: 102.78\nFats: 1.48\n");
 		strings.add(s);
-//		System.out.println(s2);
-		assert s.contains("Nutritional Values per 100 grams:\nCalories: 1142.0\nProteins: 47.14\n"
-				+ "Carbohydrates: 239.68\nFats: 3.46\n");
+//		System.out.println(s);
+		assert s.contains("Nutritional Values per 100 grams:\nCalories: 1142.4\nProteins: 47.136\n"
+				+ "Carbohydrates: 239.68\nFats: 3.456\n");
+
+	}
+	@Test 
+	public void check_raw_egg_suffix() {
+		String s =  PortionRequestGen.generatePortionWithAmount("egg", Portion.Type.FOOD, Double.valueOf(1), "large").toString();
+//		assert s2.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
+//				+ "Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
+//				+ "Carbohydrates: 102.78\nFats: 1.48\n");
+//		contained.add("Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
+//				+ "Carbohydrates: 102.78\nFats: 1.48\n");
+		strings.add(s);
+//		System.out.println(s);
+		assert s.contains("Nutritional Values per 100 grams:\nCalories: 71.5\nProteins: 6.28\n"
+				+ "Carbohydrates: 0.36\nFats: 4.755\n");
 
 	}
 	
