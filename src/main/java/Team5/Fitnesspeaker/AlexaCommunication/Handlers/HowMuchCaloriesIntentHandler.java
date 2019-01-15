@@ -139,12 +139,24 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 					int carbs = (int) userInfo.get(0).getDailyCarbsGoal();
 					int proteins = (int) userInfo.get(0).getDailyProteinGramsGoal();
 					if ("calories".contains(measure_str)) {
-						speechText2 = String.format(" There are %d %s left for your goal! Keep going!", calories - total_measure.get(0), measure_str);
+						int amount = calories - total_measure.get(0);
+						if (amount > 0)
+							speechText2 = String.format(" There are %d %s left for your goal! Keep going!", amount, measure_str);
+						else if (amount == 0)
+							speechText2 = String.format(" You achieved your %s goal, Well Done!", measure_str);
+						else
+							speechText2 = String.format(" You passed your %s goal by %d %s", measure_str, -amount, measure_str);
 					} else {
 						int amount = ("proteins".contains(measure_str) ? proteins - total_measure.get(0)
 								: ("carbs".contains(measure_str) ? carbs - total_measure.get(0)
 										: (!"fats".contains(measure_str) ? 0 : fats - total_measure.get(0))));
 						speechText2 = String.format(" There are %d grams of %s left for your goal! Keep going!", amount, measure_str);
+						if (amount > 0)
+							speechText2 = String.format(" There are %d grams of %s left for your goal! Keep going!", amount, measure_str);
+						else if (amount == 0)
+							speechText2 = String.format(" You achieved your %s goal, Well Done!", measure_str);
+						else
+							speechText2 = String.format(" You passed your %s goal by %d grams",measure_str, -amount);
 					}
 				}
 				if (total_measure.get(0) == 0)
