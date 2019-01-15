@@ -71,13 +71,13 @@ public class DBUtilsTest {
 		db.DBUtilsRemoveUserDirectory();
 		assertNull(db.DBGetFoodByKey("123"));
 		assert db.DBGetTodayFoodList().isEmpty();
-		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Integer.valueOf(52)));
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Double.valueOf(52),"grams"));
 		Portion p = db.DBGetFoodByKey(db.DBGetTodayFoodList().get(0).getName());
 		assertNotNull(p);
 		assertEquals("banana", p.getName());
 		assertEquals(Integer.valueOf(52), Integer.valueOf((int) p.getAmount()));
 		
-		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Integer.valueOf(48)));
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, Double.valueOf(48),"grams"));
 		List<Pair<String, Portion>> portionList=db.DBGetTodayFoodList();
 		p = db.DBGetFoodByKey(portionList.get(0).getName());
 		assertNotNull(p);
@@ -87,7 +87,7 @@ public class DBUtilsTest {
 		assertEquals("banana", p.getName());
 		p = db.DBGetFoodByKey("avocado");
 		assertNull(p);
-		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("avocado", Type.FOOD, Integer.valueOf(48)));
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("avocado", Type.FOOD, Double.valueOf(48),"grams"));
 		portionList=db.DBGetTodayFoodList();
 		assertEquals(1, portionList.stream().filter(s->s.getValue().getName().contains("avocado")).count());
 		assertEquals(Integer.valueOf(48), Integer.valueOf((int) portionList.stream().filter(s->s.getValue().getName().contains("avocado")).
