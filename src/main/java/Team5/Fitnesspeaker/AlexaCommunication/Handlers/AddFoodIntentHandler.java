@@ -26,7 +26,7 @@ import Utils.PortionRequestGen;
 public class AddFoodIntentHandler implements RequestHandler {
 	public static final String AMOUNT_SLOT = "Number";
 	public static final String FOOD_SLOT = "Food";
-
+	public static final String UNIT_SLOT = "Unit";
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("AddFoodIntent"));
@@ -39,6 +39,9 @@ public class AddFoodIntentHandler implements RequestHandler {
 
 		final Slot AmountSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(AMOUNT_SLOT);
+		
+		final Slot UnitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(UNIT_SLOT);
 
 		String speechText, repromptText="";
 
@@ -55,8 +58,16 @@ public class AddFoodIntentHandler implements RequestHandler {
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
+		
+		if (UnitSlot == null) {
+			speechText = "I'm not sure about the units. Please tell me again";
+			repromptText = "I will repeat, I'm not sure about the units. Please tell me again";
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+		}
 
-		Integer amountInGrams = Integer.valueOf(Integer.parseInt(AmountSlot.getValue()));
+		Integer amount = Integer.valueOf(Integer.parseInt(AmountSlot.getValue()));
+		String units = UnitSlot.getValue();
 		String added_food = foodSlot.getValue();
 
 		// initialize database object with the user mail
@@ -64,7 +75,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 		
 		//insert the portion to the DB
 		try {
-			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD, amountInGrams));
+			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD, (double)amount, units));
 		} catch (DBException e) {
 			speechText = String.format("There was a problem with the portion logging, Please tell me again");
 			repromptText = String.format("I'll repeat, there was a problem with the portion logging,  Please tell me again");
@@ -72,7 +83,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
 		
-		speechText = String.format("You logged %d grams of %s, bon appetit!", amountInGrams, added_food);
+		speechText = String.format("You logged %d %s of %s, bon appetit!", amount, units, added_food);
 
 		//the Boolean.TRUE says that the Alexa will end the session 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)

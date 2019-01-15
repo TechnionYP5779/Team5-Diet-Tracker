@@ -153,8 +153,8 @@ public class WeightConverterTest {
 
 	@Test
 	public void OuncesToGrams() {
-		assertEquals(56.699, WeightConverter.ouncesTograms(2), DELTA);
-		assertEquals(0., WeightConverter.ouncesTograms(0), DELTA);
-		assertEquals(-1, WeightConverter.ouncesTograms(-10.2), DELTA);
+		assertEquals(56.699, WeightConverter.ouncesToGrams(2), DELTA);
+		assertEquals(0., WeightConverter.ouncesToGrams(0), DELTA);
+		assertEquals(-1, WeightConverter.ouncesToGrams(-10.2), DELTA);
 	}
 }

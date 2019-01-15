@@ -14,6 +14,14 @@ public interface WeightConverter {
 
 	/**
 	 * @param gr : amount of given item in grams
+	 * @return amount of same item in gr if gr >=0 , -1 otherwise
+	 */
+	static double gramsToGrams(final double gr) {
+		return gr < 0 ? -1 : gr ;
+	}
+	
+	/**
+	 * @param gr : amount of given item in grams
 	 * @return amount of same item in milligrams if gr >=0 , -1 otherwise
 	 */
 	static double gramsToMilligrams(final double gr) {
@@ -122,7 +130,7 @@ public interface WeightConverter {
 	 * @param ounces : amount of given item in ounces
 	 * @return amount of same item in grams if ounces >= 0, -1 otherwise
 	 */
-	static double ouncesTograms(final double ounces) {
+	static double ouncesToGrams(final double ounces) {
 		return ounces < 0 ? -1 : grams_const * ouncesToKilograms(ounces);
 	}
 
