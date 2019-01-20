@@ -29,7 +29,7 @@ public class DBUtils {
 	FirebaseDatabase database;
 	String user_mail;
 
-	private static String getDate() {
+	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	} 
