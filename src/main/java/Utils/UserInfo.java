@@ -12,6 +12,7 @@ public class UserInfo {
 	public double dailyCarbsGoal = -1;
 	public double dailyFatsGoal = -1;
 	public int dailyLimitCigarettes = -1;
+	public int weightGoal=-1;
 	
 	/*
 	 * basic constructor with all the parameters
@@ -28,6 +29,21 @@ public class UserInfo {
 		this.dailyCarbsGoal = dailyCarbsGoal;
 		this.dailyFatsGoal = dailyFatsGoal;
 		this.dailyLimitCigarettes = dailyLimitCigarettes;
+	}
+	
+	public UserInfo(Gender gender, int age, int height,
+			double dailyCaloriesGoal,
+			double dailyProteinGramsGoal, double dailyCarbsGoal,
+			double dailyFatsGoal, int dailyLimitCigarettes,int wg) {
+		this.gender=gender;
+		this.age=age;
+		this.height=height;
+		this.dailyCaloriesGoal=dailyCaloriesGoal;
+		this.dailyProteinGramsGoal=dailyProteinGramsGoal;
+		this.dailyCarbsGoal = dailyCarbsGoal;
+		this.dailyFatsGoal = dailyFatsGoal;
+		this.dailyLimitCigarettes = dailyLimitCigarettes;
+		this.weightGoal=wg;
 	}
 	
 	/*
@@ -47,7 +63,8 @@ public class UserInfo {
 				&& Double.compare(user.height, height) == 0
 				&& Double.compare(user.dailyCaloriesGoal, dailyCaloriesGoal) == 0
 				&& Double.compare(user.dailyProteinGramsGoal, dailyProteinGramsGoal) == 0 &&
-				gender == user.gender;
+				gender == user.gender
+				&& this.weightGoal==user.weightGoal;
 	}
 
 	public Gender getGender() {
@@ -112,5 +129,13 @@ public class UserInfo {
 	
 	public void setDailyLimitCigarettes(int dailyLimitCigarettes) {
 		this.dailyLimitCigarettes = dailyLimitCigarettes;
+	}
+	
+	public int getWeightGoal() {
+		return weightGoal;
+	}
+	
+	public void setWeightGoal(int wg) {
+		this.weightGoal=wg;
 	}
 }
