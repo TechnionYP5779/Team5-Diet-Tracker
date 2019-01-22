@@ -88,13 +88,14 @@ public class BMIIntentHandler implements RequestHandler{
 			// TODO Auto-generated catch block
 		}
 		
+		// get the height
+		
 		final List<UserInfo> UserList = new LinkedList<>();
 		final CountDownLatch done2 = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot userSnapshot : s.getChildren())
-					UserList.add(userSnapshot.getValue(UserInfo.class));
+				UserList.add(s.getValue(UserInfo.class));
 				done2.countDown();
 			}
 
