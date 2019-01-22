@@ -38,7 +38,8 @@ public class AddCoffeeIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("addCoffeeIntent"));
+		//return i.matches(intentName("addCoffeeIntent"));
+		return false;
 	}
 
 	@Override

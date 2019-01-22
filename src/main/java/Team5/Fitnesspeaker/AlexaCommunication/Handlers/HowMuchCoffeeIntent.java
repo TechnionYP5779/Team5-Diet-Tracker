@@ -34,7 +34,8 @@ public class HowMuchCoffeeIntent implements RequestHandler {
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchCoffeeIntent"));
+		//return i.matches(intentName("HowMuchCoffeeIntent"));
+		return false;
 	}
 
 	@Override
