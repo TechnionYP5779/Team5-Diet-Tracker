@@ -39,26 +39,28 @@ public class AddWeightGoalIntentHandler implements RequestHandler{
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
-		String speechText = "", repromptText;
-
+		String speechText = "hello", repromptText="world";
+		
 		if (NumberSlot == null) {
 			speechText = "I'm not sure what is your goal. Please tell me again";
 			repromptText = "I will repeat, I'm not sure what is your goal. Please tell me again";
 		} else {
 			final int weight = Integer.parseInt(NumberSlot.getValue());
+			speechText=NumberSlot.getValue();
 			final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
 			DBUtils db=new DBUtils(UserMail);
+			
 			UserInfo ui=null;
 			try {
 				ui=db.DBGetUserInfo();
 			} catch (DBException e) {}
-			
+			if(ui ==null)
+				ui=new UserInfo();
 			ui.setWeightGoal(weight);
 			db.DBUpdateUserInfo(ui);
 			speechText = "logged succesfully";
 			repromptText = "logged succesfully";
 		}
-
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 	}
