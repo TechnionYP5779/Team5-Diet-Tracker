@@ -23,6 +23,7 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Portion;
+import Utils.Portion.Type;
 
 public class WhatIAteIntentHandler implements RequestHandler {
 	
@@ -43,7 +44,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 		
 		//retrieving the information
 		try {
-			FoodList=db.DBGetTodayFoodList().stream().map(p->p.getValue()).collect(Collectors.toList());
+			FoodList=db.DBGetTodayFoodList().stream().map(p->p.getValue()).filter(p->p.getType()==Type.FOOD).collect(Collectors.toList());
 		} catch (DBException e) {
 			// no need to do anything
 		}

@@ -15,7 +15,6 @@ import Utils.DailyStatistics;
 import Utils.EmailSender;
 import Utils.Portion;
 
-@SuppressWarnings("static-method")
 public class SendDailyEmailHandler implements RequestHandler {
 
 	String UserMail;

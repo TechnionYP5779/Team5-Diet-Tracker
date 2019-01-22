@@ -75,7 +75,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 		
 		//insert the portion to the DB
 		try {
-			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD, (double)amount, units));
+			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(), units));
 		} catch (DBException e) {
 			speechText = String.format("There was a problem with the portion logging, Please tell me again");
 			repromptText = String.format("I'll repeat, there was a problem with the portion logging,  Please tell me again");

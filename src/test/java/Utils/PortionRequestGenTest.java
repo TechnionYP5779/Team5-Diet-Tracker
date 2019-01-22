@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-@SuppressWarnings("static-method")
 public class PortionRequestGenTest {
 
 	ArrayList<String> strings = new ArrayList<>();
@@ -19,7 +18,7 @@ public class PortionRequestGenTest {
 //						+ "Nutritional Values per 100 grams:\nCalories: 346.0\nProteins: 3.89\n"
 //						+ "Carbohydrates: 88.28\nFats: 1.81");
 		/** this should pass through all options till it gets to the converter **/
-		Portion p = PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, Double.valueOf(50), "milligrams");
+		Portion p = PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, 50, "milligrams");
 		String s1 = p.toString();
 //		assert s1.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 //						+ "Nutritional Values per 100 grams:\nCalories: 44.5\nProteins: 0.545\n"
@@ -38,7 +37,7 @@ public class PortionRequestGenTest {
 	@Test
 	public void test_cup() {
 		/**this should return the value for cup of sliced banana, as appears in the usda JSON*/
-		String s2 =  PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, Double.valueOf(2), "cups").toString();
+		String s2 =  PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, 2, "cups").toString();
 //		assert s2.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 //				+ "Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
 //				+ "Carbohydrates: 102.78\nFats: 1.48\n");
@@ -54,7 +53,7 @@ public class PortionRequestGenTest {
 	@Test
 	public void test_cup2() {
 		/**this should return the value for cup of rice, as appears in the usda JSON*/
-		Portion p = PortionRequestGen.generatePortionWithAmount("rice", Portion.Type.FOOD, Double.valueOf(2), "cups");
+		Portion p = PortionRequestGen.generatePortionWithAmount("rice", Portion.Type.FOOD, 2, "cups");
 		String s = p.toString();
 //		assert s2.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 //				+ "Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
@@ -70,7 +69,7 @@ public class PortionRequestGenTest {
 	}
 	@Test 
 	public void check_raw_egg_suffix() {
-		String s =  PortionRequestGen.generatePortionWithAmount("egg", Portion.Type.FOOD, Double.valueOf(1), "large").toString();
+		String s =  PortionRequestGen.generatePortionWithAmount("egg", Portion.Type.FOOD, 1, "large").toString();
 //		assert s2.contains("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 //				+ "Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
 //				+ "Carbohydrates: 102.78\nFats: 1.48\n");
