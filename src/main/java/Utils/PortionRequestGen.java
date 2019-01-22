@@ -99,6 +99,7 @@ public class PortionRequestGen {
 		}
 	}
 
+	@SuppressWarnings("boxing")
 	public static Portion queryItem(final String id, final String food_name, final Portion.Type t, final double amount, final String units) throws Exception {
 		// Read JSON response and print
 		final JSONObject myResponse = readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=" + id
@@ -145,14 +146,14 @@ public class PortionRequestGen {
 							/** check for a label that contains the units**/
 	//						System.out.println("label: "+measures_arr.getJSONObject(j).getString("label"));
 							if(measures_arr.getJSONObject(j).getString("label").contains(post_processed_units)) {
-								value_per_100_g = Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value")));
+								value_per_100_g = Double.parseDouble(nut_arr.getJSONObject(i).getString("value"));
 //								double unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv")/100)*value_per_100_g*amount;
 								unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv"))*amount;
 
 //								/**limit result to 3 decimal digits**/
 //								unit_to_g = ((double)((int)(unit_to_g*1000.0)))/1000.0;
 //								nutritions.add(unit_to_g);
-								nutritions.add(value_per_100_g);
+								nutritions.add(Double.valueOf(value_per_100_g));
 
 								label_found = true;
 							}
@@ -185,7 +186,7 @@ public class PortionRequestGen {
 							/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
 //							double real_nut_value = (unit_to_g/100)*value_per_100_g;						
 //							nutritions.add(real_nut_value);
-							nutritions.add(value_per_100_g);
+							nutritions.add(Double.valueOf(value_per_100_g));
 							label_found = true;
 						} catch(NoSuchMethodException  e) {
 							/** TODO if reached here, then we have a lack in convertion methods, we should add
@@ -205,7 +206,7 @@ public class PortionRequestGen {
 							if(measures_arr.getJSONObject(j).getString("label").contains("medium")) {
 								value_per_100_g = Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value")));
 								unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv"))*amount;
-								nutritions.add(value_per_100_g);
+								nutritions.add(Double.valueOf(value_per_100_g));
 								label_found = true;
 							}
 						}
@@ -243,11 +244,11 @@ public class PortionRequestGen {
 			/** check for a label that contains the units**/
 //						System.out.println("label: "+measures_arr.getJSONObject(j).getString("label"));
 			if(measures_arr.getJSONObject(j).getString("label").contains(post_processed_units)) {
-				double value_per_100_g = Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(nut_arr_idx).getString("value")));
+				double value_per_100_g = Double.parseDouble(nut_arr.getJSONObject(nut_arr_idx).getString("value"));
 				double unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv")/100)*value_per_100_g*amount;
 				/**limit result to 3 decimal digits**/
 				unit_to_g = ((double)((int)(unit_to_g*1000.0)))/1000.0;
-				nutritions.add(unit_to_g);
+				nutritions.add(Double.valueOf(unit_to_g));
 				label_found = true;
 			}
 		}
