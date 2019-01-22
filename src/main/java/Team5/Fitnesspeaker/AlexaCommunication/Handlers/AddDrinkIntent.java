@@ -11,6 +11,7 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.PortionRequestGen;
 import Utils.DBUtils.DBException;
+import Utils.Portion;
 import Utils.Portion.Type;
 
 public class AddDrinkIntent implements RequestHandler {
@@ -54,7 +55,9 @@ public class AddDrinkIntent implements RequestHandler {
 			if(drink_name.equals("water"))
 				db.DBAddWaterCups(Integer.valueOf(added_num_of_cups));
 			else {
-				db.DBPushFood(PortionRequestGen.generatePortionWithAmount(drink_name, Type.DRINK, Double.valueOf(added_num_of_cups*8).doubleValue(), "fl oz"));	
+				Portion drink=PortionRequestGen.generatePortionWithAmount(drink_name, Type.DRINK, Double.valueOf(added_num_of_cups*8).doubleValue(), "fl oz");
+				drink.setAmount(added_num_of_cups*30.0); // each cup contains approx. 30 gram
+				db.DBPushFood(drink);	
 				if(drink_name.contains("coffee"))
 					db.DBAddCoffeeCups(Integer.valueOf(added_num_of_cups));
 			}

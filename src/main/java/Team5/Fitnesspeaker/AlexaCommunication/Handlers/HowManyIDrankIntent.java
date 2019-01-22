@@ -56,7 +56,7 @@ public class HowManyIDrankIntent implements RequestHandler {
 						filter(p->(p.getValue().getName().equals(drink_name))&&(p.getValue().getType()==Type.DRINK)).collect(Collectors.toList());
 				int countOz=0;
 				for(Pair<String,Portion> p : Drinklist) countOz+=(int)p.getValue().getAmount();
-				Count=Optional.ofNullable(Integer.valueOf(countOz/8));
+				Count=Optional.ofNullable(Integer.valueOf(countOz/30));
 			}
 		} catch (DBException e) {
 			// no need to do anything
