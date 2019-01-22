@@ -22,11 +22,14 @@ import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Portion.Type;
 import Utils.PortionRequestGen;
+import java.util.Random;
 
 public class AddFoodIntentHandler implements RequestHandler {
 	public static final String AMOUNT_SLOT = "Number";
 	public static final String FOOD_SLOT = "Food";
 	public static final String UNIT_SLOT = "Unit";
+	public static final String[] tips = {" Remember to eat your meals in sitting position. ", " Remember to eat slowly. ",
+			" Remember to drink liquids after the meal. ", " Remember to drink a cup of water before the meail. "};
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("AddFoodIntent"));
@@ -83,7 +86,15 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
 		
-		speechText = String.format("You logged %d %s of %s, bon appetit!", amount, units, added_food);
+		
+		speechText = String.format("You logged %d %s of %s, bon appetit! ", amount, units, added_food);
+		
+		Random rand = new Random();
+		int ask = rand.nextInt(6)+1;
+		if(ask == 3) {
+			int tip = rand.nextInt(tips.length);
+			speechText += String.format(tips[tip]);
+		}
 
 		//the Boolean.TRUE says that the Alexa will end the session 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)

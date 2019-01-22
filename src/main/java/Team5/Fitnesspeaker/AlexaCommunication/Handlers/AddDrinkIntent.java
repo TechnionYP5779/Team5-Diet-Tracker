@@ -3,6 +3,8 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.util.Optional;
+import java.util.Random;
+
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
@@ -16,6 +18,7 @@ import Utils.Portion.Type;
 public class AddDrinkIntent implements RequestHandler {
 	public static final String ADD_COUNT_SLOT = "Number";
 	public static final String DRINK_NAME_SLOT = "drink";
+	public static final String[] tips = {" Remember to drink while you are sitting. "};
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -65,11 +68,19 @@ public class AddDrinkIntent implements RequestHandler {
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
 
+
 		if (added_num_of_cups == 1)
 			speechText = String.format("You logged one cup of %s, to your health!",drink_name);
 		else
 			speechText = String.format("You logged %d cups of %s, to your health!",
 					Integer.valueOf(added_num_of_cups),drink_name);
+		
+		Random rand = new Random();
+		int ask = rand.nextInt(6)+1;
+		if(ask == 3) {
+			int tip = rand.nextInt(tips.length);
+			speechText += String.format(tips[tip]);
+		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.TRUE).build();
