@@ -158,11 +158,11 @@ public class PortionRequestGen {
 						try {
 							/** now we can find the right converter-method to invoke, using reflection*/
 							String converter_func_name = post_processed_units+"ToGrams";	
-							Method converter_method = Class.forName(WeightConverter.class.getName()).getDeclaredMethod(converter_func_name, double.class);
+							Method converter_method = Class.forName(UnitsConverter.class.getName()).getDeclaredMethod(converter_func_name, double.class);
 							
 							
 							/** calculate the amount in grams of the original unit**/
-							unit_to_g = (double) converter_method.invoke(WeightConverter.class,amount);
+							unit_to_g = (double) converter_method.invoke(UnitsConverter.class,amount);
 							/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
 							nutritions.add(Double.valueOf(value_per_100_g));
 							label_found = true;
