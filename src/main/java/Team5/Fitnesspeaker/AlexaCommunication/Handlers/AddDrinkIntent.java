@@ -38,7 +38,7 @@ public class AddDrinkIntent implements RequestHandler {
 		}
 		
 		if (DrinkSlot == null) {
-			speechText = "I'm not sure what did you  drink. Please tell me again";
+			speechText = "I'm not sure what did you drink. Please tell me again";
 			repromptText = "I will repeat, I'm not sure what did you  drink. Please tell me again";
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
