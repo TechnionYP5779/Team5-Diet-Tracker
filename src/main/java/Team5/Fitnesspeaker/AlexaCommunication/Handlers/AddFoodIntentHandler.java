@@ -81,6 +81,14 @@ public class AddFoodIntentHandler implements RequestHandler {
 			repromptText = String.format("I'll repeat, there was a problem with the portion logging,  Please tell me again");
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+		/** right now, the only other specific option we tke care of is the option 
+		 * that we didn't find the portion units in the DB or in our modules.
+		 */
+		} catch (Exception e) {
+			speechText = String.format("There was a problem with the units you said, Please try to supply the food in a different unit, for example, in grams");
+			repromptText = String.format("I'll repeat, there was a problem with the units you said, Please try to supply the food in a different unit, for example, in grams");
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
 		
 		speechText = String.format("You logged %d %s of %s, bon appetit!", amount, units, added_food);

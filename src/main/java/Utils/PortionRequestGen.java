@@ -39,8 +39,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PortionRequestGen {
+import Utils.FoodExceptions.UnitsNotFoundExcpetion;
 
+
+
+public class PortionRequestGen {
+	
+	
 	/**
 	 * list of nutritional values we want to inject and collect about the wanted
 	 * food
@@ -106,6 +111,7 @@ public class PortionRequestGen {
 		 * for each value: look for it in the array and insert its numeric value to the
 		 * list
 		 **/
+		boolean label_found = false;
 		for (final String nut : Nutritional_values) {
 			for (int i = 0; i < nut_arr.length(); i++) {
 				if (nut_arr.getJSONObject(i).getString("name").equals(nut)) {
@@ -124,7 +130,7 @@ public class PortionRequestGen {
 					
 					
 					
-					boolean label_found = false;
+					label_found = false;
 					final JSONArray measures_arr = nut_arr.getJSONObject(i).getJSONArray("measures");
 					
 					/** if not, search the units as actual labels in the JSON, so it can be more precise**/
@@ -132,11 +138,11 @@ public class PortionRequestGen {
 						for( int j=0;j<measures_arr.length() && !label_found ;j++) {
 							
 							/** turn the units to a single form (the way it appears in label) , not plural**/
-							String post_processed_units = units.substring(units.length()-1).equals("s")? units.substring(0,units.length()-1) : units;
+							String post_processed_units = "s".equals(units.substring(units.length() - 1))? units.substring(0,units.length()-1) : units;
 							/** check for a label that contains the units**/
 							if(measures_arr.getJSONObject(j).getString("label").contains(post_processed_units)) {
 								value_per_100_g = Double.parseDouble(nut_arr.getJSONObject(i).getString("value"));
-								unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv"))*amount;
+								unit_to_g = amount * measures_arr.getJSONObject(j).getDouble("eqv");
 
 								nutritions.add(Double.valueOf(value_per_100_g));
 
@@ -190,12 +196,20 @@ public class PortionRequestGen {
 				}
 			}
 		}
-		/**
-		 * right now, assignment is done in-order, according to the order of the values
-		 * in "Nutritional_values" . later on, assignment will be using reflection. just
-		 * wait for it :)
-		 **/
-		return new Portion(t, food_name, unit_to_g, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
+		/** the assumption is that if label_found changes during searching, then
+		 *  then it is because -all- of the portion's fields were found with that label.
+		 *  if the label wasn't found by one nutritional value, it won't be found by any of them,
+		 *  due to the JSON structure of USDA.
+		 *  
+		 *  if the label was not found, then we should throw an exception, which will be caught in
+		 *  "AddFoodIntentHandler", telling Alexa to response with a proper message to the user.
+		 *   
+		 */
+		if(!label_found)
+			throw new UnitsNotFoundExcpetion();
+		else
+			/** otherwise, the label was changed during the searching, means that all is good**/
+			return new Portion(t, food_name, unit_to_g, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
 				nutritions.get(2).doubleValue(), nutritions.get(3).doubleValue());
 	}
 	
