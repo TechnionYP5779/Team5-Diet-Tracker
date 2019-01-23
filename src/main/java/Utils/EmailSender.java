@@ -50,6 +50,31 @@ public class EmailSender {
 			+ "%.2f </td>\r\n  </tr>\r\n</table>\r\n</br>\r\nYou drank "
 			+ "%s cups of water and smoked %s cigarettes\r\n"
 			+ "</br>\r\n</br>\r\n<Div>Have a nice day.</Div>\r\n\r\n</body>";
+	
+	private final String weeklyEmailTop= "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
+			+ "  border-collapse: collapse;\r\n  width: 100%s;\r\n}\r\n\r\ntd, th {\r\n"
+			+ "  border: 1px solid #dddddd;\r\n  text-align: left;\r\n  padding: 8px;\r\n}\r\n"
+			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
+			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
+			+ "<center><h1><u>Weekly statistics</u></h1></center>\r\n</br>\r\nHi %s ,</br>\r\n"
+			+ "This is your current statistics of the past seven days:\r\n</br>\r\n</br>\r\n</br>\r\n"
+			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Date</th>\r\n"
+			+ "<th>calories</th>\r\n    <th>proteins</th>\r\n"
+			+ "    <th>Carbs</th>\r\n    <th>Fats</th>\r\n  </tr>\r\n ";
+	
+	private final String weeklyEmailTableLine="<tr><td> %s </td>\r\n   <td>"
+			+ "%.2f </td>\r\n    <td>"
+			+ "%.2f </td>\r\n    <td>"
+			+"%.2f  </td>\r\n    <td>"
+			+ "%.2f </td>\r\n  </tr>\r\n";
+	
+	private final String weeklyEmailBottom="  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
+			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
+			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
+			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
+			+ "%.2f </td>\r\n  </tr>\r\n</table>\r\n</br>\r\nYou drank "
+			+ "%s cups of water and smoked %s cigarettes\r\n"
+			+ "</br>\r\n</br>\r\n<Div>Have a nice day.</Div>\r\n\r\n</body>";
 
 	private String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
@@ -74,7 +99,6 @@ public class EmailSender {
 		});
 
 		try {
-
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(username));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toMail));
@@ -82,9 +106,6 @@ public class EmailSender {
 			message.setText(messegeText);
 
 			Transport.send(message);
-
-			// System.out.println("Done");
-
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
@@ -109,11 +130,8 @@ public class EmailSender {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toMail));
 			message.setSubject(subject);
 			message.setContent(messegeText, "text/html");
-			// message.setText(messegeText);
 
 			Transport.send(message);
-
-			// System.out.println("Done");
 
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
@@ -137,30 +155,11 @@ public class EmailSender {
 			WeeklyStatistics s) {
 		String[] dates=getDates();
 		s.calculateWeeklyData();
-		String messegeText = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
-				+ "  border-collapse: collapse;\r\n  width: 100%;\r\n}\r\n\r\ntd, th {\r\n"
-				+ "  border: 1px solid #dddddd;\r\n  text-align: left;\r\n  padding: 8px;\r\n}\r\n"
-				+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
-				+ "</head>\r\n<body>\r\n<h3>Date: " + getDate() + "</h3></br>"
-				+ "<center><h1><u>Weekly statistics</u></h1></center>\r\n</br>\r\nHi " + name + ",</br>\r\n"
-				+ "This is your current statistics of the past seven days:\r\n</br>\r\n</br>\r\n</br>\r\n"
-				+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Date</th>\r\n"
-				+ "<th>calories</th>\r\n    <th>proteins</th>\r\n"
-				+ "    <th>Carbs</th>\r\n    <th>Fats</th>\r\n  </tr>\r\n ";
+		String messegeText = String.format(weeklyEmailTop,"%", getDate(),name);
 		int dayIndex=0;
 		for (DailyStatistics ds : s.dailyStatistics)
-			messegeText += "<tr><td>" + dates[dayIndex++] + "</td>\r\n   <td>"
-					+ String.format("%.2f", Double.valueOf(ds.dailyCalories)) + "</td>\r\n    <td>"
-					+ String.format("%.2f", Double.valueOf(ds.dailyProteins)) + "</td>\r\n    <td>"
-					+ String.format("%.2f", Double.valueOf(ds.dailyCarbs)) + "</td>\r\n    <td>"
-					+ String.format("%.2f", Double.valueOf(ds.dailyFats)) + "</td>\r\n  </tr>\r\n";
-		messegeText += "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
-				+ String.format("%.2f", Double.valueOf(s.weeklyCalories)) + "</td>\r\n  <td  style=\"outline: thin solid\" >"
-				+ String.format("%.2f", Double.valueOf(s.weeklyProteins)) + "</td>\r\n  <td  style=\"outline: thin solid\" >"
-				+ String.format("%.2f", Double.valueOf(s.weeklyCarbs)) + "</td>\r\n  <td  style=\"outline: thin solid\" >"
-				+ String.format("%.2f", Double.valueOf(s.weeklyFats)) + "</td>\r\n  </tr>\r\n</table>\r\n</br>\r\nYou drank "
-				+ s.weeklyWaterCups + " cups of water and smoked " + s.weeklyCiggaretsSmoked+ " cigarettes\r\n"
-				+ "</br>\r\n</br>\r\n<Div>Have a nice day.</Div>\r\n\r\n</body>";
+			messegeText +=String.format(weeklyEmailTableLine,dates[dayIndex++], Double.valueOf(ds.dailyCalories),Double.valueOf(ds.dailyProteins),Double.valueOf(ds.dailyCarbs),Double.valueOf(ds.dailyFats) );
+		messegeText += String.format(weeklyEmailBottom,  Double.valueOf(s.weeklyCalories),Double.valueOf(s.weeklyProteins), Double.valueOf(s.weeklyCarbs),Double.valueOf(s.weeklyCarbs),Double.valueOf(s.weeklyFats));
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(username, password);
@@ -174,11 +173,8 @@ public class EmailSender {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toMail));
 			message.setSubject(subject);
 			message.setContent(messegeText, "text/html");
-			// message.setText(messegeText);
 
 			Transport.send(message);
-
-			// System.out.println("Done");
 
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
@@ -206,9 +202,9 @@ public class EmailSender {
 	        textBodyPart.setText("A graph describing your weight progress is attached.");
 
 	        MimeBodyPart attachmentBodyPart= new MimeBodyPart();
-	        ByteArrayDataSource source = new ByteArrayDataSource(byteImage,"image/jpg"); // ex : "C:\\test.pdf"
+	        ByteArrayDataSource source = new ByteArrayDataSource(byteImage,"image/jpg"); 
 	        attachmentBodyPart.setDataHandler(new DataHandler(source));
-	        attachmentBodyPart.setFileName("weightProgress.jpg"); // ex : "test.pdf"
+	        attachmentBodyPart.setFileName("weightProgress.jpg"); 
 
 	        multipart.addBodyPart(textBodyPart);  // add the text part
 	        multipart.addBodyPart(attachmentBodyPart); // add the attachement part
