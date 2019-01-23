@@ -18,7 +18,6 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 import GraphsMaker.simpleGraph;
-@SuppressWarnings("static-method")
 public class EmailSender {
 
 	final String username;
@@ -64,7 +63,6 @@ public class EmailSender {
 		}
 	}
 
-	@SuppressWarnings("boxing")
 	public void designedDailyStatisticsEmail(final String subject, final String toMail, final String name,
 			DailyStatistics s) {
 		String messegeText = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
@@ -144,15 +142,12 @@ public class EmailSender {
 				+ "<th>calories</th>\r\n    <th>proteins</th>\r\n"
 				+ "    <th>Carbs</th>\r\n    <th>Fats</th>\r\n  </tr>\r\n ";
 		int dayIndex=0;
-		for (DailyStatistics ds : s.dailyStatistics) {
-			messegeText += "<tr><td>" +dates[dayIndex] + "</td>\r\n   <td>"
-					+ String.format("%.2f", Double.valueOf(ds.dailyCalories)) + "</td>\r\n"
-					+ "    <td>" +String.format("%.2f", Double.valueOf( ds.dailyProteins))
-					+ "</td>\r\n    <td>" + String.format("%.2f", Double.valueOf(ds.dailyCarbs))
-					+ "</td>\r\n    <td>" + String.format("%.2f", Double.valueOf(ds.dailyFats))
-					+ "</td>\r\n  </tr>\r\n";
-			dayIndex++;
-		}
+		for (DailyStatistics ds : s.dailyStatistics)
+			messegeText += "<tr><td>" + dates[dayIndex++] + "</td>\r\n   <td>"
+					+ String.format("%.2f", Double.valueOf(ds.dailyCalories)) + "</td>\r\n    <td>"
+					+ String.format("%.2f", Double.valueOf(ds.dailyProteins)) + "</td>\r\n    <td>"
+					+ String.format("%.2f", Double.valueOf(ds.dailyCarbs)) + "</td>\r\n    <td>"
+					+ String.format("%.2f", Double.valueOf(ds.dailyFats)) + "</td>\r\n  </tr>\r\n";
 		messegeText += "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
 				+ String.format("%.2f", Double.valueOf(s.weeklyCalories)) + "</td>\r\n  <td  style=\"outline: thin solid\" >"
 				+ String.format("%.2f", Double.valueOf(s.weeklyProteins)) + "</td>\r\n  <td  style=\"outline: thin solid\" >"
@@ -186,7 +181,7 @@ public class EmailSender {
 	
 	public void sendWeightStatistics( final String subject, final String toMail,final String name ,ArrayList<Calendar> dates,ArrayList<Integer> weights) throws MessagingException  {
 		simpleGraph g=new simpleGraph();
-		String graphName=new String(toMail).replace(".", "_dot_");
+		String graphName=String.valueOf(toMail).replace(".", "_dot_");
 		byte[] byteImage=g.setDates(dates).setWeights(weights).make().save(800, 300, graphName);
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -200,16 +195,14 @@ public class EmailSender {
 	        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
 	        msg.setSubject(subject);
 
-	        Multipart multipart;
-				multipart = new MimeMultipart();
-
-	        MimeBodyPart textBodyPart = new MimeBodyPart();
+	        Multipart multipart = new MimeMultipart();
+				MimeBodyPart textBodyPart = new MimeBodyPart();
 	        textBodyPart.setText("A graph describing your weight progress is attached.");
 
 	        MimeBodyPart attachmentBodyPart= new MimeBodyPart();
 	        ByteArrayDataSource source = new ByteArrayDataSource(byteImage,"image/jpg"); // ex : "C:\\test.pdf"
 	        attachmentBodyPart.setDataHandler(new DataHandler(source));
-	        attachmentBodyPart.setFileName("weightProgress"+".jpg"); // ex : "test.pdf"
+	        attachmentBodyPart.setFileName("weightProgress.jpg"); // ex : "test.pdf"
 
 	        multipart.addBodyPart(textBodyPart);  // add the text part
 	        multipart.addBodyPart(attachmentBodyPart); // add the attachement part
@@ -220,7 +213,9 @@ public class EmailSender {
 	    } catch (MessagingException e) {
 	        throw e;
 	    }
+	    
 	    //g.delete();
+	    
 	}
 	
 }

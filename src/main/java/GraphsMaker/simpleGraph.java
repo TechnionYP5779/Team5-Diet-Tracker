@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-@SuppressWarnings("static-method")
 public class simpleGraph  { //extends JFrame
 
         JFreeChart chart;
@@ -119,8 +118,7 @@ public class simpleGraph  { //extends JFrame
             chart.draw(g2, new Rectangle2D.Double(0, 0, width, height));
             g2.dispose();
             // outputfile = new File(imageName+".jpg");
-            @SuppressWarnings("resource")
-			ByteArrayOutputStream baos=new ByteArrayOutputStream();
+            ByteArrayOutputStream baos=new ByteArrayOutputStream();
             try {
                 ImageIO.write(img, "jpg", baos);
             } catch (IOException e) {

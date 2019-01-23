@@ -2,27 +2,12 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.UserInfo;

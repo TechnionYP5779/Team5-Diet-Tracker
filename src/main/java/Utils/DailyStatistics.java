@@ -2,7 +2,6 @@ package Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-@SuppressWarnings("boxing")
 public class DailyStatistics {
 	public String cupsOfWater = "0";
 	public List<Portion> foodPortions = new ArrayList<>();

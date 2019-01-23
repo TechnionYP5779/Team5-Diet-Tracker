@@ -10,7 +10,6 @@ import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Portion;
 
-@SuppressWarnings("static-method")
 public class DrinkAlchoholHandler implements RequestHandler {
 
 	private double getAlcoholPrecentage(final String alcoholDrink) {

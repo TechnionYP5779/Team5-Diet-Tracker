@@ -39,11 +39,11 @@ public class PeriodicWeightProgressHandler implements RequestHandler{
 			final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
 			DBUtils db=new DBUtils(UserMail);
 			UserInfo ui=null;
-			DailyInfo di=null;
+			//DailyInfo di=null;
 			String c="";
 			try {
 				ui=db.DBGetUserInfo();
-				di=db.DBGetTodayDailyInfo();
+				//di=db.DBGetTodayDailyInfo();
 			} catch (DBException e) {}
 			if(ui ==null) {
 				c+="ui";

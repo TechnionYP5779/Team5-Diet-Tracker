@@ -39,7 +39,6 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 		return i.matches(intentName("HowMuchMeasureIntent"));
 	}
 
-	@SuppressWarnings("boxing")
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		String speechText = "";
