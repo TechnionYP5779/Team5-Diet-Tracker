@@ -52,7 +52,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 		
 		for (final Portion p : FoodList) {
 			String[] splited2 =p.getTime().toString().split(" ")[3].split(":");
-			speechText += ", at "+Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])+" you ate " + p.getName() + " " + Integer.valueOf((int) p.getAmount()) + " grams ";
+			speechText += ", at "+Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])+" you ate " + Integer.valueOf((int) p.getAmount()) + " grams of " + p.getName() ;
 		}
 		
 		if (speechText.isEmpty())

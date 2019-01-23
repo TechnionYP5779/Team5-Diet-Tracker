@@ -42,8 +42,8 @@ public class AddWeightGoalIntentHandler implements RequestHandler{
 		String speechText = "hello", repromptText="world";
 		
 		if (NumberSlot == null) {
-			speechText = "I'm not sure what is your goal. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your goal. Please tell me again";
+			speechText = "I'm not sure what is your weight goal. Please tell me again";
+			repromptText = "I will repeat, I'm not sure what is your weight goal. Please tell me again";
 		} else {
 			final int weight = Integer.parseInt(NumberSlot.getValue());
 			speechText=NumberSlot.getValue();

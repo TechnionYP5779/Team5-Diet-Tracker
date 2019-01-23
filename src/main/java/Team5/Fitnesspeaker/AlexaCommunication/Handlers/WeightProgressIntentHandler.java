@@ -97,10 +97,10 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		}
 		//s+=" "+String.valueOf(dts.size())+" "+String.valueOf(wts.size());
 		if( wts.size()>=5)
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with weight progess Sent"+s)
-				.withSpeech("Mail with weight progess Sent").withShouldEndSession(Boolean.FALSE).build();
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough mesurements"+s)
-				.withSpeech("I don't have enough mesurements"+s).withShouldEndSession(Boolean.FALSE).build();
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail describing your weight progess has been sent"+s)
+				.withSpeech("Mail describing your weight progess has been sent").withShouldEndSession(Boolean.FALSE).build();
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough measurements"+s)
+				.withSpeech("I don't have enough measurements"+s).withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }

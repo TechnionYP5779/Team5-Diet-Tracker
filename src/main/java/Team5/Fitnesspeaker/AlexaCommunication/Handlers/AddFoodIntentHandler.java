@@ -53,15 +53,15 @@ public class AddFoodIntentHandler implements RequestHandler {
 		}
 
 		if (AmountSlot == null) {
-			speechText = "I'm not sure how much you ate. Please tell me again";
-			repromptText = "I will repeat, I'm not sure how much you ate. Please tell me again";
+			speechText = "I'm not sure about the amount you ate, Please tell me again";
+			repromptText = "I will repeat, I'm not sure about the amount you ate, Please tell me again";
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
 		
 		if (UnitSlot == null) {
-			speechText = "I'm not sure about the units. Please tell me again";
-			repromptText = "I will repeat, I'm not sure about the units. Please tell me again";
+			speechText = "I'm not sure about the units of what you ate, Please tell me again";
+			repromptText = "I will repeat, I'm not sure about the units of what you ate, Please tell me again";
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
@@ -85,8 +85,8 @@ public class AddFoodIntentHandler implements RequestHandler {
 		 * that we didn't find the portion units in the DB or in our modules.
 		 */
 		} catch (Exception e) {
-			speechText = String.format("There was a problem with the units you said, Please try to supply the food in a different unit, for example, in grams");
-			repromptText = String.format("I'll repeat, there was a problem with the units you said, Please try to supply the food in a different unit, for example, in grams");
+			speechText = String.format("There was a problem with the units you provided, Please try to tell me the food in a different unit, for example, in grams");
+			repromptText = String.format("I'll repeat, there was a problem with the units you provided, Please try to tell me the food in a different unit, for example, in grams");
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}

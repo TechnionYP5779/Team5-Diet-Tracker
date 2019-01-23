@@ -47,8 +47,8 @@ public class PeriodicWeightProgressHandler implements RequestHandler{
 			} catch (DBException e) {}
 			if(ui ==null) {
 				c+="ui";
-				speechText="you didn't tell me your goal yet";
-				repromptText="you didn't tell me your goal yet";
+				speechText="you didn't tell me your weight goal yet";
+				repromptText="you didn't tell me your weight goal yet";
 				ui=new UserInfo();
 			}
 				
