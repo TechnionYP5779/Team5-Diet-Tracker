@@ -2,25 +2,13 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.services.Pair;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import Utils.AlcoholBloodCalc;
 import Utils.Portion;
 import Utils.UserInfo;
@@ -32,7 +20,7 @@ public class CanIDriveIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("CanIDriveIntent"));
+		return i.matches(intentName(Utils.Strings.IntentsNames.CAN_I_DRIVE_INTENT));
 	}
 
 	@Override
@@ -48,13 +36,13 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		} catch (DBException e) {}
 		
 		if(ui==null) {
-			speechText = String.format("you didn't tell me what is your gender");
+			speechText = Utils.Strings.AlcoholStrings.CAN_DRIVE_TELL_GENDER;
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
 		
 		if(di==null) {
-			speechText = String.format("you didn't tell me what is your wight");
+			speechText = Utils.Strings.AlcoholStrings.CAN_DRIVE_TELL_WEIGHT;
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
@@ -62,7 +50,7 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		int weight= (int) di.getWeight();
 		
 		if (weight==-1) {
-			speechText = String.format("you didn't tell me what is your weight");
+			speechText = Utils.Strings.AlcoholStrings.CAN_DRIVE_TELL_WEIGHT;
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
@@ -79,9 +67,9 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		else
 			alcInblood=new AlcoholBloodCalc().setForFemale().setWeight(weight).CalcForNow(todaysAlchohol);
 		if ( alcInblood>= 0.05)
-			speechText = "you can't drive right now, you drank too much";
+			speechText = Utils.Strings.AlcoholStrings.CANT_DRIVE;
 		else
-			speechText = "you are allowed to drive, go safely";
+			speechText = Utils.Strings.AlcoholStrings.CAN_DRIVE;
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

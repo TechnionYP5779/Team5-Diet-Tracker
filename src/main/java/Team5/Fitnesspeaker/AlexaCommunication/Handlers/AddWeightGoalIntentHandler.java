@@ -24,11 +24,11 @@ public class AddWeightGoalIntentHandler implements RequestHandler{
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
-		String speechText = "hello", repromptText="world";
+		String speechText = "", repromptText="";
 		
 		if (NumberSlot == null) {
-			speechText = "I'm not sure what is your weight goal. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your weight goal. Please tell me again";
+			speechText = Utils.Strings.GoalsAndMeasuresStrings.TELL_MEASURE_GOAL_AGAIN;
+			repromptText = Utils.Strings.GoalsAndMeasuresStrings.TELL_MEASURE_AGAIN_REPEAT;
 		} else {
 			final int weight = Integer.parseInt(NumberSlot.getValue());
 			speechText=NumberSlot.getValue();
@@ -43,8 +43,8 @@ public class AddWeightGoalIntentHandler implements RequestHandler{
 				ui=new UserInfo();
 			ui.setWeightGoal(weight);
 			db.DBUpdateUserInfo(ui);
-			speechText = "logged succesfully";
-			repromptText = "logged succesfully";
+			speechText = Utils.Strings.GeneralString.LOGGED_SUCCESSFULLY;
+			repromptText =  Utils.Strings.GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
 		}
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
