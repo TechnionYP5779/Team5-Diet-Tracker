@@ -84,8 +84,9 @@ public class SendDailyEmailHandler implements RequestHandler {
 			// e.printStackTrace();
 		}
 
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail Sent").withSpeech("Mail Sent")
-				.withShouldEndSession(Boolean.FALSE).build();
+		return i.getResponseBuilder()
+				.withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.DAILY_MAIL_SENT)
+				.withSpeech(Utils.Strings.EmailStrings.DAILY_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }

@@ -52,8 +52,9 @@ public class DrinkAlchoholHandler implements RequestHandler {
 		final double alcoholPrecentage = getAlcoholPrecentage(alcoholName),
 				alcoholAmount = getAlcoholAmount(alcoholName);
 		if (alcoholPrecentage == 0)
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "This is not an alcoholic drink")
-					.withSpeech("This is not an alcoholic drink").withShouldEndSession(Boolean.FALSE).build();
+			return i.getResponseBuilder()
+					.withSimpleCard("FitnessSpeakerSession", Utils.Strings.AlcoholStrings.NOT_ALCOHOL)
+					.withSpeech(Utils.Strings.AlcoholStrings.NOT_ALCOHOL).withShouldEndSession(Boolean.FALSE).build();
 
 		String speechText = "", repromptText;
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
@@ -63,8 +64,8 @@ public class DrinkAlchoholHandler implements RequestHandler {
 		} catch (DBException e) {
 			// e.printStackTrace();
 		}
-		speechText = String.format("Cheers! you drank %s", alcoholName);
-		repromptText = "You can drink again saying cheers and the alcoholic drink name";
+		speechText = String.format(Utils.Strings.AlcoholStrings.CHEERS, alcoholName);
+		repromptText = Utils.Strings.AlcoholStrings.DRINK_ALCOHOL;
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
