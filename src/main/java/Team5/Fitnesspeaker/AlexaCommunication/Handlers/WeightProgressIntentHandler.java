@@ -34,10 +34,10 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
 
-	private int getWeightByDate(String date,DBUtils db) {
+	private int getWeightByDate(String date,DBUtils u) {
 		
 		try {
-			return (int) db.DBGetDateDailyInfo(date).getWeight();
+			return (int) u.DBGetDateDailyInfo(date).getWeight();
 		} catch (DBException e) {
 			// TODO Auto-generated catch block
 			return -1;

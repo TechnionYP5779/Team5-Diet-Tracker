@@ -41,70 +41,25 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		DBUtils db = new DBUtils(UserMail);
 		String speechText = "";
 		UserInfo ui=null;
+		DailyInfo di=null;
 		try {
 		    ui=db.DBGetUserInfo();
-		}catch(Exception e) {
+		    di =db.DBGetTodayDailyInfo();
+		} catch (DBException e) {}
+		
+		if(ui==null) {
 			speechText = String.format("you didn't tell me what is your gender");
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withShouldEndSession(Boolean.FALSE).build();
-		} catch (DBException e1) {}
+		}
+		
+		if(di==null) {
+			speechText = String.format("you didn't tell me what is your wight");
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withShouldEndSession(Boolean.FALSE).build();
+		}
 			
-		int weight=-1;
-
-		// ################# need to refactor ##################### 
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String user_mail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		DatabaseReference dbRef = null;
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-									.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-				} catch (final Exception e1) {
-					speechText += e1.getMessage() + " ";// its ok
-				}
-					final FirebaseDatabase database = FirebaseDatabase.getInstance();
-					if (database != null)
-						dbRef = database.getReference().child(user_mail).child("Dates").child(DBUtils.getDate()).child("Daily-Info");
-					} catch (final Exception e) {
-						speechText += e.getMessage() + " ";// its ok
-					}
-					// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-					final List<DailyInfo> DailyInfoList = new LinkedList<>();
-					final CountDownLatch done = new CountDownLatch(1);
-					dbRef.addValueEventListener(new ValueEventListener() {
-						@Override
-						public void onDataChange(final DataSnapshot s) {
-							for (final DataSnapshot userSnapshot : s.getChildren())
-								DailyInfoList.add(userSnapshot.getValue(DailyInfo.class));
-							done.countDown();
-						}
-
-						@Override
-						public void onCancelled(final DatabaseError e) {
-							System.out.println("The read failed: " + e.getCode());
-						}
-					});
-					try {
-						done.await();
-					} catch (final InterruptedException e) {
-						// TODO Auto-generated catch block
-					}
-
-					if (DailyInfoList.isEmpty())
-						speechText = String.format("you didn't tell me what is your weight");
-					else {
-						  weight = (int)(DailyInfoList.get(0).getWeight());
-						if (weight == -1)
-							speechText = String.format("you didn't tell me what is your weight");
-					}
-					
-					// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-					// ################## need to refactor ###################### 
+		int weight= (int) di.getWeight();
 		
 		if (weight==-1) {
 			speechText = String.format("you didn't tell me what is your weight");
@@ -114,9 +69,8 @@ public class CanIDriveIntentHandler implements RequestHandler {
 			
 		List<Portion> todaysAlchohol = new LinkedList<>();
 		try {
-			for(Pair<String, Portion> p : db.DBGetTodayAlcoholList()) {
+			for(Pair<String, Portion> p : db.DBGetTodayAlcoholList())
 				todaysAlchohol.add(p.getValue());
-			}
 		} catch (DBException e) {}
 		
 		double alcInblood=0;
