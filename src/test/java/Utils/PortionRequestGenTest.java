@@ -61,7 +61,7 @@ public class PortionRequestGenTest {
 	/** this test checks all strings, after all HTTP reads have stablized**/
 	@Test
 	public void check_strings() {
-		for(int i=0;i<strings.size();i++)
+		for(int i=0;i<strings.size();++i)
 			assert strings.get(i).contains(contained.get(i));
 	}
 }

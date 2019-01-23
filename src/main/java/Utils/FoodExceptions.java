@@ -8,7 +8,7 @@ package Utils;
 public class FoodExceptions {
 	public static class UnitsNotFoundExcpetion extends Exception{
 		
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1;
 
 		public UnitsNotFoundExcpetion() {}
 
