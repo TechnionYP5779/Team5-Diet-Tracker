@@ -1,17 +1,16 @@
-/**add here document
- * @author Fname Sname
- * @since year-month-day*/
+/**this module intents to have hand-made
+ * exceptions for using in the code.
+ * @author Shaked Sapir
+ * @since 2018-01-23*/
 package Utils;
 
-/**
- * @author Shaked Sapir
- *
- */
+
 public class FoodExceptions {
 	public static class UnitsNotFoundExcpetion extends Exception{
 		
 		private static final long serialVersionUID = 1L;
 
 		public UnitsNotFoundExcpetion() {}
+
 	}
 }
