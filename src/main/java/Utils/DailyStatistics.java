@@ -2,7 +2,7 @@ package Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressWarnings("boxing")
 public class DailyStatistics {
 	public String cupsOfWater = "0";
 	public List<Portion> foodPortions = new ArrayList<>();
@@ -11,6 +11,7 @@ public class DailyStatistics {
 	public String dailyProteins = "0.0";
 	public String dailyCarbs = "0.0";
 	public String dailyFats = "0.0";
+	
 	
 	public void calculateDailyNutritions() {
 		Double calories = 0.0, proteins = 0.0, carbs = 0.0, fats = 0.0;

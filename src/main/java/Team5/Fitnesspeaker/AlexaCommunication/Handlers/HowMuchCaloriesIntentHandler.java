@@ -84,13 +84,13 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				for (final DataSnapshot portionSnapshot : s.getChildren()) {
 					double measure = 0;
 					double amount = portionSnapshot.getValue(Portion.class).getAmount();
-					if ("fats".equals(measure_str))
+					if ("fats".contains(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getFats_per_100_grams();
-					else if ("carbs".equals(measure_str))
+					else if ("carbs".contains(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getCarbs_per_100_grams();
-					else if ("proteins".equals(measure_str))
+					else if ("proteins".contains(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getProteins_per_100_grams();
-					else if ("calories".equals(measure_str))
+					else if ("calories".contains(measure_str))
 						measure = portionSnapshot.getValue(Portion.class).getCalories_per_100_grams();
 					total_measure.set(0, (int) (total_measure.get(0) + measure * ((double) amount / 100)));
 				}
@@ -103,13 +103,14 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 			}
 		});
 		final List<UserInfo> userInfo = new LinkedList<>();
+		final CountDownLatch done2 = new CountDownLatch(1);
 		// get the goal
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
 				for (final DataSnapshot userSnapshot : s.getChildren())
 					userInfo.add(userSnapshot.getValue(UserInfo.class));
-				done.countDown();
+				done2.countDown();
 			}
 
 			@Override
@@ -118,7 +119,7 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 			}
 		});
 		try {
-			done.await();
+			done2.await();
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
@@ -126,29 +127,45 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 		// TODO: say the goal even if i didn't eat anything today.
 				// meaning the second else will be executed.
 				String speechText2 = "";
-				if (userInfo.isEmpty() || (userInfo.get(0).getDailyCaloriesGoal() == -1 && "calories".equals(measure_str))
-						|| (userInfo.get(0).getDailyProteinGramsGoal() == -1 && "proteins".equals(measure_str))
-						|| (userInfo.get(0).getDailyCarbsGoal() == -1 && "carbs".equals(measure_str))
-						|| (userInfo.get(0).getDailyFatsGoal() == -1 && "fats".equals(measure_str)))
+				if (userInfo.isEmpty() || (userInfo.get(0).getDailyCaloriesGoal() == -1 && "calories".contains
+						(measure_str))
+						|| (userInfo.get(0).getDailyProteinGramsGoal() == -1 && "proteins".contains(measure_str))
+						|| (userInfo.get(0).getDailyCarbsGoal() == -1 && "carbs".contains(measure_str))
+						|| (userInfo.get(0).getDailyFatsGoal() == -1 && "fats".contains(measure_str)))
 					speechText2 = String.format("You didn't tell me your goal yet!");
 				else {
 					int calories = (int) userInfo.get(0).getDailyCaloriesGoal();
 					int fats = (int) userInfo.get(0).getDailyFatsGoal();
 					int carbs = (int) userInfo.get(0).getDailyCarbsGoal();
 					int proteins = (int) userInfo.get(0).getDailyProteinGramsGoal();
-					if ("calories".equals(measure_str)) {
-						speechText2 = String.format(" There are %d grams %s left for your goal! Keep going!", calories - total_measure.get(0), measure_str);
+					if ("calories".contains(measure_str)) {
+						int amount = calories - total_measure.get(0);
+						if (amount > 0)
+							speechText2 = String.format(" There are %d %s left for your goal! Keep going!", amount, measure_str);
+						else if (amount == 0)
+							speechText2 = String.format(" You achieved your %s goal, Well Done!", measure_str);
+						else
+							speechText2 = String.format(" You passed your %s goal by %d %s", measure_str, -amount, measure_str);
 					} else {
-						int amount = ("proteins".equals(measure_str) ? proteins - total_measure.get(0)
-								: ("carbs".equals(measure_str) ? carbs - total_measure.get(0)
-										: (!"fats".equals(measure_str) ? 0 : fats - total_measure.get(0))));
-						speechText2 = String.format(" There are %d %s left for your goal! Keep going!", amount, measure_str);
+						int amount = ("proteins".contains(measure_str) ? proteins - total_measure.get(0)
+								: ("carbs".contains(measure_str) ? carbs - total_measure.get(0)
+										: (!"fats".contains(measure_str) ? 0 : fats - total_measure.get(0))));
+						speechText2 = String.format(" There are %d grams of %s left for your goal! Keep going!", amount, measure_str);
+						if (amount > 0)
+							speechText2 = String.format(" There are %d grams of %s left for your goal! Keep going!", amount, measure_str);
+						else if (amount == 0)
+							speechText2 = String.format(" You achieved your %s goal, Well Done!", measure_str);
+						else
+							speechText2 = String.format(" You passed your %s goal by %d grams",measure_str, -amount);
 					}
 				}
 				if (total_measure.get(0) == 0)
 					speechText = String.format("you didn't eat anything today. ") + speechText2;
 				else {
-					speechText = String.format("You ate %d %s today. ", total_measure.get(0), measure_str) + speechText2;
+					if("calories".contains(measure_str))
+						speechText = String.format("You ate %d %s today. ", total_measure.get(0), measure_str) + speechText2;
+					else
+						speechText = String.format("You ate %d grams of %s today. ", total_measure.get(0), measure_str) + speechText2;
 				}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)

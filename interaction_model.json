@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "nutracker",
+            "invocationName": "diet tracker",
             "intents": [
                 {
                     "name": "AMAZON.FallbackIntent",
@@ -35,18 +35,25 @@
                         {
                             "name": "Number",
                             "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "Unit",
+                            "type": "Unit"
                         }
                     ],
                     "samples": [
-                        "I just ate {Number} grams of {Food} ",
-                        "i ate {Number} gram of {Food}",
-                        "i ate {Number} grams of {Food}"
+                        "I ate {Number} {Unit} {Food}",
+                        "I just ate {Number} {Unit} of {Food} ",
+                        "i ate {Number} {Unit} of {Food}"
                     ]
                 },
                 {
                     "name": "WhatIAteIntent",
                     "slots": [],
                     "samples": [
+                        "to tell what did i eat",
+                        "to tell what did i eat so far",
+                        "to tell what did i eat today",
                         "what did i eat today",
                         "what did i eat so far",
                         "what did i eat"
@@ -58,29 +65,40 @@
                         {
                             "name": "Number",
                             "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "drink",
+                            "type": "AMAZON.Drink"
                         }
                     ],
                     "samples": [
-                        "i just drank {Number} cup of water",
-                        "i just drank {Number} glass of water",
-                        "i just drank {Number} glasses of water",
-                        "i just drank {Number} cups of water",
-                        "i drank {Number}  cup of water",
-                        "i drank {Number}  glass of water",
-                        "i drank {Number} glasses of water",
-                        "i drank {Number} cups of water"
+                        "i drank {Number} cups of {drink}",
+                        "i drank {Number} glasses of {drink}",
+                        "i drank {Number} glass of {drink}",
+                        "i drank {Number} cup of {drink}",
+                        "i just drank {Number} cups of {drink}",
+                        "i just drank {Number} glasses of {drink}",
+                        "i just drank {Number} glass of {drink}",
+                        "i just drank {Number} cup of {drink}"
                     ]
                 },
                 {
                     "name": "HowMuchIDrankIntent",
-                    "slots": [],
+                    "slots": [
+                        {
+                            "name": "drink",
+                            "type": "AMAZON.Drink"
+                        }
+                    ],
                     "samples": [
-                        "how much water have I drank so far",
-                        "how many glasses of water i drank so far",
-                        "how many glasses of water i drank",
-                        "how many cups of water i drank so far",
-                        "how many cups of water i drank",
-                        "how much i drank so far"
+                        "how many cups of {drink} i drank",
+                        "how many cups of {drink} i drank so far",
+                        "how many glasses of {drink} i drank",
+                        "how many glasses of {drink} i drank so far",
+                        "how much {drink} have I drank so far",
+                        "to tell how much {drink} have I drank so far",
+                        "to tell how many cups of {drink} i drank so far",
+                        "to tell how many glasses of {drink} i drank so far"
                     ]
                 },
                 {
@@ -100,6 +118,7 @@
                     "name": "SendDailyMailIntent",
                     "slots": [],
                     "samples": [
+                        "send me daily statistics",
                         "email me",
                         "what is my daily statistics",
                         "send me an email"
@@ -219,36 +238,6 @@
                     ]
                 },
                 {
-                    "name": "addCoffeeIntent",
-                    "slots": [
-                        {
-                            "name": "Number",
-                            "type": "AMAZON.NUMBER"
-                        }
-                    ],
-                    "samples": [
-                        "i drank {Number} glass of coffee",
-                        "i drank {Number} glasses of coffee",
-                        "i just drank {Number} glass of coffee",
-                        "i just drank {Number} glasses of coffee",
-                        "i just drank {Number} cup of coffee",
-                        "i just drank {Number} cups of coffee",
-                        "i drank {Number} cup of coffee",
-                        "i drank {Number} cups of coffee"
-                    ]
-                },
-                {
-                    "name": "HowMuchCoffeeIntent",
-                    "slots": [],
-                    "samples": [
-                        "how many glasses of coffee have i drank so far",
-                        "how many cups of coffee have i drank so far",
-                        "how many glasses of coffee did i drink",
-                        "how many cups of coffee did i drink",
-                        "how much coffee have i drank so far"
-                    ]
-                },
-                {
                     "name": "WeeklyMailReport",
                     "slots": [],
                     "samples": [
@@ -270,6 +259,8 @@
                         }
                     ],
                     "samples": [
+                        "to log measure of {Number} by {NumberTwo}",
+                        "to log blood pressure measure of {Number} by {NumberTwo}",
                         "to log blood pressure of {Number} by {NumberTwo}",
                         "log blood pressure of {Number} by {NumberTwo}"
                     ]
@@ -278,19 +269,11 @@
                     "name": "GetBloodPressureIntent",
                     "slots": [],
                     "samples": [
+                        "to report my blood pressure measurements",
+                        "to tell my blood pressure reports",
                         "please tell my blood pressure reports",
                         "please tell me  my blood pressure reports",
                         "please report my blood pressure"
-                    ]
-                },
-                {
-                    "name": "weightProgressIntent",
-                    "slots": [],
-                    "samples": [
-                        "give me a graph",
-                        "send weight statistics",
-                        "send me my weight statistics",
-                        "how am i doing with my weight"
                     ]
                 },
                 {
@@ -351,6 +334,32 @@
                         "how much cigarettes i can smoke every day",
                         "what is my cigarette limit"
                     ]
+                },
+                {
+                    "name": "weightProgressIntent",
+                    "slots": [],
+                    "samples": [
+                        "report my weight progress"
+                    ]
+                },
+                {
+                    "name": "addWeightGoalIntent",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "my weight goal is {Number}"
+                    ]
+                },
+                {
+                    "name": "PeriodicWeightProgress",
+                    "slots": [],
+                    "samples": [
+                        "how am I doing regarding my weight"
+                    ]
                 }
             ],
             "types": [
@@ -385,6 +394,141 @@
                         {
                             "name": {
                                 "value": "calories"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Unit",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "tablespoons"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "tablespoon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "teaspoons"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "teaspoon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "gallons"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "gallon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "millilitres"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "milliliters"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "millilitre"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "milliliter"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "kilograms"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "kilogram"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pounds"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pound"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "liters"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "liter"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "milligrams"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "milligram"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pints"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pint"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ounces"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ounce"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "cup"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "cups"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "gram"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "grams"
                             }
                         }
                     ]

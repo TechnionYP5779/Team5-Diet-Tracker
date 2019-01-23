@@ -2,33 +2,25 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
-import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
+import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.amazon.ask.model.Slot;
+import com.amazon.ask.model.services.Pair;
+
+import Utils.DBUtils;
+import Utils.DBUtils.DBException;
+import Utils.Portion;
+import Utils.Portion.Type;
 
 public class HowManyIDrankIntent implements RequestHandler {
+	public static final String DRINK_NAME_SLOT = "drink";
 	
-	public static String getDate() {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
-	
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("HowMuchIDrankIntent"));
@@ -36,66 +28,53 @@ public class HowManyIDrankIntent implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		String speechText = "";
-
-		// added
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		DatabaseReference dbRef = null;
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				speechText += e1.getMessage() + " ";// its ok
-			}
-			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("Dates").child(getDate()).child("Drink");
-		} catch (final Exception e) {
-			speechText += e.getMessage() + " ";// its ok
+		final Slot DrinkSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(DRINK_NAME_SLOT);
+		String speechText = "", repromptText = "";
+		
+		if (DrinkSlot == null) {
+			speechText = "I'm not sure what drink did you ask for. Please tell me again";
+			repromptText = "I will repeat, I'm not sure what drink did you ask for. Please tell me again";
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-		final List<Integer> DrinkCount = new LinkedList<>();
-		final CountDownLatch done = new CountDownLatch(1);
-		dbRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				final Integer count = s.getValue(Integer.class);
-				if (count != null)
-					DrinkCount.add(count);
-				done.countDown();
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
+		
+		String drink_name=DrinkSlot.getValue();
+		
+		// initialize database object with the user mail
+		DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
+		
+		//retrieving the information
+		Optional<Integer> Count = Optional.empty();
 		try {
-			done.await();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
+			if(drink_name.equals("water"))
+				Count=db.DBGetTodayWaterCups();
+			else if(drink_name.contains("coffee"))
+				Count=db.DBGetTodayCofeeCups();
+			else {
+				List<Pair<String,Portion>> Drinklist= db.DBGetTodayFoodList().stream().
+						filter(p->(p.getValue().getName().equals(drink_name))&&(p.getValue().getType()==Type.DRINK)).collect(Collectors.toList());
+				int countOz=0;
+				for(Pair<String,Portion> p : Drinklist) countOz+=(int)p.getValue().getAmount();
+				Count=Optional.ofNullable(Integer.valueOf(countOz/30));
+			}
+		} catch (DBException e) {
+			// no need to do anything
 		}
 
-		if (DrinkCount.isEmpty())
-			speechText = String.format("you haven't drink anything today yet");
+		if ((!Count.isPresent())||Count.get().intValue()<=0)
+			speechText = String.format("You haven't drink %s today",drink_name);
 		else {
-			final Integer count = DrinkCount.get(0);
+			final Integer count = Count.get();
 			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of water");
+				speechText = String.format("so far, you have drank a single cup of %s",drink_name);
 			else
-				speechText = String.format("so far, you have drank %d cups of water", count);
+				speechText = String.format("so far, you have drank %d cups of %s", count,drink_name);
 
 		}
 
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withShouldEndSession(Boolean.FALSE).build();
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText).withReprompt(speechText)
+				.withShouldEndSession(Boolean.TRUE).build();
 
 	}
 }

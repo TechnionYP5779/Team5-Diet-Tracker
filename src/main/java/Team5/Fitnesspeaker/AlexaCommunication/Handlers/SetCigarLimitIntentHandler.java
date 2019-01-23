@@ -2,28 +2,15 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import Utils.DBUtils;
 import Utils.UserInfo;
+import Utils.DBUtils.DBException;
 
 public class SetCigarLimitIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
@@ -39,28 +26,8 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 				.get(NUMBER_SLOT);
 		String speechText = "", repromptText;
 
-		// added database
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-		DatabaseReference dbRef = null;
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				speechText += e1.getMessage() + " ";// its ok
-			}
-			final FirebaseDatabase database = FirebaseDatabase.getInstance();
-			if (database != null)
-				dbRef = database.getReference().child(UserMail).child("User-Info");
-		} catch (final Exception e) {
-			speechText += e.getMessage() + " ";// its ok
-		}
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
 			speechText = "I'm not sure what is your cigarettes limit. Please tell me again";
@@ -68,52 +35,22 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 		} else {
 			final int cigarettesLimit = Integer.parseInt(NumberSlot.getValue());
 
-			final List<UserInfo> UserList = new LinkedList<>();
-			final List<String> UserId = new LinkedList<>();
 			UserInfo u = new UserInfo();
 			u.setDailyLimitCigarettes(cigarettesLimit);
-			final CountDownLatch done = new CountDownLatch(1);
-			dbRef.addValueEventListener(new ValueEventListener() {
-				@Override
-				public void onDataChange(final DataSnapshot s) {
-					for (final DataSnapshot userSnapshot : s.getChildren()) {
-						UserList.add(userSnapshot.getValue(UserInfo.class));
-						UserId.add(userSnapshot.getKey());
-					}
-					done.countDown();
-				}
-
-				@Override
-				public void onCancelled(final DatabaseError e) {
-					System.out.println("The read failed: " + e.getCode());
-				}
-			});
+			UserInfo user = null;
 			try {
-				done.await();
-			} catch (final InterruptedException e) {
-				// TODO Auto-generated catch block
+				user = db.DBGetUserInfo();
+			} catch (DBException e) {
+				// no need to do anything
 			}
-			if (UserList.isEmpty())
-				try {
-					if (dbRef != null)
-						dbRef.push().setValueAsync(u).get();
-				} catch (InterruptedException | ExecutionException e) {
-					speechText += e.getMessage() + " ";
-				}
+			if (user==null)
+				db.DBUpdateUserInfo(u);
 			else
-				try {
-					FirebaseDatabase.getInstance().getReference().child(UserMail).child("User-Info").child(UserId.get(0))
-							.setValueAsync(new UserInfo(UserList.get(0).getGender(), UserList.get(0).getAge(),
-									UserList.get(0).getHeight(),
-									UserList.get(0).getDailyCaloriesGoal(),
-									UserList.get(0).getDailyProteinGramsGoal(), UserList.get(0).getDailyCarbsGoal(),
-									UserList.get(0).getDailyFatsGoal(),cigarettesLimit))
-							.get();
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
-				} catch (final ExecutionException e) {
-					e.printStackTrace();
-				}
+				db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
+						user.getHeight(),
+						user.getDailyCaloriesGoal(),
+						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
+						user.getDailyFatsGoal(),cigarettesLimit));
 
 			speechText = String.format("logged successfully");
 			repromptText = "I will repeat, logged successfully";
