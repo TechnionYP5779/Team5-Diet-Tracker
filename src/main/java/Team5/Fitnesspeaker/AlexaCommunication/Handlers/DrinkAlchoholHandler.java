@@ -19,7 +19,6 @@ public class DrinkAlchoholHandler implements RequestHandler {
 		case "wine":
 			return 12.0;
 		case "vodka":
-			return 40.0;
 		case "whiskey":
 			return 40.0;
 		default:
@@ -34,7 +33,6 @@ public class DrinkAlchoholHandler implements RequestHandler {
 		case "wine":
 			return 175.0;
 		case "vodka":
-			return 30.0;
 		case "whiskey":
 			return 30.0;
 		default:
@@ -44,15 +42,15 @@ public class DrinkAlchoholHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("DrinkAlchohol"));
+		return i.matches(intentName(Utils.Strings.IntentsNames.DRINK_ALCOHOL_INTENT));
 	}
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
 		final String alcoholName = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get("alchohol").getValue();
-		final double alcoholPrecentage = getAlcoholPrecentage(alcoholName);
-		final double alcoholAmount = getAlcoholAmount(alcoholName);
+		final double alcoholPrecentage = getAlcoholPrecentage(alcoholName),
+				alcoholAmount = getAlcoholAmount(alcoholName);
 		if (alcoholPrecentage == 0)
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "This is not an alcoholic drink")
 					.withSpeech("This is not an alcoholic drink").withShouldEndSession(Boolean.FALSE).build();

@@ -39,10 +39,7 @@ public class SendDailyEmailHandler implements RequestHandler {
 			// e1.printStackTrace();
 		}
 
-		if (!drinks.isPresent())
-			this.dailyStatistics.cupsOfWater = "0";
-		else
-			this.dailyStatistics.cupsOfWater = drinks.get().toString();
+		this.dailyStatistics.cupsOfWater = !drinks.isPresent() ? "0" : drinks.get().toString();
 	}
 
 	private void getFoodInfo() {
@@ -63,15 +60,12 @@ public class SendDailyEmailHandler implements RequestHandler {
 			// e1.printStackTrace();
 		}
 
-		if (!cigs.isPresent())
-			this.dailyStatistics.ciggaretesSmoked = "0";
-		else
-			this.dailyStatistics.ciggaretesSmoked = cigs.get().toString();
+		this.dailyStatistics.ciggaretesSmoked = !cigs.isPresent() ? "0" : cigs.get().toString();
 	}
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("SendDailyMailIntent"));
+		return i.matches(intentName(Utils.Strings.IntentsNames.DAILY_MAIL_INTENT));
 	}
 
 	@Override

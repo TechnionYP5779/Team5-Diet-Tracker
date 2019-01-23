@@ -80,7 +80,7 @@ public class WeeklyMailReportHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("WeeklyMailReport"));
+		return i.matches(intentName(Utils.Strings.IntentsNames.WEEKLY_MAIL_INTENT));
 	}
 
 	@Override
