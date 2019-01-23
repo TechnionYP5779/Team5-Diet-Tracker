@@ -8,7 +8,6 @@ import javax.mail.MessagingException;
 
 import org.junit.Test;
 import Utils.EmailSender;
-@SuppressWarnings("static-method")
 public class EmailSenderTest {
 
 	// checking there are no exceptions and that the mail is sent
