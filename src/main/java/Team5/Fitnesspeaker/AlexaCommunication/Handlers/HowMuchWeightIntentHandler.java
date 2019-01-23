@@ -83,11 +83,11 @@ public class HowMuchWeightIntentHandler implements RequestHandler{
 		}
 
 		if (DailyInfoList.isEmpty())
-			speechText = String.format("you didn't tell me what is your weight");
+			speechText = String.format("you didn't tell me what is your weight yet");
 		else {
 			final int weight = (int)(DailyInfoList.get(0).getWeight());
 			if (weight == -1)
-				speechText = String.format("you didn't tell me what is your weight");
+				speechText = String.format("you didn't tell me what is your weight yet");
 			else
 				speechText = String.format("you weight %d kilograms", Integer.valueOf(weight));
 

@@ -38,7 +38,7 @@ public class GetBloodPressureIntentHandler implements RequestHandler {
 		}
 
 		if (logListDB.isEmpty())
-			speechText = "You did not log any blood pressure measure today";
+			speechText = "You haven't logged any blood pressure measure today yet";
 		else
 			for (BloodPressure log : logListDB)
 				speechText += log.toString() + ", ";

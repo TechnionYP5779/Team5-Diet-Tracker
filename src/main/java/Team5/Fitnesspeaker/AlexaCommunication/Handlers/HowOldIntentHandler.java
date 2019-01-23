@@ -31,11 +31,11 @@ public class HowOldIntentHandler implements RequestHandler{
 		}
 
 		if (user==null)
-			speechText = String.format("you didn't tell me what is your age");
+			speechText = String.format("you didn't tell me what is your age yet");
 		else {
 			final int age = user.getAge();
 			if (age == -1)
-				speechText = String.format("you didn't tell me what is your age");
+				speechText = String.format("you didn't tell me what is your age yet");
 			else
 				speechText = String.format("you are %d years old", Integer.valueOf(age));
 

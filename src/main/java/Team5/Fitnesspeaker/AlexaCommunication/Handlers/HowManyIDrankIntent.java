@@ -33,8 +33,8 @@ public class HowManyIDrankIntent implements RequestHandler {
 		String speechText = "", repromptText = "";
 		
 		if (DrinkSlot == null) {
-			speechText = "I'm not sure what drink did you ask for. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what drink did you ask for. Please tell me again";
+			speechText = "I'm not sure what did you drink, Please tell me again";
+			repromptText = "I will repeat, I'm not sure what did you drink, Please tell me again";
 			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
 		}
@@ -63,7 +63,7 @@ public class HowManyIDrankIntent implements RequestHandler {
 		}
 
 		if ((!Count.isPresent())||Count.get().intValue()<=0)
-			speechText = String.format("You haven't drink %s today",drink_name);
+			speechText = String.format("You haven't drink %s today yet",drink_name);
 		else {
 			final Integer count = Count.get();
 			if (count.intValue() == 1)

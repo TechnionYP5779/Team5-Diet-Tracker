@@ -104,8 +104,8 @@ public class WeeklyMailReportHandler implements RequestHandler {
 			// e.printStackTrace();
 		}
 		weeklyStatistics = new WeeklyStatistics();
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with weekly report has been sent")
-				.withSpeech("Mail with weekly report has been sent ").withShouldEndSession(Boolean.FALSE).build();
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with a weekly report has been sent")
+				.withSpeech("Mail with a weekly report has been sent ").withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }
