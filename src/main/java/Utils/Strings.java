@@ -158,7 +158,7 @@ public class Strings {
 		public static final String GOAL_PASSED_GRAMS = "You passed your %s goal by %d grams";
 		public static final String DIDNT_EAT = "you didn't eat anything today.";
 		public static final String MEASURE_AMOUNT_ATE = "You ate %d %s today.";
-		public static final String MEASURE_AMOUNT_ATE_GRAMS = "You ate %d grams of %s today.";
+		public static final String MEASURE_AMOUNT_ATE_GRAMS = "You ate %d grams of %s today";
 		public static final String DIDNT_TELL_WEIGHT_GOAL = "you didn't tell me your weight goal yet";
 		public static final String DIDNT_TELL_WEIGHT = "you didn't tell me what is your weight";
 		public static final String DOING_GREAT = "you are doing great, keep going";
