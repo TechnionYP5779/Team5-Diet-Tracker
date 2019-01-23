@@ -21,7 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import Utils.DBUtils;
+import Utils.DBUtils.DBException;
 import Utils.DailyInfo;
 import Utils.EmailSender;
 @SuppressWarnings("static-method")
@@ -44,58 +45,18 @@ public class WeightProgressIntentHandler implements RequestHandler {
 	}
 
 	private void getUserInfo(HandlerInput i) {
-		this.UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		this.UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
 
-	
-	private void openDatabase() {
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				// empty block
-
-			}
-		} catch (final Exception e) {
-			// empty block
-		}
-	}
-
-	private int getWeightByDate(String date) {
-		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail)
-				.child("Dates").child(date).child("Daily-Info");
+	private int getWeightByDate(String date,DBUtils db) {
 		
-		
-		final List<DailyInfo> UserList = new LinkedList<>();
-		final CountDownLatch done = new CountDownLatch(1);
-		dbRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot userSnapshot : s.getChildren())
-					UserList.add(userSnapshot.getValue(DailyInfo.class));
-				done.countDown();
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
 		try {
-			done.await();
-		} catch (final InterruptedException e) {
+			return (int) db.DBGetDateDailyInfo(date).getWeight();
+		} catch (DBException e) {
 			// TODO Auto-generated catch block
-		}
-		
-		if(UserList.isEmpty())
 			return -1;
-		return (int) UserList.get(0).getWeight();
+		}
 	}
 		
 
@@ -111,12 +72,12 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		String s="";
 		try {
 		getUserInfo(i);
-		openDatabase();
+		DBUtils db=new DBUtils(UserMail);
 		String[] dates = getDates();
 		
 		int w=-1;
 		for (int day = 0; day < MAX_DAYS; ++day) {
-			w=getWeightByDate(dates[day]);
+			w=getWeightByDate(dates[day],db);
 			if(w!=-1) {
 				wts.add(Integer.valueOf(w));
 				Calendar c=Calendar.getInstance();
@@ -127,7 +88,7 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		}
 		try {
 			if( wts.size()>=5) 
-				(new EmailSender()).sendWeightStatistics("weight progess", this.UserMail.replace("_dot_", "."), UserName, dts, wts);
+				(new EmailSender()).sendWeightStatistics("weight progess", this.UserMail, UserName, dts, wts);
 		} catch (Exception e) {
 			//s+=e.toString();
 		}
