@@ -52,23 +52,23 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		int weight=-1;
 
 		// ################# need to refactor ##################### 
-					// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-					final String user_mail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
-					DatabaseReference dbRef = null;
-					try {
-						FileInputStream serviceAccount;
-						FirebaseOptions options = null;
-						try {
-							serviceAccount = new FileInputStream("db_credentials.json");
-							options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		final String user_mail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		DatabaseReference dbRef = null;
+		try {
+			FileInputStream serviceAccount;
+			FirebaseOptions options = null;
+			try {
+				serviceAccount = new FileInputStream("db_credentials.json");
+				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
 									.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-							FirebaseApp.initializeApp(options);
-						} catch (final Exception e1) {
-							speechText += e1.getMessage() + " ";// its ok
-						}
-						final FirebaseDatabase database = FirebaseDatabase.getInstance();
-						if (database != null)
-							dbRef = database.getReference().child(user_mail).child("Dates").child(DBUtils.getDate()).child("Daily-Info");
+				FirebaseApp.initializeApp(options);
+				} catch (final Exception e1) {
+					speechText += e1.getMessage() + " ";// its ok
+				}
+					final FirebaseDatabase database = FirebaseDatabase.getInstance();
+					if (database != null)
+						dbRef = database.getReference().child(user_mail).child("Dates").child(DBUtils.getDate()).child("Daily-Info");
 					} catch (final Exception e) {
 						speechText += e.getMessage() + " ";// its ok
 					}

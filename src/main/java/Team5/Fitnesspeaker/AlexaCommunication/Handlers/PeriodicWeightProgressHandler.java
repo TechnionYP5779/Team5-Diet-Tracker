@@ -35,7 +35,7 @@ public class PeriodicWeightProgressHandler implements RequestHandler{
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		String speechText = "hello", repromptText="world";
+		    String speechText = "", repromptText="";
 			final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
 			DBUtils db=new DBUtils(UserMail);
 			UserInfo ui=null;
@@ -110,10 +110,12 @@ public class PeriodicWeightProgressHandler implements RequestHandler{
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// ################## need to refactor ###################### 
 			
-			if(wg==-1)
-				c+="wg";
+			if(wg==-1) {
+				speechText="you didn't tell me your goal yet";
+				repromptText="you didn't tell me your goal yet";
+			}
+				
 			if(w==-1) {
-				c+="w";
 				speechText="you didn't tell me your weight yet";
 				repromptText="you didn't tell me your weight yet";
 			}
