@@ -10,15 +10,19 @@ import java.util.stream.Collectors;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
+
 import Utils.BloodPressure;
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
+import Utils.Strings;
+import Utils.Strings.BloodPressureString;
+import Utils.Strings.IntentsNames;
 
 public class GetBloodPressureIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("GetBloodPressureIntent"));
+		return i.matches(intentName(IntentsNames.GET_BLOOD_PRESSURE_INTENT));
 	}
 
 	@Override
@@ -26,24 +30,24 @@ public class GetBloodPressureIntentHandler implements RequestHandler {
 
 		String speechText = "";
 		// initialize database object with the user mail
-		DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
+		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
 
 		// retrieving all logs from the DB
 		List<BloodPressure> logListDB = new LinkedList<>();
 		try {
 			logListDB = db.DBGetTodayBloodPressureMeasuresList().stream().map(p -> p.getValue())
 					.collect(Collectors.toList());
-		} catch (DBException e) {
+		} catch (final DBException e) {
 			// no need to do anything
 		}
 
-		if (logListDB.isEmpty())
-			speechText = "You haven't logged any blood pressure measure today yet";
-		else
-			for (BloodPressure log : logListDB)
-				speechText += log.toString() + ", ";
+		for (final BloodPressure log : logListDB)
+			speechText += log.toString() + ", ";
 
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+		if (speechText.isEmpty())
+			speechText = BloodPressureString.NO_LOGGED_BLODD_PRESSURE;
+
+		return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)
 				.withReprompt(speechText).withShouldEndSession(Boolean.TRUE).build();
 	}
 

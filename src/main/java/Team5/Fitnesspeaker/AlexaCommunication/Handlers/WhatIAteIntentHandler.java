@@ -1,13 +1,3 @@
-/*
-     Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-     Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
-     except in compliance with the License. A copy of the License is located at
-         http://aws.amazon.com/apache2.0/
-     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
-     the specific language governing permissions and limitations under the License.
-*/
-
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
@@ -20,45 +10,50 @@ import java.util.stream.Collectors;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
+
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Portion;
 import Utils.Portion.Type;
+import Utils.Strings;
+import Utils.Strings.FoodStrings;
+import Utils.Strings.IntentsNames;
 
 public class WhatIAteIntentHandler implements RequestHandler {
-	
+
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("WhatIAteIntent"));
+		return i.matches(intentName(IntentsNames.WHAT_I_ATE_INTENT));
 	}
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
-		
+
 		String speechText = "";
-		
+
 		// initialize database object with the user mail
-		DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
-		
-		List<Portion> FoodList=new LinkedList<>();
-		
-		//retrieving the information
+		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
+
+		List<Portion> FoodList = new LinkedList<>();
+
+		// retrieving the information
 		try {
-			FoodList=db.DBGetTodayFoodList().stream().map(p->p.getValue()).filter(p->p.getType()==Type.FOOD).collect(Collectors.toList());
-		} catch (DBException e) {
+			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).filter(p -> p.getType() == Type.FOOD)
+					.collect(Collectors.toList());
+		} catch (final DBException e) {
 			// no need to do anything
 		}
-		
-		
-		for (final Portion p : FoodList) {
-			String[] splited2 =p.getTime().toString().split(" ")[3].split(":");
-			speechText += ", at "+Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])+" you ate " + Integer.valueOf((int) p.getAmount()) + " grams of " + p.getName() ;
-		}
-		
-		if (speechText.isEmpty())
-			speechText = "you haven't eaten anything today yet. Please Tell me when you do";
 
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+		for (final Portion p : FoodList) {
+			final String[] splited2 = p.getTime().toString().split(" ")[3].split(":");
+			speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1]) + " you ate "
+					+ Integer.valueOf((int) p.getAmount()) + " grams of " + p.getName();
+		}
+
+		if (speechText.isEmpty())
+			speechText = FoodStrings.DIDNT_EAT_ANYTHING;
+
+		return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.TRUE).build();
 
 	}

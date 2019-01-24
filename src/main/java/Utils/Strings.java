@@ -1,6 +1,7 @@
 package Utils;
 
 public class Strings {
+	public static final String GLOBAL_SESSION_NAME = "FitnessSpeakerSession";
 
 	public static class IntentsNames {
 		public static final String ADD_AGE_INTENT = "AddAgeIntent";
@@ -30,6 +31,8 @@ public class Strings {
 		public static final String WEIGHT_PROGRESS_INTENT = "weightProgressIntent";
 		public static final String WHAT_I_ATE_INTENT = "WhatIAteIntent";
 		public static final String WHAT_IS_MY_NAME_INTENT = "WhatIsMyNameIntent";
+		public static final String FALL_BACK_INTENT = "AMAZON.FallbackIntent";
+		public static final String HELP_INTENT = "AMAZON.HelpIntent";
 	}
 
 	public static class AgeStrings {
@@ -48,6 +51,8 @@ public class Strings {
 	}
 
 	public static class DrinkStrings {
+		public static final String TELL_DRINKS_AMOUNT_AGAIN = "I'm not sure how many cups you drank. Please tell me again";
+		public static final String TELL_DRINKS_AMOUNT_AGAIN_REPEAT = "I will repeat, I'm not sure how many cups you drank. Please tell me again";
 		public static final String TELL_DRINKS_AGAIN = "I'm not sure what did you drink. Please tell me again";
 		public static final String TELL_DRINKS_AGAIN_REPEAT = "I will repeat, I'm not sure what did you  drink. Please tell me again";
 		public static final String DRINKS_LOGGING_PROBLEM = "There was a problem with the water logging, Please tell me again";
@@ -57,6 +62,7 @@ public class Strings {
 		public static final String DIDNT_DRINKED_TODAY = "You haven't drink %s today yet";
 		public static final String DRINKED_SO_FAR_ONE = "so far, you have drank a single cup of %s";
 		public static final String DRINKED_SO_FAR_MANY = "so far, you have drank %d cups of %s";
+		public static final String SITTING_TIP = " Remember to drink while you are sitting. ";
 	}
 
 	public static class FoodStrings {
@@ -72,6 +78,10 @@ public class Strings {
 		public static final String FOOD_UNITS_PROBLEM_REPEAT = "I'll repeat, there was a problem with the units you provided, Please try to tell me the food in a different unit, for example, in grams";
 		public static final String FOOD_LOGGED = "You logged %d %s of %s, bon appetit!";
 		public static final String DIDNT_EAT_ANYTHING = "you haven't eaten anything today yet. Please Tell me when you do";
+		public static final String SITTING_TIP = " Remember to eat your meals in sitting position. ";
+		public static final String SLOWLY_TIP = " Remember to eat slowly. ";
+		public static final String DRINK_LIQUID_TIP = " Remember to drink liquids after the meal. ";
+		public static final String WATER_BEFORE_MEAL_TIP = " Remember to drink a cup of water before the meail. ";
 	}
 
 	public static class HeightStrings {
@@ -174,6 +184,16 @@ public class Strings {
 	public static class GeneralString {
 		public static final String LOGGED_SUCCESSFULLY = "logged succesfully";
 		public static final String LOGGED_SUCCESSFULLY_REPEAT = "I will repeat, logged successfully";
+	}
+
+	public static class FallbackString {
+		public static final String TRY_HELP = "Sorry, I don't know that. You can say try saying help!";
+	}
+
+	public static class HelpString {
+		public static final String SAY_HELP = "You can tell me what you ate, for example, i ate twenty grams of pasta or you can tell me everytime you drink,"
+				+ " for example, i drank 3 cups of water.";
+		public static final String SAY_HELP_REPEAT = "I will repeat, " +SAY_HELP;
 	}
 
 }
