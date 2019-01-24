@@ -54,7 +54,7 @@ public class WhatIAteIntentHandler implements RequestHandler {
 		  Portion.Meal m = FoodList.get(0).getMeal();
 		  speechText += "For " + m.name();
 		  for (final Portion p : FoodList) {
-		  	if (p.getMeal() != m) {
+		  	if (! (p.getMeal().name().equals(m.name()))) {
 		  		speechText += "For " + p.getMeal().name();
 		  		m = p.getMeal();
 		  	}

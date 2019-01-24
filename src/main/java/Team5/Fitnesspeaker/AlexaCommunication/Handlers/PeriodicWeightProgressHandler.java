@@ -30,7 +30,9 @@ public class PeriodicWeightProgressHandler implements RequestHandler{
 			try {
 				ui=db.DBGetUserInfo();
 				di=db.DBGetTodayDailyInfo();
-			} catch (DBException e) {}
+			} catch (DBException e) {
+				// nothing to do here
+			}
 			if(ui ==null) {
 				c+="ui";
 				speechText=Utils.Strings.GoalsAndMeasuresStrings.DIDNT_TELL_WEIGHT_GOAL;

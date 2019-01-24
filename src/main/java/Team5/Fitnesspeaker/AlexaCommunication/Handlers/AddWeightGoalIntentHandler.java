@@ -12,7 +12,7 @@ import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.UserInfo;
 
-public class AddWeightGoalIntentHandler implements RequestHandler{
+public class AddWeightGoalIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
@@ -38,15 +38,14 @@ public class AddWeightGoalIntentHandler implements RequestHandler{
 			UserInfo ui=null;
 			try {
 				ui=db.DBGetUserInfo();
-			} catch (DBException e) {}
+			} catch (DBException e) { // nothing to do here
+				
+			}
 			if(ui ==null)
 				ui=new UserInfo();
 			ui.setWeightGoal(weight);
 			db.DBUpdateUserInfo(ui);
 			speechText = Utils.Strings.GeneralString.LOGGED_SUCCESSFULLY;
 			repromptText =  Utils.Strings.GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
-		}
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
-	}
-}
+		}return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession",speechText).withSpeech(speechText).withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+}}
