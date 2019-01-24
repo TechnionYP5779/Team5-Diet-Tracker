@@ -17,6 +17,7 @@ import Utils.Portion.Type;
 import Utils.PortionRequestGen;
 import Utils.Strings;
 import Utils.Strings.DrinkStrings;
+import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 
 /** this class handles drink recording
@@ -76,6 +77,10 @@ public class AddDrinkIntent implements RequestHandler {
 					.withSpeech(DrinkStrings.DRINKS_LOGGING_PROBLEM)
 					.withReprompt(DrinkStrings.DRINKS_LOGGING_PROBLEM_REPEAT).withShouldEndSession(Boolean.FALSE)
 					.build();
+		} catch (Exception e) {
+			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
+					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+					.withShouldEndSession(Boolean.FALSE).build();
 		}
 
 		speechText = added_num_of_cups == 1 ? String.format(DrinkStrings.ONE_DRINKS_LOGGED, drink_name)

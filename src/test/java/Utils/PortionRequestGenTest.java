@@ -12,10 +12,11 @@ public class PortionRequestGenTest {
 	ArrayList<String> strings = new ArrayList<>();
 	ArrayList<String> contained = new ArrayList<>();
 	@Test
-	public void test_grams() {
-		/** this should pass through all options till it gets to the converter **/
-		Portion p = PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, 50, "milligrams");
-		String s1 = p.toString();
+	public void test_grams() throws Exception {
+		Portion p;
+		p = PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, 50, "milligrams");
+		String s1;
+		s1 = p.toString();
 		contained.add("Portion name: banana , 50.0 grams\nPortion type: FOOD\n----------------------------------\n"
 						+ "Nutritional Values per 100 grams:\nCalories: 89\nProteins: 1.09\n"
 						+ "Carbohydrates: 22.84\nFats: 0.33\n");
@@ -27,7 +28,7 @@ public class PortionRequestGenTest {
 	}
 	
 	@Test
-	public void test_cup() {
+	public void test_cup() throws Exception {
 		/**this should return the value for cup of sliced banana, as appears in the usda JSON*/
 		String s2 =  PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, 2, "cups").toString();
 		contained.add("Nutritional Values per 100 grams:\nCalories: 400.0\nProteins: 4.9\n"
@@ -39,7 +40,7 @@ public class PortionRequestGenTest {
 	}
 	
 	@Test
-	public void test_cup2() {
+	public void test_cup2() throws Exception {
 		/**this should return the value for cup of rice, as appears in the usda JSON*/
 		Portion p = PortionRequestGen.generatePortionWithAmount("rice", Portion.Type.FOOD, 2, "cups");
 		String s = p.toString();
@@ -50,7 +51,7 @@ public class PortionRequestGenTest {
 
 	}
 	@Test 
-	public void check_raw_egg_suffix() {
+	public void check_raw_egg_suffix() throws Exception {
 		String s =  PortionRequestGen.generatePortionWithAmount("egg", Portion.Type.FOOD, 1, "large").toString();
 		strings.add(s);
 		assert s.contains("Nutritional Values per 100 grams:\nCalories: 143.0\nProteins: 12.56\n"

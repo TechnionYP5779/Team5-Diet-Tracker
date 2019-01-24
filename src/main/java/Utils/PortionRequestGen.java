@@ -59,9 +59,8 @@ public class PortionRequestGen {
 		try {
 			return PortionRequestGen.generatePortionHandler(portion_name, t, amount, units);
 		} catch (final Exception e) {
-			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
 
@@ -76,25 +75,24 @@ public class PortionRequestGen {
 		JSONObject portion_search = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + raw_food_name.replace(" ", "%20")
 		+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 		/** if no errors occurred, then we have the raw portion */
-		if(!portion_search.has("errors")) {
-			return queryItem(portion_search.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"), food_name, t, amount, units);
-			
-		}
-			
+		if(!portion_search.has("errors"))
+			return queryItem(
+					portion_search.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"),
+					food_name, t, amount, units);
 		else {
 			portion_search = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + raw_food_suffix.replace(" ","%20")
 			+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 			/** if no errors occurred, then we have the raw portion in second search */
-			if(!portion_search.has("errors")) {
-				return queryItem(portion_search.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"), food_name, t, amount, units);
-				
-			}else {
-
-				/** otherwise, there isn't a "raw" version of the wanted portion. look for it regularly**/	
-			return queryItem(readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q=" + food_name.replace(' ', '_')
-						+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul")
-				.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"), food_name, t, amount, units);
-			}
+			if(!portion_search.has("errors"))
+				return queryItem(
+						portion_search.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"),
+						food_name, t, amount, units);
+			else
+				return queryItem(readJsonFromUrl(
+						"https://api.nal.usda.gov/ndb/search/?format=json&q=" + food_name.replace(' ', '_')
+								+ "&max=5&offset=0&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul")
+										.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno"),
+						food_name, t, amount, units);
 		}
 	}
 
@@ -111,8 +109,8 @@ public class PortionRequestGen {
 		 * list
 		 **/
 		boolean label_found = false;
-		for (final String nut : Nutritional_values) {
-			for (int i = 0; i < nut_arr.length(); i++) {
+		for (final String nut : Nutritional_values) 
+			for (int i = 0; i < nut_arr.length(); ++i) 
 				if (nut_arr.getJSONObject(i).getString("name").equals(nut)) {
 					/** we got the nutritional value we want. we now have to do the following:
 					 * 1. check if the units given by user are located in json. if so - capture it and 
@@ -133,22 +131,19 @@ public class PortionRequestGen {
 					final JSONArray measures_arr = nut_arr.getJSONObject(i).getJSONArray("measures");
 					
 					/** if not, search the units as actual labels in the JSON, so it can be more precise**/
-					if(!label_found) {
-						for( int j=0;j<measures_arr.length() && !label_found ;j++) {
+					if(!label_found) 
+						for( int j=0;j<measures_arr.length() && !label_found ;++j) 
 							
-							/** turn the units to a single form (the way it appears in label) , not plural**/
-							String post_processed_units = "s".equals(units.substring(units.length() - 1))? units.substring(0,units.length()-1) : units;
-							/** check for a label that contains the units**/
-							if(measures_arr.getJSONObject(j).getString("label").contains(post_processed_units)) {
+							if (measures_arr.getJSONObject(j).getString("label")
+									.contains(!"s".equals(units.substring(units.length() - 1)) ? units
+											: units.substring(0, units.length() - 1))) {
 								value_per_100_g = Double.parseDouble(nut_arr.getJSONObject(i).getString("value"));
 								unit_to_g = amount * measures_arr.getJSONObject(j).getDouble("eqv");
-
 								nutritions.add(Double.valueOf(value_per_100_g));
-
 								label_found = true;
 							}
-						}
-					}
+						
+					
 					
 					
 					/** in case the units didn't appear in the JSON object, we convert manually according 
@@ -159,7 +154,7 @@ public class PortionRequestGen {
 						/** if reached here, the unit is not a label in the JSON,  convert manually**/
 						value_per_100_g = Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value")));
 						/** turn the units to a plural form, not single**/
-						String post_processed_units = units.substring(units.length()-1).equals("s")? units : units+"s";
+						String post_processed_units = "s".equals(units.substring(units.length() - 1))? units : units+"s";
 						try {
 							/** now we can find the right converter-method to invoke, using reflection*/
 							String converter_func_name = post_processed_units+"ToGrams";	
@@ -180,21 +175,21 @@ public class PortionRequestGen {
 					}
 					/** if we didn't find the label, check if there is a size measure label in the
 					 *  JSON object, for portions like raw fruits, vegetables...*/
-					if(!label_found) {
-						for( int j=0;j<measures_arr.length() && !label_found ;j++) {
+					if(!label_found) 
+						for( int j=0;j<measures_arr.length() && !label_found ;++j) 
 							
 							/** check for a label that contains the size: we use "medium" as default**/
 							if(measures_arr.getJSONObject(j).getString("label").contains("medium")) {
 								value_per_100_g = Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value")));
-								unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv"))*amount;
+								unit_to_g = amount * measures_arr.getJSONObject(j).getDouble("eqv");
 								nutritions.add(Double.valueOf(value_per_100_g));
 								label_found = true;
 							}
-						}
-					}
+						
+					
 				}
-			}
-		}
+			
+		
 		/** the assumption is that if label_found changes during searching, then
 		 *  then it is because -all- of the portion's fields were found with that label.
 		 *  if the label wasn't found by one nutritional value, it won't be found by any of them,
@@ -225,20 +220,17 @@ public class PortionRequestGen {
 		boolean label_found = false;		
 		/** if not, search the units as actual labels in the JSON, so it can be more precise**/
 		
-		for( int j=0;j<measures_arr.length() && !label_found ;j++) {
+		for( int j=0;j<measures_arr.length() && !label_found ;++j) 
 			
-			/** turn the units to a single form (the way it appears in label) , not plural**/
-			String post_processed_units = units.substring(units.length()-1).equals("s")? units.substring(0,units.length()-1) : units;
-			/** check for a label that contains the units**/
-			if(measures_arr.getJSONObject(j).getString("label").contains(post_processed_units)) {
+			if (measures_arr.getJSONObject(j).getString("label")
+					.contains(!"s".equals(units.substring(units.length() - 1)) ? units : units.substring(0, units.length() - 1))) {
 				double value_per_100_g = Double.parseDouble(nut_arr.getJSONObject(nut_arr_idx).getString("value"));
-				double unit_to_g = (measures_arr.getJSONObject(j).getDouble("eqv")/100)*value_per_100_g*amount;
-				/**limit result to 3 decimal digits**/
-				unit_to_g = ((double)((int)(unit_to_g*1000.0)))/1000.0;
+				double unit_to_g = ((double) ((int) (1000.0 * amount * value_per_100_g
+						* measures_arr.getJSONObject(j).getDouble("eqv") / 100))) / 1000.0;
 				nutritions.add(Double.valueOf(unit_to_g));
 				label_found = true;
 			}
-		}
+		
 		return label_found;
 	}
 	
