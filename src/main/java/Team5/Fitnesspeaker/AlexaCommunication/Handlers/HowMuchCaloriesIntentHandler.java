@@ -70,8 +70,7 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 		List<Portion> FoodList = new LinkedList<>();
 		// retrieving the information
 		try {
-			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).filter(p -> p.getType() == Type.FOOD)
-					.collect(Collectors.toList());
+			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).collect(Collectors.toList());
 		} catch (DBException e) {
 			// no need to do anything
 		}
