@@ -47,17 +47,35 @@ public class LaunchRequestHandler implements RequestHandler {
 				.withReprompt("I will repeat, " + speechText).build();
 	}
 
+	/** 
+	 * @author Shalev Kuba
+	 * @since 2018-12-07
+	 * @param hour - in int format
+	 * @return part of day name of the given hour
+	 * */
 	private static String getPartOfDay(final int hour) {
 		return hour >= 10 && hour <= 16 ? "afternoon"
 				: hour >= 19 && hour <= 23 || hour >= 0 && hour < 3 ? "night"
 						: hour < 3 || hour >= 10 ? "evening" : "morning";
 	}
 
+	/** 
+	 * @author Shalev Kuba
+	 * @since 2018-12-07
+	 * @param hour - in int format
+	 * @return meal name of the given hour
+	 * */
 	private static String getMealName(final int hour) {
 		return hour >= 10 && hour <= 16 ? "lunch"
 				: hour >= 19 && hour <= 23 || hour >= 0 && hour < 3 || hour < 3 || hour >= 10 ? "dinner" : "breakfast";
 	}
 
+	/** 
+	 * @author Shalev Kuba
+	 * @since 2018-12-07
+	 * @param HandlerInput i - information about the session
+	 * @return the last hour the user ate today
+	 * */
 	@SuppressWarnings("deprecation")
 	private static int getLastHour(final HandlerInput i) {
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
