@@ -5,6 +5,7 @@
 package Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,7 +13,11 @@ public class Portion {
 	public enum Type {
 		FOOD, DRINK
 	}
-
+	// todo: maybe add supper? and brunch?
+	public enum Meal {
+		BREAKFAST, LUNCH, DINNER, MIDNIGHT
+	}
+	public final Meal meal;
 	public final Type type;
 	public final String name;
 
@@ -39,6 +44,11 @@ public class Portion {
 		this.fats_per_100_grams = fats;
 		this.alchohol_by_volume = 0;
 		this.time = new Date();
+		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+		calendar.setTime(this.time);   // assigns calendar to given date 
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+		this.meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST : (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH : 
+			(hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
 	}
 
 	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
@@ -52,6 +62,12 @@ public class Portion {
 		this.fats_per_100_grams = fats;
 		this.alchohol_by_volume = alchohol;
 		this.time = new Date();
+		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+		calendar.setTime(this.time);   // assigns calendar to given date 
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+		this.meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST : (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH : 
+			(hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
+
 	}
 
 	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
@@ -65,6 +81,12 @@ public class Portion {
 		this.fats_per_100_grams = fats;
 		this.alchohol_by_volume = alchohol;
 		this.time = time;
+		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+		calendar.setTime(this.time);   // assigns calendar to given date 
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+		this.meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST : (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH : 
+			(hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
+
 	}
 
 	public Portion() {
@@ -77,6 +99,7 @@ public class Portion {
 		this.fats_per_100_grams = 0;
 		this.alchohol_by_volume = 0;
 		this.time = null;
+		this.meal = Meal.BREAKFAST;
 	}
 
 	@Override
@@ -93,7 +116,8 @@ public class Portion {
 				&& Double.compare(portion.fats_per_100_grams, fats_per_100_grams) == 0 && type == portion.type
 				&& Double.compare(portion.alchohol_by_volume, alchohol_by_volume) == 0
 				&& (portion.time == null ? time == null : portion.time.equals(time))
-				&& Objects.equals(name, portion.name);
+				&& Objects.equals(name, portion.name)
+				&& meal == portion.meal;
 	}
 
 	public double getAmount() {
@@ -131,6 +155,10 @@ public class Portion {
 	public Type getType() {
 		return type;
 	}
+	
+	public Meal getMeal() {
+		return meal;
+	}
 
 	public void setAmount(final double amount) {
 		this.amount = amount;
@@ -159,12 +187,12 @@ public class Portion {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-
+	
 	@Override
 	public String toString() {
 		final String units = this.type != Type.FOOD ? " ml" : " grams";
-		return "Portion name: " + this.name + " , " + this.amount + units + "\nPortion type: " + this.type + "\n"
-				+ "----------------------------------\nNutritional Values per 100 grams:\nCalories: "
+		return "Portion name: " + this.name + " , " + this.amount + units + "\nPortion type: " + this.type + "\nPortion Meal: " + this.meal
+				+ "\n----------------------------------\nNutritional Values per 100 grams:\nCalories: "
 				+ this.calories_per_100_grams + "\nProteins: " + this.proteins_per_100_grams + "\nCarbohydrates: "
 				+ this.carbs_per_100_grams + "\nFats: " + this.fats_per_100_grams + "\nAlchohol by volume: "
 				+ this.alchohol_by_volume + "\nTime taken: "
