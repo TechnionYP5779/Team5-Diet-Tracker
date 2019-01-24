@@ -19,6 +19,8 @@ import Utils.Portion;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
 import Utils.Portion.Type;
+import Utils.Strings.GoalsAndMeasuresStrings;
+import Utils.Strings.IntentsNames;
 
 public class HowMuchCaloriesIntentHandler implements RequestHandler {
 	public static final String MEASURE_SLOT = "Measure";
@@ -57,7 +59,7 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchMeasureIntent"));
+		return i.matches(intentName(IntentsNames.HOW_MUCH_MEASURE_INTENT));
 	}
 
 	@Override
@@ -108,7 +110,7 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				|| (user.getDailyProteinGramsGoal() == -1 && PROTEINS.contains(measure_str))
 				|| (user.getDailyCarbsGoal() == -1 && CARBS.contains(measure_str))
 				|| (user.getDailyFatsGoal() == -1 && FATS.contains(measure_str)))
-			speechText2 = String.format("You didn't tell me your goal yet!");
+			speechText2 = GoalsAndMeasuresStrings.DIDNT_TELL_GOAL_YET;
 		else {
 			int goal=0;
 			if (FATS.contains(measure_str))
@@ -124,41 +126,41 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 			Calendar curr = Calendar.getInstance();
 			int hour = curr.get(Calendar.HOUR_OF_DAY);
 			if(eatTooMuch(progress, hour))
-				speechText3 = " You are close to your goal. Try to minimize your eating rate for the rest of the day ";
+				speechText3 = GoalsAndMeasuresStrings.GOAL_CLOSE;
 			else if(eatTooFew(progress, hour))
-				speechText3 = " You are far from your goal. Try to increase your eating rate for the rest of the day ";
+				speechText3 = GoalsAndMeasuresStrings.GOAL_FAR;
 			else
-				speechText3 = " Keep going! ";
+				speechText3 = GoalsAndMeasuresStrings.GOAL_KEEP;
 			
 			if (CALORIES.contains(measure_str)) {
 				if (amount > 0)
-					speechText2 = String.format(" There are %d %s left for your goal! ",
+					speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL,
 							Integer.valueOf(amount), measure_str) + speechText3;
 				else if (amount == 0)
-					speechText2 = String.format(" You achieved your %s goal, Well Done!", measure_str);
+					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_ACHIEVED, measure_str);
 				else
-					speechText2 = String.format(" You passed your %s goal by %d %s . Try to minimize your eating rate for the rest of the day ", measure_str,
+					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_PASSED, measure_str,
 							Integer.valueOf(-amount), measure_str);
 			} else {
 				if (amount > 0)
-					speechText2 = String.format(" There are %d grams of %s left for your goal! Keep going!",
+					speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL_GRAMS,
 							Integer.valueOf(amount), measure_str)+ speechText3;
 				else if (amount == 0)
-					speechText2 = String.format(" You achieved your %s goal, Well Done!", measure_str);
+					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_ACHIEVED, measure_str);
 				else
-					speechText2 = String.format(" You passed your %s goal by %d grams . Try to minimize your eating rate for the rest of the day", measure_str,
+					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_PASSED_GRAMS, measure_str,
 							Integer.valueOf(-amount));
 			}
 
 		}
 
 		if (total_measure == 0)
-			speechText = "you didn't eat anything today. " + speechText2;
+			speechText = GoalsAndMeasuresStrings.DIDNT_EAT + speechText2;
 		else if (CALORIES.contains(measure_str))
-			speechText = String.format("You ate %d %s today. ", Integer.valueOf((int) total_measure), measure_str)
+			speechText = String.format(GoalsAndMeasuresStrings.MEASURE_AMOUNT_ATE, Integer.valueOf((int) total_measure), measure_str)
 					+ speechText2;
 		else
-			speechText = String.format("You ate %d grams of %s today. ", Integer.valueOf((int) total_measure),
+			speechText = String.format(GoalsAndMeasuresStrings.MEASURE_AMOUNT_ATE_GRAMS, Integer.valueOf((int) total_measure),
 					measure_str) + speechText2;
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
