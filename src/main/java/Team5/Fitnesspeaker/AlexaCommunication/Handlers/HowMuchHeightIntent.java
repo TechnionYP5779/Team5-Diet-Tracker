@@ -9,11 +9,13 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.HeightStrings;
+import Utils.Strings.IntentsNames;
 
 public class HowMuchHeightIntent implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchHeightIntent"));
+		return i.matches(intentName(IntentsNames.HOW_MUCH_HEIGHT_INTENT));
 	}
 
 	@Override
@@ -31,13 +33,13 @@ public class HowMuchHeightIntent implements RequestHandler{
 		}
 
 		if (user==null)
-			speechText = String.format("you didn't tell me what is your height");
+			speechText = HeightStrings.DIDNT_TELL_HEIGHT;
 		else {
 			final int height = user.getHeight();
 			if (height == -1)
-				speechText = String.format("you didn't tell me what is your height");
+				speechText = HeightStrings.DIDNT_TELL_HEIGHT;
 			else
-				speechText = String.format("your height is %d centimeters", Integer.valueOf(height));
+				speechText = String.format(HeightStrings.HEIGHT_IS, Integer.valueOf(height));
 
 		}
 

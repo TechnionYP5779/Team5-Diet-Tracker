@@ -11,13 +11,15 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.HeightStrings;
+import Utils.Strings.IntentsNames;
 
 public class AddHeightIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddHeightIntent"));
+		return i.matches(intentName(IntentsNames.ADD_HEIGHT_INTENT));
 	}
 
 	@Override
@@ -30,8 +32,8 @@ public class AddHeightIntentHandler implements RequestHandler{
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
-			speechText = "I'm not sure what is your height. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your height. Please tell me again";
+			speechText = HeightStrings.TELL_HEIGHT_AGAIN;
+			repromptText = HeightStrings.TELL_HEIGHT_AGAIN_REPEAT;
 		} else {
 			final int height = Integer.parseInt(NumberSlot.getValue());
 
@@ -52,8 +54,8 @@ public class AddHeightIntentHandler implements RequestHandler{
 						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 						user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
 
-			speechText = String.format("your height is %d centimeters", Integer.valueOf(height));
-			repromptText = "I will repeat, You can ask me what is your height saying, what is my height?";
+			speechText = String.format(HeightStrings.HEIGHT_LOGGED, Integer.valueOf(height));
+			repromptText = HeightStrings.ASK_HEIGHT;
 
 		}
 

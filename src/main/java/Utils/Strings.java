@@ -151,20 +151,24 @@ public class Strings {
 		public static final String DIDNT_TELL_MEASURE_GOAL = "you didn't tell me what is your %s goal";
 		public static final String MEASURE_GOAL_LOGGED_CALORIES = "your %s goal is %d calories";
 		public static final String MEASURE_GOAL_LOGGED_GRAMS = "your %s goal is %d grams";
-		public static final String LEFT_FOR_GOAL = "There are %d %s left for your goal! Keep going!";
+		public static final String LEFT_FOR_GOAL = "There are %d %s left for your goal! ";
 		public static final String GOAL_ACHIEVED = "You achieved your %s goal, Well Done!";
-		public static final String GOAL_PASSED = "You passed your %s goal by %d %s";
-		public static final String LEFT_FOR_GOAL_GRAMS = "There are %d grams of %s left for your goal! Keep going!";
-		public static final String GOAL_PASSED_GRAMS = "You passed your %s goal by %d grams";
-		public static final String DIDNT_EAT = "you didn't eat anything today.";
-		public static final String MEASURE_AMOUNT_ATE = "You ate %d %s today.";
-		public static final String MEASURE_AMOUNT_ATE_GRAMS = "You ate %d grams of %s today";
+		public static final String GOAL_PASSED = " You passed your %s goal by %d %s . Try to minimize your eating rate for the rest of the day ";
+		public static final String LEFT_FOR_GOAL_GRAMS = "There are %d grams of %s left for your goal! ";
+		public static final String GOAL_PASSED_GRAMS = " You passed your %s goal by %d grams . Try to minimize your eating rate for the rest of the day";
+		public static final String DIDNT_EAT = "you didn't eat anything today. ";
+		public static final String MEASURE_AMOUNT_ATE = "You ate %d %s today. ";
+		public static final String MEASURE_AMOUNT_ATE_GRAMS = "You ate %d grams of %s today. ";
 		public static final String DIDNT_TELL_WEIGHT_GOAL = "you didn't tell me your weight goal yet";
 		public static final String DIDNT_TELL_WEIGHT = "you didn't tell me what is your weight";
 		public static final String DOING_GREAT = "you are doing great, keep going";
 		public static final String FAR_FROM_GOAL = "you are stil far from your goal";
 		public static final String TELL_MEASURE_GOAL_AGAIN = "I'm not sure what is your goal. Please tell me again";
 		public static final String TELL_MEASURE_GOAL_AGAIN_REPEAT = "I will repeat, I'm not sure what is your goal. Please tell me again";
+		public static final String DIDNT_TELL_GOAL_YET = "You didn't tell me your goal yet! ";
+		public static final String GOAL_CLOSE = " You are close to your goal. Try to minimize your eating rate for the rest of the day ";
+		public static final String GOAL_FAR = " You are far from your goal. Try to increase your eating rate for the rest of the day ";
+		public static final String GOAL_KEEP = " Keep going! ";
 	}
 
 	public static class GeneralString {
