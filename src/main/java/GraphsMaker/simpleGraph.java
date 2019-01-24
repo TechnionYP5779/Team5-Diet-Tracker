@@ -1,3 +1,7 @@
+/** This class create a graph of weights as function of dates.
+ * The graph is save as jpg file on memory using byte[]
+ * @author Or Feldman
+ * @since 2018-12-26*/
 package GraphsMaker;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -31,8 +35,8 @@ public class simpleGraph  { //extends JFrame
             return this;
         }
         
-        public simpleGraph setDates(ArrayList<Calendar> d) {
-        	dates=d;
+        public simpleGraph setDates(ArrayList<Calendar> cs) {
+        	dates=cs;
         	return this;
         }
         
