@@ -63,7 +63,7 @@ public class HowManyIDrankIntent implements RequestHandler {
 				int countOz = 0;
 				for (final Pair<String, Portion> p : Drinklist)
 					countOz += (int) p.getValue().getAmount();
-				Count = Optional.ofNullable(Integer.valueOf(countOz / 30));
+				Count = Optional.ofNullable(Integer.valueOf(countOz / 240));
 			}
 		} catch (final DBException e) {
 			// no need to do anything
