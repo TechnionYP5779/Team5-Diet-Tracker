@@ -1,13 +1,3 @@
-/*
-     Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-     Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
-     except in compliance with the License. A copy of the License is located at
-         http://aws.amazon.com/apache2.0/
-     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
-     the specific language governing permissions and limitations under the License.
-*/
-
 package Team5.Fitnesspeaker.AlexaCommunication;
 
 import com.amazon.ask.Skill;
@@ -49,6 +39,10 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeeklyMailReportHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeightProgressIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler;
 
+/** this class initializes the intents handlers
+ * @author Shalev Kuba
+ * @since 2018-12-07
+ * */
 public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 	static final String skillID = "amzn1.ask.skill.8204b920-c87b-453b-8bee-b10cd79945a8";
 

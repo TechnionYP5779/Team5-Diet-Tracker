@@ -17,64 +17,69 @@ import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Portion;
 import Utils.Portion.Type;
+import Utils.Strings;
+import Utils.Strings.DrinkStrings;
+import Utils.Strings.IntentsNames;
 
+/** this class handle drink history querying
+ * @author Shalev Kuba
+ * @since 2018-12-07
+ * */
 public class HowManyIDrankIntent implements RequestHandler {
 	public static final String DRINK_NAME_SLOT = "drink";
-	
+
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchIDrankIntent"));
+		return i.matches(intentName(IntentsNames.HOW_MUCH_DRANK_INTENT));
 	}
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot DrinkSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(DRINK_NAME_SLOT);
-		String speechText = "", repromptText = "";
-		
-		if (DrinkSlot == null) {
-			speechText = "I'm not sure what did you drink, Please tell me again";
-			repromptText = "I will repeat, I'm not sure what did you drink, Please tell me again";
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
-		}
-		
-		String drink_name=DrinkSlot.getValue();
-		
+		String speechText = "";
+
+		if (DrinkSlot == null)
+			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, DrinkStrings.TELL_DRINKS_AGAIN)
+					.withSpeech(DrinkStrings.TELL_DRINKS_AGAIN).withReprompt(DrinkStrings.TELL_DRINKS_AGAIN_REPEAT)
+					.withShouldEndSession(Boolean.FALSE).build();
+
+		final String drink_name = DrinkSlot.getValue();
+
 		// initialize database object with the user mail
-		DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
-		
-		//retrieving the information
+		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
+
+		// retrieving the information
 		Optional<Integer> Count = Optional.empty();
 		try {
-			if(drink_name.equals("water"))
-				Count=db.DBGetTodayWaterCups();
-			else if(drink_name.contains("coffee"))
-				Count=db.DBGetTodayCofeeCups();
+			if ("water".equals(drink_name))
+				Count = db.DBGetTodayWaterCups();
+			else if (drink_name.contains("coffee"))
+				Count = db.DBGetTodayCofeeCups();
 			else {
-				List<Pair<String,Portion>> Drinklist= db.DBGetTodayFoodList().stream().
-						filter(p->(p.getValue().getName().equals(drink_name))&&(p.getValue().getType()==Type.DRINK)).collect(Collectors.toList());
-				int countOz=0;
-				for(Pair<String,Portion> p : Drinklist) countOz+=(int)p.getValue().getAmount();
-				Count=Optional.ofNullable(Integer.valueOf(countOz/30));
+				final List<Pair<String, Portion>> Drinklist = db.DBGetTodayFoodList().stream()
+						.filter(p -> p.getValue().getName().equals(drink_name) && p.getValue().getType() == Type.DRINK)
+						.collect(Collectors.toList());
+				int countOz = 0;
+				for (final Pair<String, Portion> p : Drinklist)
+					countOz += (int) p.getValue().getAmount();
+				Count = Optional.ofNullable(Integer.valueOf(countOz / 240));
 			}
-		} catch (DBException e) {
+		} catch (final DBException e) {
 			// no need to do anything
 		}
 
-		if ((!Count.isPresent())||Count.get().intValue()<=0)
-			speechText = String.format("You haven't drink %s today yet",drink_name);
+		if (!Count.isPresent() || Count.get().intValue() <= 0)
+			speechText = String.format(DrinkStrings.DIDNT_DRINKED_TODAY, drink_name);
 		else {
 			final Integer count = Count.get();
-			if (count.intValue() == 1)
-				speechText = String.format("so far, you have drank a single cup of %s",drink_name);
-			else
-				speechText = String.format("so far, you have drank %d cups of %s", count,drink_name);
+			speechText = count.intValue() == 1 ? String.format(DrinkStrings.DRINKED_SO_FAR_ONE, drink_name)
+					: String.format(DrinkStrings.DRINKED_SO_FAR_MANY, count, drink_name);
 
 		}
 
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText).withReprompt(speechText)
-				.withShouldEndSession(Boolean.TRUE).build();
+		return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)
+				.withReprompt(speechText).withShouldEndSession(Boolean.TRUE).build();
 
 	}
 }
