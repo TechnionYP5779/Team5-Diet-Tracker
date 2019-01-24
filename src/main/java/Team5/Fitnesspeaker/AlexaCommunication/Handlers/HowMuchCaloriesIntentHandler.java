@@ -18,7 +18,6 @@ import Utils.DBUtils;
 import Utils.Portion;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
-import Utils.Portion.Type;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
 

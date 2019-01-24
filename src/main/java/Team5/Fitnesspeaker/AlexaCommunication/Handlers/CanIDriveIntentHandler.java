@@ -33,7 +33,9 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		try {
 		    ui=db.DBGetUserInfo();
 		    di =db.DBGetTodayDailyInfo();
-		} catch (DBException e) {}
+		} catch (DBException e) { // nothing to do here
+			
+		}
 		
 		if(ui==null) {
 			speechText = Utils.Strings.AlcoholStrings.CAN_DRIVE_TELL_GENDER;
@@ -59,7 +61,9 @@ public class CanIDriveIntentHandler implements RequestHandler {
 		try {
 			for(Pair<String, Portion> p : db.DBGetTodayAlcoholList())
 				todaysAlchohol.add(p.getValue());
-		} catch (DBException e) {}
+		} catch (DBException e) {
+			// nothing to do here
+		}
 		
 		double alcInblood=0;
 		if(ui.gender==UserInfo.Gender.MALE)
