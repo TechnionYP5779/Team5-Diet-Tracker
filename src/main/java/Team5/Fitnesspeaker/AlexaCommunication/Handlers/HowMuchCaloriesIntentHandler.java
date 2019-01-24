@@ -30,25 +30,20 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 	public static final String FATS = "fats";
 	
 	public static boolean eatTooMuch(int progressPerc, int hour) {
-		if(hour>4 && hour < 12 && progressPerc > 40) {
+		if(hour>4 && hour < 12 && progressPerc > 40)
 			return true;
-		}
-		if(hour > 4 && hour < 18 && progressPerc > 90) {
+		if(hour > 4 && hour < 18 && progressPerc > 90)
 			return true;
-		}
-		if(progressPerc > 100) {
+		if(progressPerc > 100)
 			return true;
-		}
 		return false;
 	}
 	
 	public static boolean eatTooFew(int progressPerc, int hour) {
-		if(hour > 12 && progressPerc < 20) {
+		if(hour > 12 && progressPerc < 20)
 			return true;
-		}
-		if(hour > 18 && progressPerc < 60) {
+		if(hour > 18 && progressPerc < 60)
 			return true;
-		}
 		return false;
 	}
 
@@ -132,25 +127,23 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 			else
 				speechText3 = GoalsAndMeasuresStrings.GOAL_KEEP;
 			
-			if (CALORIES.contains(measure_str)) {
+			if (CALORIES.contains(measure_str))
 				if (amount > 0)
-					speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL,
-							Integer.valueOf(amount), measure_str) + speechText3;
+					speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL, Integer.valueOf(amount),
+							measure_str) + speechText3;
 				else if (amount == 0)
 					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_ACHIEVED, measure_str);
 				else
 					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_PASSED, measure_str,
 							Integer.valueOf(-amount), measure_str);
-			} else {
-				if (amount > 0)
-					speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL_GRAMS,
-							Integer.valueOf(amount), measure_str)+ speechText3;
-				else if (amount == 0)
-					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_ACHIEVED, measure_str);
-				else
-					speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_PASSED_GRAMS, measure_str,
-							Integer.valueOf(-amount));
-			}
+			else if (amount > 0)
+				speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL_GRAMS, Integer.valueOf(amount),
+						measure_str) + speechText3;
+			else if (amount == 0)
+				speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_ACHIEVED, measure_str);
+			else
+				speechText2 = String.format(GoalsAndMeasuresStrings.GOAL_PASSED_GRAMS, measure_str,
+						Integer.valueOf(-amount));
 
 		}
 

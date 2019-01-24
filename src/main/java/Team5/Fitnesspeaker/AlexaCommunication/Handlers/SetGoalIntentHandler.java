@@ -61,9 +61,8 @@ public class SetGoalIntentHandler implements RequestHandler{
 			} catch (DBException e) {
 				// no need to do anything
 			}
-			if (user == null) {
+			if (user == null)
 				db.DBUpdateUserInfo(u);
-			}
 			else {
 				if (FATS.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
