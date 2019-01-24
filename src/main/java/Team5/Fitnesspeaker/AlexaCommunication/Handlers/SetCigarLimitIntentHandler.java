@@ -11,13 +11,16 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.CigarettesStrings;
+import Utils.Strings.GeneralString;
+import Utils.Strings.IntentsNames;
 
 public class SetCigarLimitIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("SetCigarLimitIntent"));
+		return i.matches(intentName(IntentsNames.CIGAR_LIMIT_INTENT));
 	}
 
 	@Override
@@ -30,8 +33,8 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
-			speechText = "I'm not sure what is your cigarettes limit. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your cigarettes limit. Please tell me again";
+			speechText = CigarettesStrings.TELL_CIGS_LIMIT_AGAIN;
+			repromptText = CigarettesStrings.TELL_CIGS_LIMIT_AGAIN_REPEAT;
 		} else {
 			final int cigarettesLimit = Integer.parseInt(NumberSlot.getValue());
 
@@ -52,8 +55,8 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 						user.getDailyFatsGoal(),cigarettesLimit));
 
-			speechText = String.format("logged successfully");
-			repromptText = "I will repeat, logged successfully";
+			speechText = GeneralString.LOGGED_SUCCESSFULLY;
+			repromptText = GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
 
 		}
 

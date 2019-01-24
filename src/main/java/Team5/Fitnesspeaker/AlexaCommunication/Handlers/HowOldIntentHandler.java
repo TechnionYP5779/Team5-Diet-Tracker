@@ -9,11 +9,13 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.AgeStrings;
+import Utils.Strings.IntentsNames;
 
 public class HowOldIntentHandler implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowOldIntent"));
+		return i.matches(intentName(IntentsNames.HOW_OLD_INTENT));
 	}
 
 	@Override
@@ -31,13 +33,13 @@ public class HowOldIntentHandler implements RequestHandler{
 		}
 
 		if (user==null)
-			speechText = String.format("you didn't tell me what is your age");
+			speechText = AgeStrings.DIDNT_TELL_AGE;
 		else {
 			final int age = user.getAge();
 			if (age == -1)
-				speechText = String.format("you didn't tell me what is your age");
+				speechText = AgeStrings.DIDNT_TELL_AGE;
 			else
-				speechText = String.format("you are %d years old", Integer.valueOf(age));
+				speechText = String.format(AgeStrings.AGE_IS, Integer.valueOf(age));
 
 		}
 

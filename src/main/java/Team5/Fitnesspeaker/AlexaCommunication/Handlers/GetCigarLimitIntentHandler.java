@@ -9,11 +9,13 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.CigarettesStrings;
+import Utils.Strings.IntentsNames;
 
 public class GetCigarLimitIntentHandler implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("GetCigarLimitIntent"));
+		return i.matches(intentName(IntentsNames.GET_CIGAR_LIMIT_INTENT));
 	}
 
 	@Override
@@ -31,13 +33,13 @@ public class GetCigarLimitIntentHandler implements RequestHandler{
 		}
 
 		if (user==null)
-			speechText = String.format("you didn't tell me what is your cigarettes limit");
+			speechText = CigarettesStrings.DIDNT_TELL_CIGS_LIMIT;
 		else {
 			final int cigarLimit = user.getDailyLimitCigarettes();
 			if (cigarLimit == -1)
-				speechText = String.format("you didn't tell me what is your cigarettes limit");
+				speechText = CigarettesStrings.DIDNT_TELL_CIGS_LIMIT;
 			else
-				speechText = String.format("you are allowed to smoke %d cigarettes every day", Integer.valueOf(cigarLimit));
+				speechText = String.format(CigarettesStrings.TELL_CIGS_LIMIT, Integer.valueOf(cigarLimit));
 
 		}
 

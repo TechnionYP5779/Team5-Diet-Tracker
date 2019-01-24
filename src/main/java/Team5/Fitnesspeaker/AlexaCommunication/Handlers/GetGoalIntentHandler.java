@@ -11,13 +11,19 @@ import com.amazon.ask.model.Slot;
 import Utils.UserInfo;
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
+import Utils.Strings.GoalsAndMeasuresStrings;
+import Utils.Strings.IntentsNames;
 
 public class GetGoalIntentHandler implements RequestHandler{
 	public static final String MEASURE_SLOT = "Measure";
+	public static final String CALORIES = "calories";
+	public static final String CARBS = "carbs";
+	public static final String PROTEINS = "proteins";
+	public static final String FATS = "fats";
 	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("GetGoalIntent"));
+		return i.matches(intentName(IntentsNames.GET_GOAL_INTENT));
 	}
 
 	@Override
@@ -30,8 +36,8 @@ public class GetGoalIntentHandler implements RequestHandler{
 		DBUtils db = new DBUtils(UserMail);
 		
 		if (MeasureSlot == null) {
-			speechText = "I'm not sure which goal do you want. Please tell me again";
-			repromptText = "I will repeat, I'm not sure which goal do you want. Please tell me again";
+			speechText = GoalsAndMeasuresStrings.TELL_MEASURE_AGAIN;
+			repromptText = GoalsAndMeasuresStrings.TELL_MEASURE_AGAIN_REPEAT;
 		} else {
 			final String measure_str = MeasureSlot.getValue();
 			UserInfo user = null;
@@ -43,23 +49,23 @@ public class GetGoalIntentHandler implements RequestHandler{
 			
 
 			if (user==null)
-				speechText = String.format("you didn't tell me what is your " + measure_str + " goal");
+				speechText = String.format(GoalsAndMeasuresStrings.DIDNT_TELL_MEASURE_GOAL , measure_str);
 			else {
 				int amount=0;
-				if ("fats".contains(measure_str))
+				if (FATS.contains(measure_str))
 					amount = (int)user.getDailyFatsGoal();
-				else if ("carbs".contains(measure_str))
+				else if (CARBS.contains(measure_str))
 					amount = (int)user.getDailyCarbsGoal();
-				else if ("proteins".contains(measure_str))
+				else if (PROTEINS.contains(measure_str))
 					amount = (int)user.getDailyProteinGramsGoal();
-				else if ("calories".contains(measure_str))
+				else if (CALORIES.contains(measure_str))
 					amount = (int)user.getDailyCaloriesGoal();
 				if (amount == -1)
-					speechText = String.format("you didn't tell me what is your " + measure_str + " goal");
-				else if ("calories".contains(measure_str))
-					speechText = String.format("your " + measure_str + " goal is %d calories", Integer.valueOf(amount));
+					speechText = String.format(GoalsAndMeasuresStrings.DIDNT_TELL_MEASURE_GOAL , measure_str);
+				else if (CALORIES.contains(measure_str))
+					speechText = String.format(GoalsAndMeasuresStrings.MEASURE_GOAL_LOGGED_CALORIES,measure_str, Integer.valueOf(amount));
 				else
-					speechText = String.format("your " + measure_str + " goal is %d grams", Integer.valueOf(amount));
+					speechText = String.format(GoalsAndMeasuresStrings.MEASURE_GOAL_LOGGED_GRAMS,measure_str, Integer.valueOf(amount));
 			}
 		}
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)

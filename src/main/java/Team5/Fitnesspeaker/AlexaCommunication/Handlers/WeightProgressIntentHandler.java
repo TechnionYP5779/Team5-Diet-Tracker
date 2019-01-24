@@ -2,29 +2,15 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import Utils.DailyInfo;
+import Utils.DBUtils;
+import Utils.DBUtils.DBException;
 import Utils.EmailSender;
-@SuppressWarnings("static-method")
 public class WeightProgressIntentHandler implements RequestHandler {
 
 	String UserMail;
@@ -44,58 +30,18 @@ public class WeightProgressIntentHandler implements RequestHandler {
 	}
 
 	private void getUserInfo(HandlerInput i) {
-		this.UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		this.UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
 
-	
-	private void openDatabase() {
-		try {
-			FileInputStream serviceAccount;
-			FirebaseOptions options = null;
-			try {
-				serviceAccount = new FileInputStream("db_credentials.json");
-				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://fitnesspeaker-6eee9.firebaseio.com/").build();
-				FirebaseApp.initializeApp(options);
-			} catch (final Exception e1) {
-				// empty block
-
-			}
-		} catch (final Exception e) {
-			// empty block
-		}
-	}
-
-	private int getWeightByDate(String date) {
-		final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child(UserMail)
-				.child("Dates").child(date).child("Daily-Info");
+	private int getWeightByDate(String date,DBUtils u) {
 		
-		
-		final List<DailyInfo> UserList = new LinkedList<>();
-		final CountDownLatch done = new CountDownLatch(1);
-		dbRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot userSnapshot : s.getChildren())
-					UserList.add(userSnapshot.getValue(DailyInfo.class));
-				done.countDown();
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
 		try {
-			done.await();
-		} catch (final InterruptedException e) {
+			return (int) u.DBGetDateDailyInfo(date).getWeight();
+		} catch (DBException e) {
 			// TODO Auto-generated catch block
-		}
-		
-		if(UserList.isEmpty())
 			return -1;
-		return (int) UserList.get(0).getWeight();
+		}
 	}
 		
 
@@ -111,12 +57,12 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		String s="";
 		try {
 		getUserInfo(i);
-		openDatabase();
+		DBUtils db=new DBUtils(UserMail);
 		String[] dates = getDates();
 		
 		int w=-1;
 		for (int day = 0; day < MAX_DAYS; ++day) {
-			w=getWeightByDate(dates[day]);
+			w=getWeightByDate(dates[day],db);
 			if(w!=-1) {
 				wts.add(Integer.valueOf(w));
 				Calendar c=Calendar.getInstance();
@@ -127,7 +73,7 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		}
 		try {
 			if( wts.size()>=5) 
-				(new EmailSender()).sendWeightStatistics("weight progess", this.UserMail.replace("_dot_", "."), UserName, dts, wts);
+				(new EmailSender()).sendWeightStatistics("weight progess", this.UserMail, UserName, dts, wts);
 		} catch (Exception e) {
 			//s+=e.toString();
 		}
@@ -136,10 +82,10 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		}
 		//s+=" "+String.valueOf(dts.size())+" "+String.valueOf(wts.size());
 		if( wts.size()>=5)
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with weight progess Sent"+s)
-				.withSpeech("Mail with weight progess Sent").withShouldEndSession(Boolean.FALSE).build();
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough mesurements"+s)
-				.withSpeech("I don't have enough mesurements"+s).withShouldEndSession(Boolean.FALSE).build();
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT)
+				.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough measurements"+s)
+				.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_NOT_SENT).withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }

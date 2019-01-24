@@ -18,7 +18,6 @@ import Utils.Portion;
 import Utils.WeeklyStatistics;
 import Utils.DBUtils.DBException;
 
-@SuppressWarnings("static-method")
 public class WeeklyMailReportHandler implements RequestHandler {
 
 	String UserMail;
@@ -55,10 +54,7 @@ public class WeeklyMailReportHandler implements RequestHandler {
 			// e1.printStackTrace();
 		}
 
-		if (!drinks.isPresent())
-			return "0";
-		else
-			return drinks.get().toString();
+		return !drinks.isPresent() ? "0" : drinks.get().toString();
 	}
 
 	private List<Portion> getFoodInfo(String date) {
@@ -79,15 +75,12 @@ public class WeeklyMailReportHandler implements RequestHandler {
 			// e1.printStackTrace();
 		}
 
-		if (!cigs.isPresent())
-			return "0";
-		else
-			return cigs.get().toString();
+		return !cigs.isPresent() ? "0" : cigs.get().toString();
 	}
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("WeeklyMailReport"));
+		return i.matches(intentName(Utils.Strings.IntentsNames.WEEKLY_MAIL_INTENT));
 	}
 
 	@Override
@@ -111,8 +104,9 @@ public class WeeklyMailReportHandler implements RequestHandler {
 			// e.printStackTrace();
 		}
 		weeklyStatistics = new WeeklyStatistics();
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail with weekly report has been sent")
-				.withSpeech("Mail with weekly report has been sent ").withShouldEndSession(Boolean.FALSE).build();
+		return i.getResponseBuilder()
+				.withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.WEEKLY_MAIL_SENT)
+				.withSpeech(Utils.Strings.EmailStrings.WEEKLY_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }

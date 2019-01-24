@@ -11,14 +11,21 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.GeneralString;
+import Utils.Strings.GoalsAndMeasuresStrings;
+import Utils.Strings.IntentsNames;
 
 public class SetGoalIntentHandler implements RequestHandler{
 	public static final String MEASURE_SLOT = "Measure";
 	public static final String NUMBER_SLOT = "Number";
+	public static final String CALORIES = "calories";
+	public static final String CARBS = "carbs";
+	public static final String PROTEINS = "proteins";
+	public static final String FATS = "fats";
 	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("SetGoalIntent"));
+		return i.matches(intentName(IntentsNames.SET_GOAL_INTENT));
 	}
 	
 	@Override
@@ -34,19 +41,19 @@ public class SetGoalIntentHandler implements RequestHandler{
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null || MeasureSlot == null) {
-			speechText = "I'm not sure what is your goal. Please tell me again";
-			repromptText = "I will repeat, I'm not sure what is your goal. Please tell me again";
+			speechText = GoalsAndMeasuresStrings.TELL_MEASURE_GOAL_AGAIN;
+			repromptText = GoalsAndMeasuresStrings.TELL_MEASURE_AGAIN_REPEAT;
 		} else {
 			final String measure_str = MeasureSlot.getValue();
 			final int amount = Integer.parseInt(NumberSlot.getValue());
 			UserInfo u = new UserInfo();
-			if ("fats".contains(measure_str))
+			if (FATS.contains(measure_str))
 				u.setDailyFatsGoal(amount);
-			else if ("carbs".contains(measure_str))
+			else if (CARBS.contains(measure_str))
 				u.setDailyCarbsGoal(amount);
-			else if ("proteins".contains(measure_str))
+			else if (PROTEINS.contains(measure_str))
 				u.setDailyProteinGramsGoal(amount);
-			else if ("calories".contains(measure_str))
+			else if (CALORIES.contains(measure_str))
 				u.setDailyCaloriesGoal(amount);
 			UserInfo user = null;
 			try {
@@ -54,37 +61,36 @@ public class SetGoalIntentHandler implements RequestHandler{
 			} catch (DBException e) {
 				// no need to do anything
 			}
-			if (user == null) {
+			if (user == null)
 				db.DBUpdateUserInfo(u);
-			}
 			else {
-				if ("fats".contains(measure_str))
+				if (FATS.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
 							user.getHeight(),
 							user.getDailyCaloriesGoal(),
 							user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 							amount, user.getDailyLimitCigarettes()));
-				else if ("carbs".contains(measure_str))
+				else if (CARBS.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
 							user.getHeight(),
 							user.getDailyCaloriesGoal(),
 							user.getDailyProteinGramsGoal(), amount,
 							user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
-				else if ("proteins".contains(measure_str))
+				else if (PROTEINS.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
 							user.getHeight(),
 							user.getDailyCaloriesGoal(),
 							amount, user.getDailyCarbsGoal(),
 							user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
-				else if ("calories".contains(measure_str))
+				else if (CALORIES.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
 							user.getHeight(),amount,
 							user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 							user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
 			}
 
-			speechText = String.format("logged successfully");
-			repromptText = "I will repeat, logged successfully";
+			speechText = GeneralString.LOGGED_SUCCESSFULLY;
+			repromptText = GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
 
 		}
 

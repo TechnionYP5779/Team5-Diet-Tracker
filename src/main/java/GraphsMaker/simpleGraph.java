@@ -1,3 +1,7 @@
+/** This class create a graph of weights as function of dates.
+ * The graph is save as jpg file on memory using byte[]
+ * @author Or Feldman
+ * @since 2018-12-26*/
 package GraphsMaker;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -19,7 +23,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-@SuppressWarnings("static-method")
 public class simpleGraph  { //extends JFrame
 
         JFreeChart chart;
@@ -32,8 +35,8 @@ public class simpleGraph  { //extends JFrame
             return this;
         }
         
-        public simpleGraph setDates(ArrayList<Calendar> d) {
-        	dates=d;
+        public simpleGraph setDates(ArrayList<Calendar> cs) {
+        	dates=cs;
         	return this;
         }
         
@@ -119,8 +122,7 @@ public class simpleGraph  { //extends JFrame
             chart.draw(g2, new Rectangle2D.Double(0, 0, width, height));
             g2.dispose();
             // outputfile = new File(imageName+".jpg");
-            @SuppressWarnings("resource")
-			ByteArrayOutputStream baos=new ByteArrayOutputStream();
+            ByteArrayOutputStream baos=new ByteArrayOutputStream();
             try {
                 ImageIO.write(img, "jpg", baos);
             } catch (IOException e) {
