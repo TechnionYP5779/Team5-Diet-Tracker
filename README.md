@@ -1,11 +1,15 @@
 # Diet Tracker
 ## Diet-Tracker development status 
-[![Build Status](https://travis-ci.org/TechnionYP5779/Team5-Diet-Tracker.svg?branch=master)](https://travis-ci.org/TechnionYP5779/Team5-Diet-Tracker)
+[![Build Status](https://travis-ci.org/TechnionYP5779/Team5-Fitnesspeaker.svg?branch=master)](https://travis-ci.org/TechnionYP5779/Team5-Fitnesspeaker)
 [![GitHub issues](https://img.shields.io/github/issues/TechnionYP5779/Team5-Diet-Tracker.svg)](https://github.com/TechnionYP5779/Team5-Diet-Tracker/issues)
 [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/TechnionYP5779/Team5-Diet-Tracker.svg?maxAge=2592000)]()
 
+## Technologies
+* [AWS](https://aws.amazon.com/) - we used AWS to store our lambda function.
+* [ASK - Alexa Skills Kit](https://developer.amazon.com) - we used ASK to develop our skill for Alexa
+
 ## Diet Tracker Abilities
-Please see [this](https://github.com/TechnionYP5779/Team5-Diet-Tracker/wiki/Diet-Tracker) wiki page 
+* [Please visit this wiki page](https://github.com/TechnionYP5779/Team5-Diet-Tracker/wiki/Diet-Tracker) 
 
 ## Built With
 
