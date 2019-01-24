@@ -19,6 +19,10 @@ import Utils.Strings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 
+/** this class handles food recording
+ * @author Shalev Kuba
+ * @since 2018-12-07
+ * */
 public class AddFoodIntentHandler implements RequestHandler {
 	public static final String AMOUNT_SLOT = "Number";
 	public static final String FOOD_SLOT = "Food";
@@ -71,7 +75,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 			/**
-			 * right now, the only other specific option we tke care of is the option that
+			 * right now, the only other specific option we take care of is the option that
 			 * we didn't find the portion units in the DB or in our modules.
 			 */
 		} catch (final Exception e) {

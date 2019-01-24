@@ -19,6 +19,10 @@ import Utils.Portion;
 import Utils.Portion.Type;
 import Utils.Strings;
 
+/** this class handles launch request
+ * @author Shalev Kuba
+ * @since 2018-12-07
+ * */
 public class LaunchRequestHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {

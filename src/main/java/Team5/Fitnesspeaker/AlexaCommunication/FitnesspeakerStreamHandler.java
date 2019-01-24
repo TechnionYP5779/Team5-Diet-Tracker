@@ -39,6 +39,10 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeeklyMailReportHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeightProgressIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIAteIntentHandler;
 
+/** this class initializes the intents handlers
+ * @author Shalev Kuba
+ * @since 2018-12-07
+ * */
 public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 	static final String skillID = "amzn1.ask.skill.8204b920-c87b-453b-8bee-b10cd79945a8";
 

@@ -16,6 +16,10 @@ import Utils.DBUtils.DBException;
 import Utils.Portion.Type;
 import Utils.UserInfo.Gender;
 
+/** unit tests for DBUtils
+ * @author Shalev Kuba
+ * @since 2018-12-23
+ * */
 @SuppressWarnings("static-method")
 public class DBUtilsTest {
 

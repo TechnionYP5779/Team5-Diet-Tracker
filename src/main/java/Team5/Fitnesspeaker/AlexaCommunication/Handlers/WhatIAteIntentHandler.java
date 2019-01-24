@@ -19,6 +19,10 @@ import Utils.Strings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 
+/** this class handles eating history querying
+ * @author Shalev Kuba
+ * @since 2018-12-26
+ * */
 public class WhatIAteIntentHandler implements RequestHandler {
 
 	@Override

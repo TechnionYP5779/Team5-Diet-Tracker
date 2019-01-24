@@ -2,6 +2,10 @@ package Utils;
 
 import java.util.Date;
 
+/** this class holds blood presure's measure data
+ * @author Shalev Kuba
+ * @since 2018-12-26
+ * */
 public class BloodPressure {
 
 	public Integer systolic;

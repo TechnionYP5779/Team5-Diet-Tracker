@@ -19,6 +19,10 @@ import Utils.Strings;
 import Utils.Strings.DrinkStrings;
 import Utils.Strings.IntentsNames;
 
+/** this class handles drink recording
+ * @author Shalev Kuba
+ * @since 2018-12-07
+ * */
 public class AddDrinkIntent implements RequestHandler {
 	public static final String ADD_COUNT_SLOT = "Number";
 	public static final String DRINK_NAME_SLOT = "drink";

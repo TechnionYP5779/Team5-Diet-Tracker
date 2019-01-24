@@ -19,11 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-/**
- *
- * @author ShalevKuba
- * @date 12-23-2018
- */
+/** this class communicate with the db for storing/querying information
+ * @author Shalev Kuba
+ * @since 2018-12-23
+ * */
 public class DBUtils {
 
 	FirebaseDatabase database;

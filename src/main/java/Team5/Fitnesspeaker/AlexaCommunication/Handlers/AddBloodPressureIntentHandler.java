@@ -18,6 +18,10 @@ import Utils.Strings;
 import Utils.Strings.BloodPressureString;
 import Utils.Strings.IntentsNames;
 
+/** this class handles blood pressure recording
+ * @author Shalev Kuba
+ * @since 2018-12-26
+ * */
 public class AddBloodPressureIntentHandler implements RequestHandler {
 	public static final String SYSTOLIC = "Number";
 	public static final String DIASTOLIC = "NumberTwo";

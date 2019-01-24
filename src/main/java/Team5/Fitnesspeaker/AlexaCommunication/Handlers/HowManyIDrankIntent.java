@@ -21,6 +21,10 @@ import Utils.Strings;
 import Utils.Strings.DrinkStrings;
 import Utils.Strings.IntentsNames;
 
+/** this class handle drink history querying
+ * @author Shalev Kuba
+ * @since 2018-12-07
+ * */
 public class HowManyIDrankIntent implements RequestHandler {
 	public static final String DRINK_NAME_SLOT = "drink";
 
