@@ -34,10 +34,10 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
 
-	private int getWeightByDate(String date,DBUtils db) {
+	private int getWeightByDate(String date,DBUtils u) {
 		
 		try {
-			return (int) db.DBGetDateDailyInfo(date).getWeight();
+			return (int) u.DBGetDateDailyInfo(date).getWeight();
 		} catch (DBException e) {
 			// TODO Auto-generated catch block
 			return -1;
@@ -82,10 +82,10 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		}
 		//s+=" "+String.valueOf(dts.size())+" "+String.valueOf(wts.size());
 		if( wts.size()>=5)
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "Mail describing your weight progess has been sent"+s)
-				.withSpeech("Mail describing your weight progess has been sent").withShouldEndSession(Boolean.FALSE).build();
+			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT)
+				.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough measurements"+s)
-				.withSpeech("I don't have enough measurements"+s).withShouldEndSession(Boolean.FALSE).build();
+				.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_NOT_SENT).withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }
