@@ -1,7 +1,13 @@
 /**This interface is used as a converter between different types of
  * volume units, such as liters, gallons, etc.
+ * it contains convertions between weight and volume units.
+ * it is used by PortionRequestGen, so if the portion units
+ * provided by the user don't appear in the DB, we can estimate the
+ * right amount of nutritional values by converting the user's units
+ * to some units known by the DB.
  * @author Shaked Sapir
  * @since 2018-12-07*/
+
 package Utils;
 
 public interface UnitsConverter {

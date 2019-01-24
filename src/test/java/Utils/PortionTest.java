@@ -59,11 +59,13 @@ public class PortionTest {
 		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
 		calendar.setTime(time);   // assigns calendar to given date 
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-		Portion.Meal meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST : (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH : 
-			(hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
-
 		assertEquals(
-				"Portion name: bacon , 100.0 grams\nPortion type: FOOD\nPortion Meal: " + meal.name() + "\n----------------------------------\n"
+				"Portion name: bacon , 100.0 grams\nPortion type: FOOD\nPortion Meal: "
+						+ (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST
+								: (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH
+										: (hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)))
+												.name()
+						+ "\n----------------------------------\n"
 						+ "Nutritional Values per 100 grams:\nCalories: 700.0\nProteins: 13.0\n"
 						+ "Carbohydrates: 302.0\nFats: 30.3\nAlchohol by volume: 0.0\nTime taken: "
 						+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time),
@@ -77,11 +79,13 @@ public class PortionTest {
 		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
 		calendar.setTime(time);   // assigns calendar to given date 
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-		Portion.Meal meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST : (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH : 
-			(hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
-
 		assertEquals(
-				"Portion name: fuzetea , 100.0 ml\nPortion type: DRINK\nPortion Meal: " + meal.name() + "\n----------------------------------\n"
+				"Portion name: fuzetea , 100.0 ml\nPortion type: DRINK\nPortion Meal: "
+						+ (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST
+								: (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH
+										: (hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)))
+												.name()
+						+ "\n----------------------------------\n"
 						+ "Nutritional Values per 100 grams:\nCalories: 700.0\nProteins: 13.0\n"
 						+ "Carbohydrates: 302.0\nFats: 30.3\nAlchohol by volume: 0.0\nTime taken: "
 						+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time),

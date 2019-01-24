@@ -1,16 +1,12 @@
-/**add here document
- * @author Fname Sname
- * @since year-month-day*/
+/**this module is meant to test UnitsConverter module.
+ * @author Shaked Sapir
+ * @since 2019-01-21*/
 package Utils;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-/**
- * @author Shaked Sapir
- *
- */
 @SuppressWarnings("static-method")
 public class UnitsConverterTest {
 

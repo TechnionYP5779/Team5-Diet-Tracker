@@ -13,7 +13,7 @@ public class simpleGraphTest {
 		ArrayList<Calendar> dates=new ArrayList<>();
 		ArrayList<Integer> weights=new ArrayList<>();
 		
-		for(int i=0;i<7;i++) {
+		for(int i=0;i<7;++i) {
 			Calendar c=Calendar.getInstance();
 			c.add(Calendar.DAY_OF_YEAR, -i);
 			dates.add(c);

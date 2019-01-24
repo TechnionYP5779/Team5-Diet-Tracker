@@ -57,13 +57,13 @@ public class AddWeightIntentHandler implements RequestHandler {
 					db.DBUpdateTodayDailyInfo(di);
 				} catch (DBException e) { // nothing to do
 				}
-			else {
+			else 
 				try {
 					db.DBUpdateTodayDailyInfo(new DailyInfo(weight, di2.getDailyCalories(), di2.getDailyLitresOfWater(),
 							di2.getDailyProteinGrams()));
 				} catch (DBException e) { // nothing to do
 				}
-			}
+			
 
 			speechText = String.format("your weight is %d kilograms", Integer.valueOf(weight));
 			repromptText = "I will repeat, You can ask me what is your weight saying, what is my weight?";
