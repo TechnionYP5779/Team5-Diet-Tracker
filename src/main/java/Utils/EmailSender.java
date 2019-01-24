@@ -1,3 +1,6 @@
+/** This class is allows to send designed email using existing "do not reply" mail address.
+ * @author Or Feldman & Igor Bashmashnikov
+ * @since 2018-12-21*/
 package Utils;
 
 import java.util.ArrayList;
@@ -36,8 +39,8 @@ public class EmailSender {
 			+ "    <th>Amount (in grams)</th>\r\n    <th>calories</th>\r\n    <th>proteins</th>\r\n"
 			+ "    <th>Carbs</th>\r\n    <th>Fats</th>\r\n  </tr>\r\n  <tr>\r\n";
 
-	private final String dailyEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td>" + "%.2f </td>\r\n"
-			+ "    <td> %.2f" + "</td>\r\n    <td> %.2f" + "</td>\r\n    <td> %.2f" + "</td>\r\n  </tr>\r\n";
+	private final String dailyEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td>%.2f </td>\r\n"
+			+ "    <td> %.2f</td>\r\n    <td> %.2f</td>\r\n    <td> %.2f</td>\r\n  </tr>\r\n";
 
 	private final String dailyEmailBottom = "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
 			+ "  <td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
@@ -59,8 +62,8 @@ public class EmailSender {
 			+ "<th>calories</th>\r\n    <th>proteins</th>\r\n"
 			+ "    <th>Carbs</th>\r\n    <th>Fats</th>\r\n  </tr>\r\n ";
 
-	private final String weeklyEmailTableLine = "<tr><td> %s </td>\r\n   <td>" + "%.2f </td>\r\n    <td>"
-			+ "%.2f </td>\r\n    <td>" + "%.2f  </td>\r\n    <td>" + "%.2f </td>\r\n  </tr>\r\n";
+	private final String weeklyEmailTableLine = "<tr><td> %s </td>\r\n   <td>%.2f </td>\r\n    <td>"
+			+ "%.2f </td>\r\n    <td>%.2f  </td>\r\n    <td>%.2f </td>\r\n  </tr>\r\n";
 
 	private final String weeklyEmailBottom = "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"

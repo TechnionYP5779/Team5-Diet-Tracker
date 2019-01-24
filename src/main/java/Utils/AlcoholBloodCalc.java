@@ -1,4 +1,8 @@
-
+/** This class Calculates the percentage of alcohol in blood by given 
+ *  alcoholic drinks and the time they have been consumed.
+ *  The calculation relies on the EBAC formula.
+ * @author Or Feldman
+ * @since 2018-12-25*/
 package Utils;
 
 import java.util.Calendar;
