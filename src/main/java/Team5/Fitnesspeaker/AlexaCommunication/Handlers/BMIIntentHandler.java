@@ -9,6 +9,7 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.DailyInfo;
 import Utils.Strings.BMIStrings;
+import Utils.Strings.IntentsNames;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
 
@@ -16,7 +17,7 @@ public class BMIIntentHandler implements RequestHandler{
 	
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("BMIIntent"));
+		return i.matches(intentName(IntentsNames.BMI_INTENT));
 	}
 
 	@Override

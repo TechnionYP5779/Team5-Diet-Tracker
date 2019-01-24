@@ -11,13 +11,16 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.AgeStrings;
+import Utils.Strings.GeneralString;
+import Utils.Strings.IntentsNames;
 
 public class AddAgeIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("AddAgeIntent"));
+		return i.matches(intentName(IntentsNames.ADD_AGE_INTENT));
 	}
 
 	@Override
@@ -31,8 +34,8 @@ public class AddAgeIntentHandler implements RequestHandler {
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
-			speechText = "I'm not sure how old are you. Please tell me again";
-			repromptText = "I will repeat, I'm not sure how old are you. Please tell me again";
+			speechText = AgeStrings.TELL_AGE_AGAIN;
+			repromptText = AgeStrings.TELL_AGE_AGAIN_REPEAT;
 		} else {
 			final int age = Integer.parseInt(NumberSlot.getValue());
 
@@ -53,8 +56,8 @@ public class AddAgeIntentHandler implements RequestHandler {
 						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 						user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
 
-			speechText = String.format("logged succesfully");
-			repromptText = "I will repeat, You can ask me how old are you saying, how older am i?";
+			speechText = GeneralString.LOGGED_SUCCESSFULLY;
+			repromptText = GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
 
 		}
 
