@@ -1,9 +1,11 @@
-# Team5-Diet Tracker
-## Team 5 development status 
-[![Build Status](https://travis-ci.org/TechnionYP5779/Team5-Fitnesspeaker.svg?branch=master)](https://travis-ci.org/TechnionYP5779/Team5-Fitnesspeaker)
-[![GitHub issues](https://img.shields.io/github/issues/TechnionYP5779/Team5-Fitnesspeaker.svg)](https://github.com/TechnionYP5779/Team5-Fitnesspeaker/issues)
-[![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/TechnionYP5779/Team5-Fitnesspeaker.svg?maxAge=2592000)]()
-![sonarqube](https://sonarcloud.io/api/project_badges/measure?project=0a9d7e0d9cbe7bf65aeddc34f4ad28e99cd09382&metric=alert_status)
+# Diet Tracker
+## Diet-Tracker development status 
+[![Build Status](https://travis-ci.org/TechnionYP5779/Team5-Diet-Tracker.svg?branch=master)](https://travis-ci.org/TechnionYP5779/Team5-Diet-Tracker)
+[![GitHub issues](https://img.shields.io/github/issues/TechnionYP5779/Team5-Diet-Tracker.svg)](https://github.com/TechnionYP5779/Team5-Diet-Tracker/issues)
+[![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/TechnionYP5779/Team5-Diet-Tracker.svg?maxAge=2592000)]()
+
+## Diet Tracker Abilities
+Please see [this](https://github.com/TechnionYP5779/Team5-Diet-Tracker/wiki/Diet-Tracker) wiki page 
 
 ## Built With
 
