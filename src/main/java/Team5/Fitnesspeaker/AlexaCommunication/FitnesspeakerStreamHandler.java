@@ -10,7 +10,6 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchSmokedIntentHandle
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.HowMuchWeightIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddWeightIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.BMIIntentHandler;
-import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CanIDriveIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddHeightIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WhatIsMyNameIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AddNameIntentHandler;
@@ -54,7 +53,7 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new HowOldIntentHandler(), new WhatIsMyNameIntentHandler(), new AddNameIntentHandler(),
 						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
 						new HowMuchHeightIntent(), new SendDailyEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
-            new HowMuchCaloriesIntentHandler(), new CanIDriveIntentHandler(), new WeightProgressIntentHandler(), 
+            new HowMuchCaloriesIntentHandler(), new WeightProgressIntentHandler(), 
             new WeeklyMailReportHandler(),new AddBloodPressureIntentHandler(), new GetBloodPressureIntentHandler(),
             new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler(),new AddWeightGoalIntentHandler(),new PeriodicWeightProgressHandler()).withSkillId(skillID).build();
 	}
