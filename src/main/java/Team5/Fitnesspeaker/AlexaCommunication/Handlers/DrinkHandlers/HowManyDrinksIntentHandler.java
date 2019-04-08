@@ -27,7 +27,7 @@ import Utils.Strings.IntentsNames;
  * @author Shalev Kuba
  * @since 2018-12-07
  */
-public class HowManyIDrankIntent implements RequestHandler {
+public class HowManyDrinksIntentHandler implements RequestHandler {
 	public static final String DRINK_NAME_SLOT = "drink";
 
 	@Override

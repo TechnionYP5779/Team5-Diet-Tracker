@@ -12,7 +12,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowMuchHeightIntent implements RequestHandler {
+public class GetHeightIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.HOW_MUCH_HEIGHT_INTENT));

@@ -15,7 +15,7 @@ import Utils.DailyStatistics;
 import Utils.EmailSender;
 import Utils.Portion;
 
-public class SendDailyEmailHandler implements RequestHandler {
+public class SendDailyMailIntentHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;

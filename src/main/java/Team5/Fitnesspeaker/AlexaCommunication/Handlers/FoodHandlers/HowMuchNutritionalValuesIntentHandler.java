@@ -21,7 +21,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowMuchCaloriesIntentHandler implements RequestHandler {
+public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 	public static final String MEASURE_SLOT = "Measure";
 	public static final String CALORIES = "calories";
 	public static final String CARBS = "carbs";

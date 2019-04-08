@@ -26,7 +26,7 @@ import Utils.Strings.IntentsNames;
  * @author Shalev Kuba
  * @since 2018-12-07
  */
-public class AddDrinkIntent implements RequestHandler {
+public class AddDrinkIntentHandler implements RequestHandler {
 	public static final String ADD_COUNT_SLOT = "Number";
 	public static final String DRINK_NAME_SLOT = "drink";
 	public static final String[] tips = { DrinkStrings.SITTING_TIP };

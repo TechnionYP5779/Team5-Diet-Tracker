@@ -25,7 +25,7 @@ import Utils.Strings.IntentsNames;
  * @author Shalev Kuba
  * @since 2018-12-26
  */
-public class WhatIAteIntentHandler implements RequestHandler {
+public class WhatDidIEatIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {

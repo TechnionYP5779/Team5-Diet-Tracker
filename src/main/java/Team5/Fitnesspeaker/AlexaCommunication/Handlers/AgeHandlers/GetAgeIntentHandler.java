@@ -12,7 +12,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.AgeStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowOldIntentHandler implements RequestHandler {
+public class GetAgeIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.HOW_OLD_INTENT));

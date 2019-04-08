@@ -11,7 +11,7 @@ import Utils.DBUtils.DBException;
 import Utils.DailyInfo;
 import Utils.UserInfo;
 
-public class PeriodicWeightProgressHandler implements RequestHandler {
+public class PeriodicWeightProgressIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override

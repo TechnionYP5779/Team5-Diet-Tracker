@@ -15,7 +15,7 @@ import Utils.Strings.AgeStrings;
 import Utils.Strings.GeneralString;
 import Utils.Strings.IntentsNames;
 
-public class AddAgeIntentHandler implements RequestHandler {
+public class SetAgeIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override

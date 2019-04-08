@@ -12,7 +12,7 @@ import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.EmailSender;
 
-public class WeightProgressIntentHandler implements RequestHandler {
+public class SendWeightProgressMailIntentHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;

@@ -10,7 +10,7 @@ import Utils.DBUtils;
 import Utils.DailyInfo;
 import Utils.DBUtils.DBException;
 
-public class HowMuchWeightIntentHandler implements RequestHandler {
+public class GetWeightIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("HowMuchWeightIntent"));

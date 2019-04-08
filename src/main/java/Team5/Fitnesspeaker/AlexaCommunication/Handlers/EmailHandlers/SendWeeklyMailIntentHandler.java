@@ -18,7 +18,7 @@ import Utils.Portion;
 import Utils.WeeklyStatistics;
 import Utils.DBUtils.DBException;
 
-public class WeeklyMailReportHandler implements RequestHandler {
+public class SendWeeklyMailIntentHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;
