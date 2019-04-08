@@ -27,21 +27,21 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 	public static final String CARBS = "carbs";
 	public static final String PROTEINS = "proteins";
 	public static final String FATS = "fats";
-	
+
 	public static boolean eatTooMuch(int progressPerc, int hour) {
-		if(hour>4 && hour < 12 && progressPerc > 40)
+		if (hour > 4 && hour < 12 && progressPerc > 40)
 			return true;
-		if(hour > 4 && hour < 18 && progressPerc > 90)
+		if (hour > 4 && hour < 18 && progressPerc > 90)
 			return true;
-		if(progressPerc > 100)
+		if (progressPerc > 100)
 			return true;
 		return false;
 	}
-	
+
 	public static boolean eatTooFew(int progressPerc, int hour) {
-		if(hour > 12 && progressPerc < 20)
+		if (hour > 12 && progressPerc < 20)
 			return true;
-		if(hour > 18 && progressPerc < 60)
+		if (hour > 18 && progressPerc < 60)
 			return true;
 		return false;
 	}
@@ -61,7 +61,6 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 		String speechText = "";
 		final Slot measureSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(MEASURE_SLOT);
-
 
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DBUtils db = new DBUtils(UserMail);
@@ -88,24 +87,24 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				measure = p.getCalories_per_100_grams();
 			total_measure += measure * ((double) amount / 100);
 		}
-		total_measure += (total_measure%50>0 ? 50: 0) - (total_measure%50);
-		
+		total_measure += (total_measure % 50 > 0 ? 50 : 0) - (total_measure % 50);
+
 		// after we got the total measure we look for the goal
-		
+
 		UserInfo user = null;
 		try {
 			user = db.DBGetUserInfo();
 		} catch (DBException e) {
 			// no need to do anything
 		}
-		String speechText2 = "", speechText3= "";
+		String speechText2 = "", speechText3 = "";
 		if (user == null || (user.getDailyCaloriesGoal() == -1 && CALORIES.contains(measure_str))
 				|| (user.getDailyProteinGramsGoal() == -1 && PROTEINS.contains(measure_str))
 				|| (user.getDailyCarbsGoal() == -1 && CARBS.contains(measure_str))
 				|| (user.getDailyFatsGoal() == -1 && FATS.contains(measure_str)))
 			speechText2 = GoalsAndMeasuresStrings.DIDNT_TELL_GOAL_YET;
 		else {
-			int goal=0;
+			int goal = 0;
 			if (FATS.contains(measure_str))
 				goal = (int) user.getDailyFatsGoal();
 			else if (CARBS.contains(measure_str))
@@ -114,17 +113,17 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 				goal = (int) user.getDailyProteinGramsGoal();
 			else if (CALORIES.contains(measure_str))
 				goal = (int) user.getDailyCaloriesGoal();
-			int progress = (int)((total_measure / (double) goal) * 100.0);
-			int amount = goal - (int)total_measure;
+			int progress = (int) ((total_measure / (double) goal) * 100.0);
+			int amount = goal - (int) total_measure;
 			Calendar curr = Calendar.getInstance();
 			int hour = curr.get(Calendar.HOUR_OF_DAY);
-			if(eatTooMuch(progress, hour))
+			if (eatTooMuch(progress, hour))
 				speechText3 = GoalsAndMeasuresStrings.GOAL_CLOSE;
-			else if(eatTooFew(progress, hour))
+			else if (eatTooFew(progress, hour))
 				speechText3 = GoalsAndMeasuresStrings.GOAL_FAR;
 			else
 				speechText3 = GoalsAndMeasuresStrings.GOAL_KEEP;
-			
+
 			if (CALORIES.contains(measure_str))
 				if (amount > 0)
 					speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL, Integer.valueOf(amount),
@@ -148,11 +147,11 @@ public class HowMuchCaloriesIntentHandler implements RequestHandler {
 		if (total_measure == 0)
 			speechText = GoalsAndMeasuresStrings.DIDNT_EAT + speechText2;
 		else if (CALORIES.contains(measure_str))
-			speechText = String.format(GoalsAndMeasuresStrings.MEASURE_AMOUNT_ATE, Integer.valueOf((int) total_measure), measure_str)
-					+ speechText2;
-		else
-			speechText = String.format(GoalsAndMeasuresStrings.MEASURE_AMOUNT_ATE_GRAMS, Integer.valueOf((int) total_measure),
+			speechText = String.format(GoalsAndMeasuresStrings.MEASURE_AMOUNT_ATE, Integer.valueOf((int) total_measure),
 					measure_str) + speechText2;
+		else
+			speechText = String.format(GoalsAndMeasuresStrings.MEASURE_AMOUNT_ATE_GRAMS,
+					Integer.valueOf((int) total_measure), measure_str) + speechText2;
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.FALSE).build();

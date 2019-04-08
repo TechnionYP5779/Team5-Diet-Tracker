@@ -193,7 +193,7 @@ public class Strings {
 	public static class HelpString {
 		public static final String SAY_HELP = "You can tell me what you ate, for example, i ate twenty grams of pasta or you can tell me everytime you drink,"
 				+ " for example, i drank 3 cups of water.";
-		public static final String SAY_HELP_REPEAT = "I will repeat, " +SAY_HELP;
+		public static final String SAY_HELP_REPEAT = "I will repeat, " + SAY_HELP;
 	}
 
 }

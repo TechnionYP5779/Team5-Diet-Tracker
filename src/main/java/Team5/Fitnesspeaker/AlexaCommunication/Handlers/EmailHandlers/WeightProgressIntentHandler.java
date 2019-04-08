@@ -11,11 +11,12 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.EmailSender;
+
 public class WeightProgressIntentHandler implements RequestHandler {
 
 	String UserMail;
 	String UserName;
-	private final int MAX_DAYS=14;
+	private final int MAX_DAYS = 14;
 
 	private String[] getDates() {
 		String[] dates = new String[MAX_DAYS];
@@ -34,8 +35,8 @@ public class WeightProgressIntentHandler implements RequestHandler {
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
 
-	private int getWeightByDate(String date,DBUtils u) {
-		
+	private int getWeightByDate(String date, DBUtils u) {
+
 		try {
 			return (int) u.DBGetDateDailyInfo(date).getWeight();
 		} catch (DBException e) {
@@ -43,7 +44,6 @@ public class WeightProgressIntentHandler implements RequestHandler {
 			return -1;
 		}
 	}
-		
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
@@ -52,40 +52,43 @@ public class WeightProgressIntentHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
-		ArrayList<Calendar> dts=new ArrayList<>();
-		ArrayList<Integer> wts=new ArrayList<>();
-		String s="";
+		ArrayList<Calendar> dts = new ArrayList<>();
+		ArrayList<Integer> wts = new ArrayList<>();
+		String s = "";
 		try {
-		getUserInfo(i);
-		DBUtils db=new DBUtils(UserMail);
-		String[] dates = getDates();
-		
-		int w=-1;
-		for (int day = 0; day < MAX_DAYS; ++day) {
-			w=getWeightByDate(dates[day],db);
-			if(w!=-1) {
-				wts.add(Integer.valueOf(w));
-				Calendar c=Calendar.getInstance();
-				c.add(Calendar.DAY_OF_YEAR, -MAX_DAYS+day);
-				dts.add(c);
+			getUserInfo(i);
+			DBUtils db = new DBUtils(UserMail);
+			String[] dates = getDates();
+
+			int w = -1;
+			for (int day = 0; day < MAX_DAYS; ++day) {
+				w = getWeightByDate(dates[day], db);
+				if (w != -1) {
+					wts.add(Integer.valueOf(w));
+					Calendar c = Calendar.getInstance();
+					c.add(Calendar.DAY_OF_YEAR, -MAX_DAYS + day);
+					dts.add(c);
+				}
+
 			}
-			
-		}
-		try {
-			if( wts.size()>=5) 
-				(new EmailSender()).sendWeightStatistics("weight progess", this.UserMail, UserName, dts, wts);
+			try {
+				if (wts.size() >= 5)
+					(new EmailSender()).sendWeightStatistics("weight progess", this.UserMail, UserName, dts, wts);
+			} catch (Exception e) {
+				// s+=e.toString();
+			}
 		} catch (Exception e) {
-			//s+=e.toString();
+			// s+=" "+e.toString();
 		}
-		} catch(Exception e) {
-			//s+=" "+e.toString();
-		}
-		//s+=" "+String.valueOf(dts.size())+" "+String.valueOf(wts.size());
-		if( wts.size()>=5)
-			return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT)
-				.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
-		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough measurements"+s)
-				.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_NOT_SENT).withShouldEndSession(Boolean.FALSE).build();
+		// s+=" "+String.valueOf(dts.size())+" "+String.valueOf(wts.size());
+		if (wts.size() >= 5)
+			return i.getResponseBuilder()
+					.withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT)
+					.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_SENT).withShouldEndSession(Boolean.FALSE)
+					.build();
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", "I don't have enough measurements" + s)
+				.withSpeech(Utils.Strings.EmailStrings.WEIGHT_MAIL_NOT_SENT).withShouldEndSession(Boolean.FALSE)
+				.build();
 	}
 
 }

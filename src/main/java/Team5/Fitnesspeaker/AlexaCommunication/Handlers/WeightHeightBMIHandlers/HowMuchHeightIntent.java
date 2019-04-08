@@ -12,7 +12,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowMuchHeightIntent implements RequestHandler{
+public class HowMuchHeightIntent implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.HOW_MUCH_HEIGHT_INTENT));
@@ -22,7 +22,7 @@ public class HowMuchHeightIntent implements RequestHandler{
 	public Optional<Response> handle(final HandlerInput i) {
 		String speechText = "";
 
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		UserInfo user = null;
@@ -32,7 +32,7 @@ public class HowMuchHeightIntent implements RequestHandler{
 			// no need to do anything
 		}
 
-		if (user==null)
+		if (user == null)
 			speechText = HeightStrings.DIDNT_TELL_HEIGHT;
 		else {
 			final int height = user.getHeight();

@@ -19,10 +19,12 @@ import Utils.Strings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 
-/** this class handles eating history querying
+/**
+ * this class handles eating history querying
+ * 
  * @author Shalev Kuba
  * @since 2018-12-26
- * */
+ */
 public class WhatIAteIntentHandler implements RequestHandler {
 
 	@Override
@@ -47,22 +49,23 @@ public class WhatIAteIntentHandler implements RequestHandler {
 		} catch (final DBException e) {
 			// no need to do anything
 		}
-    
-    if (FoodList.isEmpty())
+
+		if (FoodList.isEmpty())
 			speechText = FoodStrings.DIDNT_EAT_ANYTHING;
-    else{
-		  Portion.Meal m = FoodList.get(0).getMeal();
-		  speechText += "For " + m.name();
-		  for (final Portion p : FoodList) {
-		  	if (! (p.getMeal().name().equals(m.name()))) {
-		  		speechText += "For " + p.getMeal().name();
-		  		m = p.getMeal();
-		  	}
-			  String[] splited2 =p.getTime().toString().split(" ")[3].split(":");
-			  speechText += ", at "+Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])+" you ate " + Integer.valueOf((int) p.getAmount()) + " grams of " + p.getName() ;
-		  }
-    }
-    
+		else {
+			Portion.Meal m = FoodList.get(0).getMeal();
+			speechText += "For " + m.name();
+			for (final Portion p : FoodList) {
+				if (!(p.getMeal().name().equals(m.name()))) {
+					speechText += "For " + p.getMeal().name();
+					m = p.getMeal();
+				}
+				String[] splited2 = p.getTime().toString().split(" ")[3].split(":");
+				speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " grams of " + p.getName();
+			}
+		}
+
 		return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)
 				.withShouldEndSession(Boolean.TRUE).build();
 

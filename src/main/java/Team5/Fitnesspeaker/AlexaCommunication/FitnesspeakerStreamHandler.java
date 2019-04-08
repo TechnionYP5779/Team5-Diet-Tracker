@@ -40,16 +40,18 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 
 	@SuppressWarnings("unchecked")
 	private static Skill getSkill() {
-		return Skills.standard().addRequestHandlers(new WhatIAteIntentHandler(), new AddFoodIntentHandler(),
-				new LaunchRequestHandler(), new CancelandStopIntentHandler(), new SessionEndedRequestHandler(),
-				new HelpIntentHandler(), new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent(),
-				new AddAgeIntentHandler(), new HowOldIntentHandler(),
-				new AddWeightIntentHandler(), new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(),
-				new HowMuchHeightIntent(), new SendDailyEmailHandler(), new AddSmokeIntentHandler(),
-				new HowMuchSmokedIntentHandler(), new HowMuchCaloriesIntentHandler(), new WeightProgressIntentHandler(),
-				new WeeklyMailReportHandler(), new BMIIntentHandler(), new SetGoalIntentHandler(),
-				new GetGoalIntentHandler(), new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler(),
-				new AddWeightGoalIntentHandler(), new PeriodicWeightProgressHandler()).withSkillId(skillID).build();
+		return Skills.standard()
+				.addRequestHandlers(new WhatIAteIntentHandler(), new AddFoodIntentHandler(), new LaunchRequestHandler(),
+						new CancelandStopIntentHandler(), new SessionEndedRequestHandler(), new HelpIntentHandler(),
+						new FallbackIntentHandler(), new AddDrinkIntent(), new HowManyIDrankIntent(),
+						new AddAgeIntentHandler(), new HowOldIntentHandler(), new AddWeightIntentHandler(),
+						new AddHeightIntentHandler(), new HowMuchWeightIntentHandler(), new HowMuchHeightIntent(),
+						new SendDailyEmailHandler(), new AddSmokeIntentHandler(), new HowMuchSmokedIntentHandler(),
+						new HowMuchCaloriesIntentHandler(), new WeightProgressIntentHandler(),
+						new WeeklyMailReportHandler(), new BMIIntentHandler(), new SetGoalIntentHandler(),
+						new GetGoalIntentHandler(), new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler(),
+						new AddWeightGoalIntentHandler(), new PeriodicWeightProgressHandler())
+				.withSkillId(skillID).build();
 	}
 
 	public FitnesspeakerStreamHandler() {

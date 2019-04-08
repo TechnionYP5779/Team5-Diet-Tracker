@@ -14,9 +14,9 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.CigarettesStrings;
 import Utils.Strings.IntentsNames;
 
-public class AddSmokeIntentHandler implements RequestHandler{
+public class AddSmokeIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
-	
+
 	public static String getDate() {
 		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
@@ -33,7 +33,7 @@ public class AddSmokeIntentHandler implements RequestHandler{
 				.get(NUMBER_SLOT);
 		String speechText = "", repromptText;
 
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {

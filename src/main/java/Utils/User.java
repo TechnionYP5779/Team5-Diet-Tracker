@@ -9,46 +9,45 @@ public class User {
 	public enum Gender {
 		MALE, FEMALE
 	}
-	
-	public String name="";
-	public Gender gender=Gender.MALE;
-	public int age=-1;
-	public int weight=-1;
-	public int height=-1;
+
+	public String name = "";
+	public Gender gender = Gender.MALE;
+	public int age = -1;
+	public int weight = -1;
+	public int height = -1;
 	public double dailyCalories;
-	public double dailyCaloriesGoal=-1;
+	public double dailyCaloriesGoal = -1;
 	public double dailyLitresOfWater;
-	public double dailyLitresOfWaterGoal=-1;
+	public double dailyLitresOfWaterGoal = -1;
 	public double dailyProteinGrams;
-	public double dailyProteinGramsGoal=-1;
-	
+	public double dailyProteinGramsGoal = -1;
+
 	/*
 	 * basic constructor with all the parameters
 	 */
-	public User(String name, Gender gender, int age, int weight, int height,
-			double dailyCaloriesGoal,double dailyLitresOfWaterGoal,
-			double dailyProteinGramsGoal, double dailyCalories, double dailyLitresOfWater,
-			double dailyProteinGrams) {
-		this.name=name;
-		this.gender=gender;
-		this.age=age;
-		this.weight=weight;
-		this.height=height;
-		this.dailyCaloriesGoal=dailyCaloriesGoal;
-		this.dailyLitresOfWaterGoal=dailyLitresOfWaterGoal;
-		this.dailyProteinGramsGoal=dailyProteinGramsGoal;
+	public User(String name, Gender gender, int age, int weight, int height, double dailyCaloriesGoal,
+			double dailyLitresOfWaterGoal, double dailyProteinGramsGoal, double dailyCalories,
+			double dailyLitresOfWater, double dailyProteinGrams) {
+		this.name = name;
+		this.gender = gender;
+		this.age = age;
+		this.weight = weight;
+		this.height = height;
+		this.dailyCaloriesGoal = dailyCaloriesGoal;
+		this.dailyLitresOfWaterGoal = dailyLitresOfWaterGoal;
+		this.dailyProteinGramsGoal = dailyProteinGramsGoal;
 		this.dailyCalories = dailyCalories;
 		this.dailyLitresOfWater = dailyLitresOfWater;
 		this.dailyProteinGrams = dailyProteinGrams;
 	}
-	
+
 	/*
 	 * default constructor
 	 */
 	public User() {
-		
+
 	}
-	
+
 	@Override
 	public boolean equals(final Object o) {
 		if (o == this)
@@ -56,10 +55,8 @@ public class User {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		final User user = (User) o;
-		return Double.compare(user.age, age) == 0
-				&& Double.compare(user.weight, weight) == 0
-				&& Double.compare(user.height, height) == 0
-				&& Double.compare(user.dailyCalories, dailyCalories) == 0
+		return Double.compare(user.age, age) == 0 && Double.compare(user.weight, weight) == 0
+				&& Double.compare(user.height, height) == 0 && Double.compare(user.dailyCalories, dailyCalories) == 0
 				&& Double.compare(user.dailyCaloriesGoal, dailyCaloriesGoal) == 0
 				&& Double.compare(user.dailyLitresOfWater, dailyLitresOfWater) == 0
 				&& Double.compare(user.dailyLitresOfWaterGoal, dailyLitresOfWaterGoal) == 0
@@ -67,6 +64,7 @@ public class User {
 				&& Double.compare(user.dailyProteinGramsGoal, dailyProteinGramsGoal) == 0 && gender == user.gender
 				&& Objects.equals(name, user.name);
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -154,7 +152,5 @@ public class User {
 	public void setDailyProteinGramsGoal(double dailyProteinGramsGoal) {
 		this.dailyProteinGramsGoal = dailyProteinGramsGoal;
 	}
-	
-	
-	
+
 }

@@ -10,7 +10,7 @@ import Utils.DBUtils;
 import Utils.DailyInfo;
 import Utils.DBUtils.DBException;
 
-public class HowMuchWeightIntentHandler implements RequestHandler{	
+public class HowMuchWeightIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("HowMuchWeightIntent"));
@@ -22,7 +22,7 @@ public class HowMuchWeightIntentHandler implements RequestHandler{
 
 		// added
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DBUtils db = new DBUtils(UserMail);
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -35,7 +35,7 @@ public class HowMuchWeightIntentHandler implements RequestHandler{
 		if (daily == null)
 			speechText = String.format("you didn't tell me what is your weight");
 		else {
-			final int weight = (int)(daily.getWeight());
+			final int weight = (int) (daily.getWeight());
 			if (weight == -1)
 				speechText = String.format("you didn't tell me what is your weight");
 			else

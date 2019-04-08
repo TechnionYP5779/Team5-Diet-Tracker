@@ -12,7 +12,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.CigarettesStrings;
 import Utils.Strings.IntentsNames;
 
-public class GetCigarLimitIntentHandler implements RequestHandler{
+public class GetCigarLimitIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.GET_CIGAR_LIMIT_INTENT));
@@ -22,7 +22,7 @@ public class GetCigarLimitIntentHandler implements RequestHandler{
 	public Optional<Response> handle(final HandlerInput i) {
 		String speechText = "";
 
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		UserInfo user = null;
@@ -32,7 +32,7 @@ public class GetCigarLimitIntentHandler implements RequestHandler{
 			// no need to do anything
 		}
 
-		if (user==null)
+		if (user == null)
 			speechText = CigarettesStrings.DIDNT_TELL_CIGS_LIMIT;
 		else {
 			final int cigarLimit = user.getDailyLimitCigarettes();

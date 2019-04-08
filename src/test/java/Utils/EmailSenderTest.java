@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 
 import org.junit.Test;
 import Utils.EmailSender;
+
 public class EmailSenderTest {
 
 	// checking there are no exceptions and that the mail is sent
@@ -35,11 +36,11 @@ public class EmailSenderTest {
 		ds.dailyFats = "50.0000001";
 		new EmailSender().designedDailyStatisticsEmail("test2", "team5.yearlyproject@gmail.com", "Team", ds);
 	}
-	
+
 	@Test
 	public void designedWeeklyEmailTest() {
-		WeeklyStatistics w=new WeeklyStatistics();
-		DailyStatistics ds=new DailyStatistics();
+		WeeklyStatistics w = new WeeklyStatistics();
+		DailyStatistics ds = new DailyStatistics();
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
@@ -47,31 +48,29 @@ public class EmailSenderTest {
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
-		new EmailSender().designedWeeklyStatisticsEmail("test3", "team5.yearlyproject@gmail.com", "Team", w);	
+		new EmailSender().designedWeeklyStatisticsEmail("test3", "team5.yearlyproject@gmail.com", "Team", w);
 	}
-	
-	
+
 	@Test
 	public void sendWeightStatistics() {
-		
-		ArrayList<Calendar> dates=new ArrayList<>();
-		ArrayList<Integer> weights=new ArrayList<>();
-		
-		for(int i=0;i<7;++i) {
-			Calendar c=Calendar.getInstance();
+
+		ArrayList<Calendar> dates = new ArrayList<>();
+		ArrayList<Integer> weights = new ArrayList<>();
+
+		for (int i = 0; i < 7; ++i) {
+			Calendar c = Calendar.getInstance();
 			c.add(Calendar.DAY_OF_YEAR, -i);
 			dates.add(c);
-			weights.add(Integer.valueOf(70-i));
+			weights.add(Integer.valueOf(70 - i));
 		}
-		
-		
-			try {
-				new EmailSender().sendWeightStatistics("test4", "team5.yearlyproject@gmail.com", "team", dates, weights);
-			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
+
+		try {
+			new EmailSender().sendWeightStatistics("test4", "team5.yearlyproject@gmail.com", "team", dates, weights);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 }

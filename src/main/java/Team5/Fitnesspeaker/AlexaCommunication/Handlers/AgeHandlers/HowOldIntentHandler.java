@@ -12,7 +12,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.AgeStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowOldIntentHandler implements RequestHandler{
+public class HowOldIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.HOW_OLD_INTENT));
@@ -22,7 +22,7 @@ public class HowOldIntentHandler implements RequestHandler{
 	public Optional<Response> handle(final HandlerInput i) {
 		String speechText = "";
 
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		UserInfo user = null;
@@ -32,7 +32,7 @@ public class HowOldIntentHandler implements RequestHandler{
 			// no need to do anything
 		}
 
-		if (user==null)
+		if (user == null)
 			speechText = AgeStrings.DIDNT_TELL_AGE;
 		else {
 			final int age = user.getAge();

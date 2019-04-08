@@ -3,10 +3,10 @@ package Utils;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
 @SuppressWarnings("static-method")
 public class WeeklyStatisticsTest {
 
-	
 	@Test
 	public void testCalculateWeeklyData() {
 		DailyStatistics ds1 = new DailyStatistics();

@@ -15,7 +15,7 @@ import Utils.Strings.CigarettesStrings;
 import Utils.Strings.GeneralString;
 import Utils.Strings.IntentsNames;
 
-public class SetCigarLimitIntentHandler implements RequestHandler{
+public class SetCigarLimitIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
@@ -29,7 +29,7 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 				.get(NUMBER_SLOT);
 		String speechText = "", repromptText;
 
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
@@ -46,14 +46,12 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 			} catch (DBException e) {
 				// no need to do anything
 			}
-			if (user==null)
+			if (user == null)
 				db.DBUpdateUserInfo(u);
 			else
-				db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
-						user.getHeight(),
-						user.getDailyCaloriesGoal(),
-						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
-						user.getDailyFatsGoal(),cigarettesLimit));
+				db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(),
+						user.getDailyCaloriesGoal(), user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
+						user.getDailyFatsGoal(), cigarettesLimit));
 
 			speechText = GeneralString.LOGGED_SUCCESSFULLY;
 			repromptText = GeneralString.LOGGED_SUCCESSFULLY_REPEAT;

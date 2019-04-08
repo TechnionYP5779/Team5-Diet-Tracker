@@ -11,7 +11,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.CigarettesStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowMuchSmokedIntentHandler implements RequestHandler{
+public class HowMuchSmokedIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.HOW_MUCH_SMOKE_INTENT));
@@ -21,10 +21,10 @@ public class HowMuchSmokedIntentHandler implements RequestHandler{
 	public Optional<Response> handle(final HandlerInput i) {
 		String speechText = "";
 
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
-		Optional<Integer> smoked =  Optional.empty();
+		Optional<Integer> smoked = Optional.empty();
 		try {
 			smoked = db.DBGetTodayCigarettesCount();
 		} catch (DBException e) {
@@ -46,5 +46,5 @@ public class HowMuchSmokedIntentHandler implements RequestHandler{
 				.withShouldEndSession(Boolean.FALSE).build();
 
 	}
-	
+
 }

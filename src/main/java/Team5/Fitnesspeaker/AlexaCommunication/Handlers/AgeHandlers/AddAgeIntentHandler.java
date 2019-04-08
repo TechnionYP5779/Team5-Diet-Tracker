@@ -29,8 +29,7 @@ public class AddAgeIntentHandler implements RequestHandler {
 				.get(NUMBER_SLOT);
 		String speechText = "", repromptText;
 
-		
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
@@ -47,14 +46,12 @@ public class AddAgeIntentHandler implements RequestHandler {
 			} catch (DBException e) {
 				// no need to do anything
 			}
-			if (user==null)
+			if (user == null)
 				db.DBUpdateUserInfo(u);
 			else
-				db.DBUpdateUserInfo(new UserInfo(user.getGender(), age,
-						user.getHeight(),
-						user.getDailyCaloriesGoal(),
-						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
-						user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
+				db.DBUpdateUserInfo(new UserInfo(user.getGender(), age, user.getHeight(), user.getDailyCaloriesGoal(),
+						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(), user.getDailyFatsGoal(),
+						user.getDailyLimitCigarettes()));
 
 			speechText = GeneralString.LOGGED_SUCCESSFULLY;
 			repromptText = GeneralString.LOGGED_SUCCESSFULLY_REPEAT;

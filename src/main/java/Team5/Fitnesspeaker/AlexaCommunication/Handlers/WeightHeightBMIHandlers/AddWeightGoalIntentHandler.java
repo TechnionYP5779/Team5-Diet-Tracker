@@ -24,28 +24,31 @@ public class AddWeightGoalIntentHandler implements RequestHandler {
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
-		String speechText = "", repromptText="";
-		
+		String speechText = "", repromptText = "";
+
 		if (NumberSlot == null) {
 			speechText = Utils.Strings.GoalsAndMeasuresStrings.TELL_MEASURE_GOAL_AGAIN;
 			repromptText = Utils.Strings.GoalsAndMeasuresStrings.TELL_MEASURE_AGAIN_REPEAT;
 		} else {
 			final int weight = Integer.parseInt(NumberSlot.getValue());
-			speechText=NumberSlot.getValue();
-			final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
-			DBUtils db=new DBUtils(UserMail);
-			
-			UserInfo ui=null;
+			speechText = NumberSlot.getValue();
+			final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
+			DBUtils db = new DBUtils(UserMail);
+
+			UserInfo ui = null;
 			try {
-				ui=db.DBGetUserInfo();
+				ui = db.DBGetUserInfo();
 			} catch (DBException e) { // nothing to do here
-				
+
 			}
-			if(ui ==null)
-				ui=new UserInfo();
+			if (ui == null)
+				ui = new UserInfo();
 			ui.setWeightGoal(weight);
 			db.DBUpdateUserInfo(ui);
 			speechText = Utils.Strings.GeneralString.LOGGED_SUCCESSFULLY;
-			repromptText =  Utils.Strings.GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
-		}return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession",speechText).withSpeech(speechText).withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
-}}
+			repromptText = Utils.Strings.GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
+		}
+		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
+				.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+	}
+}

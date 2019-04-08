@@ -15,29 +15,29 @@ import Utils.Strings.GeneralString;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
 
-public class SetGoalIntentHandler implements RequestHandler{
+public class SetGoalIntentHandler implements RequestHandler {
 	public static final String MEASURE_SLOT = "Measure";
 	public static final String NUMBER_SLOT = "Number";
 	public static final String CALORIES = "calories";
 	public static final String CARBS = "carbs";
 	public static final String PROTEINS = "proteins";
 	public static final String FATS = "fats";
-	
+
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.SET_GOAL_INTENT));
 	}
-	
+
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(NUMBER_SLOT);
-		
+
 		final Slot MeasureSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(MEASURE_SLOT);
-		
+
 		String speechText = "", repromptText;
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null || MeasureSlot == null) {
@@ -65,28 +65,21 @@ public class SetGoalIntentHandler implements RequestHandler{
 				db.DBUpdateUserInfo(u);
 			else {
 				if (FATS.contains(measure_str))
-					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
-							user.getHeight(),
-							user.getDailyCaloriesGoal(),
-							user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
+					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(),
+							user.getDailyCaloriesGoal(), user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 							amount, user.getDailyLimitCigarettes()));
 				else if (CARBS.contains(measure_str))
-					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
-							user.getHeight(),
-							user.getDailyCaloriesGoal(),
-							user.getDailyProteinGramsGoal(), amount,
+					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(),
+							user.getDailyCaloriesGoal(), user.getDailyProteinGramsGoal(), amount,
 							user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
 				else if (PROTEINS.contains(measure_str))
-					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
-							user.getHeight(),
-							user.getDailyCaloriesGoal(),
-							amount, user.getDailyCarbsGoal(),
-							user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
+					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(),
+							user.getDailyCaloriesGoal(), amount, user.getDailyCarbsGoal(), user.getDailyFatsGoal(),
+							user.getDailyLimitCigarettes()));
 				else if (CALORIES.contains(measure_str))
-					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
-							user.getHeight(),amount,
-							user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
-							user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
+					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(), amount,
+							user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(), user.getDailyFatsGoal(),
+							user.getDailyLimitCigarettes()));
 			}
 
 			speechText = GeneralString.LOGGED_SUCCESSFULLY;

@@ -14,7 +14,7 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
 
-public class AddHeightIntentHandler implements RequestHandler{
+public class AddHeightIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
@@ -28,7 +28,7 @@ public class AddHeightIntentHandler implements RequestHandler{
 				.get(NUMBER_SLOT);
 		String speechText = "", repromptText;
 
-		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
@@ -45,14 +45,12 @@ public class AddHeightIntentHandler implements RequestHandler{
 			} catch (DBException e) {
 				// no need to do anything
 			}
-			if (user==null)
+			if (user == null)
 				db.DBUpdateUserInfo(u);
 			else
-				db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
-						height,
-						user.getDailyCaloriesGoal(),
-						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
-						user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
+				db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), height, user.getDailyCaloriesGoal(),
+						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(), user.getDailyFatsGoal(),
+						user.getDailyLimitCigarettes()));
 
 			speechText = String.format(HeightStrings.HEIGHT_LOGGED, Integer.valueOf(height));
 			repromptText = HeightStrings.ASK_HEIGHT;
