@@ -1,10 +1,7 @@
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeightHeightBMIHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
-
-import java.util.Calendar;
 import java.util.Optional;
-
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
@@ -13,15 +10,9 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.DailyInfo;
 import Utils.DBUtils.DBException;
+import Utils.Strings.SlotString;
 
 public class AddWeightIntentHandler implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
-
-	public static String getDate() {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("AddWeightIntent"));
@@ -30,7 +21,7 @@ public class AddWeightIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
+				.get(SlotString.NUMBER_SLOT);
 		String speechText = "", repromptText;
 
 		// added database

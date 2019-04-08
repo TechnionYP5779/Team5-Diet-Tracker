@@ -14,14 +14,10 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.GeneralString;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.NutritionalString;
+import Utils.Strings.SlotString;
 
 public class SetGoalIntentHandler implements RequestHandler {
-	public static final String MEASURE_SLOT = "Measure";
-	public static final String NUMBER_SLOT = "Number";
-	public static final String CALORIES = "calories";
-	public static final String CARBS = "carbs";
-	public static final String PROTEINS = "proteins";
-	public static final String FATS = "fats";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -31,10 +27,10 @@ public class SetGoalIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
+				.get(SlotString.NUMBER_SLOT);
 
 		final Slot MeasureSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(MEASURE_SLOT);
+				.get(SlotString.MEASURE_SLOT);
 
 		String speechText = "", repromptText;
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
@@ -47,13 +43,13 @@ public class SetGoalIntentHandler implements RequestHandler {
 			final String measure_str = MeasureSlot.getValue();
 			final int amount = Integer.parseInt(NumberSlot.getValue());
 			UserInfo u = new UserInfo();
-			if (FATS.contains(measure_str))
+			if (NutritionalString.FATS.contains(measure_str))
 				u.setDailyFatsGoal(amount);
-			else if (CARBS.contains(measure_str))
+			else if (NutritionalString.CARBS.contains(measure_str))
 				u.setDailyCarbsGoal(amount);
-			else if (PROTEINS.contains(measure_str))
+			else if (NutritionalString.PROTEINS.contains(measure_str))
 				u.setDailyProteinGramsGoal(amount);
-			else if (CALORIES.contains(measure_str))
+			else if (NutritionalString.CALORIES.contains(measure_str))
 				u.setDailyCaloriesGoal(amount);
 			UserInfo user = null;
 			try {
@@ -64,19 +60,19 @@ public class SetGoalIntentHandler implements RequestHandler {
 			if (user == null)
 				db.DBUpdateUserInfo(u);
 			else {
-				if (FATS.contains(measure_str))
+				if (NutritionalString.FATS.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(),
 							user.getDailyCaloriesGoal(), user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 							amount, user.getDailyLimitCigarettes()));
-				else if (CARBS.contains(measure_str))
+				else if (NutritionalString.CARBS.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(),
 							user.getDailyCaloriesGoal(), user.getDailyProteinGramsGoal(), amount,
 							user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
-				else if (PROTEINS.contains(measure_str))
+				else if (NutritionalString.PROTEINS.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(),
 							user.getDailyCaloriesGoal(), amount, user.getDailyCarbsGoal(), user.getDailyFatsGoal(),
 							user.getDailyLimitCigarettes()));
-				else if (CALORIES.contains(measure_str))
+				else if (NutritionalString.CALORIES.contains(measure_str))
 					db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(), user.getHeight(), amount,
 							user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(), user.getDailyFatsGoal(),
 							user.getDailyLimitCigarettes()));

@@ -20,6 +20,7 @@ import Utils.Portion.Type;
 import Utils.Strings;
 import Utils.Strings.DrinkStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.SlotString;
 
 /**
  * this class handle drink history querying
@@ -28,8 +29,6 @@ import Utils.Strings.IntentsNames;
  * @since 2018-12-07
  */
 public class HowManyDrinksIntentHandler implements RequestHandler {
-	public static final String DRINK_NAME_SLOT = "drink";
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.HOW_MUCH_DRANK_INTENT));
@@ -38,7 +37,7 @@ public class HowManyDrinksIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot DrinkSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(DRINK_NAME_SLOT);
+				.get(SlotString.DRINK_NAME_SLOT);
 		String speechText = "";
 
 		if (DrinkSlot == null)

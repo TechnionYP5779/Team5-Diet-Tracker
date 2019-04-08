@@ -19,6 +19,7 @@ import Utils.Strings;
 import Utils.Strings.DrinkStrings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.SlotString;
 
 /**
  * this class handles drink recording
@@ -27,8 +28,6 @@ import Utils.Strings.IntentsNames;
  * @since 2018-12-07
  */
 public class AddDrinkIntentHandler implements RequestHandler {
-	public static final String ADD_COUNT_SLOT = "Number";
-	public static final String DRINK_NAME_SLOT = "drink";
 	public static final String[] tips = { DrinkStrings.SITTING_TIP };
 
 	@Override
@@ -39,9 +38,9 @@ public class AddDrinkIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(ADD_COUNT_SLOT),
+				.get(SlotString.ADD_COUNT_SLOT),
 				DrinkSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-						.get(DRINK_NAME_SLOT);
+						.get(SlotString.DRINK_NAME_SLOT);
 		String speechText, repromptText = "";
 
 		if (NumberSlot == null)

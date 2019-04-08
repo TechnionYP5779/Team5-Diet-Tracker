@@ -20,13 +20,10 @@ import Utils.UserInfo;
 import Utils.DBUtils.DBException;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.NutritionalString;
+import Utils.Strings.SlotString;
 
 public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
-	public static final String MEASURE_SLOT = "Measure";
-	public static final String CALORIES = "calories";
-	public static final String CARBS = "carbs";
-	public static final String PROTEINS = "proteins";
-	public static final String FATS = "fats";
 
 	public static boolean eatTooMuch(int progressPerc, int hour) {
 		if (hour > 4 && hour < 12 && progressPerc > 40)
@@ -46,11 +43,6 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 		return false;
 	}
 
-	public static String getDate() {
-		String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
-		return splited[2] + "-" + splited[1] + "-" + splited[5];
-	}
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.HOW_MUCH_MEASURE_INTENT));
@@ -60,7 +52,7 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 	public Optional<Response> handle(final HandlerInput i) {
 		String speechText = "";
 		final Slot measureSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(MEASURE_SLOT);
+				.get(SlotString.MEASURE_SLOT);
 
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DBUtils db = new DBUtils(UserMail);
@@ -77,13 +69,13 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 		for (final Portion p : FoodList) {
 			double measure = 0;
 			double amount = p.getAmount();
-			if (FATS.contains(measure_str))
+			if (NutritionalString.FATS.contains(measure_str))
 				measure = p.getFats_per_100_grams();
-			else if (CARBS.contains(measure_str))
+			else if (NutritionalString.CARBS.contains(measure_str))
 				measure = p.getCarbs_per_100_grams();
-			else if (PROTEINS.contains(measure_str))
+			else if (NutritionalString.PROTEINS.contains(measure_str))
 				measure = p.getProteins_per_100_grams();
-			else if (CALORIES.contains(measure_str))
+			else if (NutritionalString.CALORIES.contains(measure_str))
 				measure = p.getCalories_per_100_grams();
 			total_measure += measure * ((double) amount / 100);
 		}
@@ -98,20 +90,20 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 			// no need to do anything
 		}
 		String speechText2 = "", speechText3 = "";
-		if (user == null || (user.getDailyCaloriesGoal() == -1 && CALORIES.contains(measure_str))
-				|| (user.getDailyProteinGramsGoal() == -1 && PROTEINS.contains(measure_str))
-				|| (user.getDailyCarbsGoal() == -1 && CARBS.contains(measure_str))
-				|| (user.getDailyFatsGoal() == -1 && FATS.contains(measure_str)))
+		if (user == null || (user.getDailyCaloriesGoal() == -1 && NutritionalString.CALORIES.contains(measure_str))
+				|| (user.getDailyProteinGramsGoal() == -1 && NutritionalString.PROTEINS.contains(measure_str))
+				|| (user.getDailyCarbsGoal() == -1 && NutritionalString.CARBS.contains(measure_str))
+				|| (user.getDailyFatsGoal() == -1 && NutritionalString.FATS.contains(measure_str)))
 			speechText2 = GoalsAndMeasuresStrings.DIDNT_TELL_GOAL_YET;
 		else {
 			int goal = 0;
-			if (FATS.contains(measure_str))
+			if (NutritionalString.FATS.contains(measure_str))
 				goal = (int) user.getDailyFatsGoal();
-			else if (CARBS.contains(measure_str))
+			else if (NutritionalString.CARBS.contains(measure_str))
 				goal = (int) user.getDailyCarbsGoal();
-			else if (PROTEINS.contains(measure_str))
+			else if (NutritionalString.PROTEINS.contains(measure_str))
 				goal = (int) user.getDailyProteinGramsGoal();
-			else if (CALORIES.contains(measure_str))
+			else if (NutritionalString.CALORIES.contains(measure_str))
 				goal = (int) user.getDailyCaloriesGoal();
 			int progress = (int) ((total_measure / (double) goal) * 100.0);
 			int amount = goal - (int) total_measure;
@@ -124,7 +116,7 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 			else
 				speechText3 = GoalsAndMeasuresStrings.GOAL_KEEP;
 
-			if (CALORIES.contains(measure_str))
+			if (NutritionalString.CALORIES.contains(measure_str))
 				if (amount > 0)
 					speechText2 = String.format(GoalsAndMeasuresStrings.LEFT_FOR_GOAL, Integer.valueOf(amount),
 							measure_str) + speechText3;
@@ -146,7 +138,7 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 
 		if (total_measure == 0)
 			speechText = GoalsAndMeasuresStrings.DIDNT_EAT + speechText2;
-		else if (CALORIES.contains(measure_str))
+		else if (NutritionalString.CALORIES.contains(measure_str))
 			speechText = String.format(GoalsAndMeasuresStrings.MEASURE_AMOUNT_ATE, Integer.valueOf((int) total_measure),
 					measure_str) + speechText2;
 		else

@@ -8,12 +8,13 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.DailyInfo;
+import Utils.Strings.IntentsNames;
 import Utils.DBUtils.DBException;
 
 public class GetWeightIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("HowMuchWeightIntent"));
+		return i.matches(intentName(IntentsNames.HOW_MUCH_WEIGHT_INTENT));
 	}
 
 	@Override

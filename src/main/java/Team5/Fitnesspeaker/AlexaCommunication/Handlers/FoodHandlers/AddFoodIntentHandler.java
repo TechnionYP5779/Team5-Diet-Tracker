@@ -18,6 +18,7 @@ import Utils.PortionRequestGen;
 import Utils.Strings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.SlotString;
 
 /**
  * this class handles food recording
@@ -26,9 +27,7 @@ import Utils.Strings.IntentsNames;
  * @since 2018-12-07
  */
 public class AddFoodIntentHandler implements RequestHandler {
-	public static final String AMOUNT_SLOT = "Number";
-	public static final String FOOD_SLOT = "Food";
-	public static final String UNIT_SLOT = "Unit";
+
 	public static final String[] tips = { FoodStrings.SITTING_TIP, FoodStrings.SLOWLY_TIP, FoodStrings.DRINK_LIQUID_TIP,
 			FoodStrings.WATER_BEFORE_MEAL_TIP };
 
@@ -40,10 +39,11 @@ public class AddFoodIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot foodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(FOOD_SLOT),
+				.get(SlotString.FOOD_SLOT),
 				AmountSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-						.get(AMOUNT_SLOT),
-				UnitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().get(UNIT_SLOT);
+						.get(SlotString.AMOUNT_SLOT),
+				UnitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+						.get(SlotString.UNIT_SLOT);
 
 		String speechText;
 		final String repromptText = "";

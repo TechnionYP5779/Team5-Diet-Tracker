@@ -10,11 +10,10 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
+import Utils.Strings.SlotString;
 import Utils.UserInfo;
 
 public class AddWeightGoalIntentHandler implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName("addWeightGoalIntent"));
@@ -23,7 +22,7 @@ public class AddWeightGoalIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
+				.get(SlotString.NUMBER_SLOT);
 		String speechText = "", repromptText = "";
 
 		if (NumberSlot == null) {

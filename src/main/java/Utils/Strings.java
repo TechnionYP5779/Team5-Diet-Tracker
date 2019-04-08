@@ -33,6 +33,7 @@ public class Strings {
 		public static final String WEIGHT_PROGRESS_INTENT = "weightProgressIntent";
 		public static final String WHAT_I_ATE_INTENT = "WhatIAteIntent";
 		public static final String WHAT_IS_MY_NAME_INTENT = "WhatIsMyNameIntent";
+		public static final String PERIODIC_WEIGHT_PROGRESS = "PeriodicWeightProgress";
 	}
 
 	public static class AgeStrings {
@@ -179,6 +180,23 @@ public class Strings {
 		public static final String TELL_MEASURE_AGAIN_REPEAT = "I will repeat, I'm not sure which goal do you want. Please tell me again";
 		public static final String TELL_MEASURE_GOAL_AGAIN = "I'm not sure what is your goal. Please tell me again";
 		public static final String TELL_MEASURE_GOAL_AGAIN_REPEAT = "I will repeat, I'm not sure what is your goal. Please tell me again";
+	}
+	
+	public static class SlotString{
+		public static final String NUMBER_SLOT = "Number";
+		public static final String ADD_COUNT_SLOT = "Number";
+		public static final String DRINK_NAME_SLOT = "drink";
+		public static final String AMOUNT_SLOT = "Number";
+		public static final String FOOD_SLOT = "Food";
+		public static final String UNIT_SLOT = "Unit";
+		public static final String MEASURE_SLOT = "Measure";
+	}
+	
+	public static class NutritionalString{
+		public static final String CALORIES = "calories";
+		public static final String CARBS = "carbs";
+		public static final String PROTEINS = "proteins";
+		public static final String FATS = "fats";
 	}
 
 	public static class GeneralString {

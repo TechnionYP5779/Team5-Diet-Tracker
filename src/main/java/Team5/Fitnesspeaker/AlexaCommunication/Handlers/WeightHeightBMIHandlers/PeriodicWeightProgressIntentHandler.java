@@ -9,14 +9,13 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.DailyInfo;
+import Utils.Strings.IntentsNames;
 import Utils.UserInfo;
 
 public class PeriodicWeightProgressIntentHandler implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName("PeriodicWeightProgress"));
+		return i.matches(intentName(IntentsNames.PERIODIC_WEIGHT_PROGRESS));
 	}
 
 	@Override

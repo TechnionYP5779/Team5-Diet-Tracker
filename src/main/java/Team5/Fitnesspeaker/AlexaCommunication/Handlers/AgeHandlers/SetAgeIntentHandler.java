@@ -14,9 +14,9 @@ import Utils.DBUtils.DBException;
 import Utils.Strings.AgeStrings;
 import Utils.Strings.GeneralString;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.SlotString;
 
 public class SetAgeIntentHandler implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -26,7 +26,7 @@ public class SetAgeIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
+				.get(SlotString.NUMBER_SLOT);
 		String speechText = "", repromptText;
 
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();

@@ -13,13 +13,10 @@ import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.NutritionalString;
+import Utils.Strings.SlotString;
 
 public class GetGoalIntentHandler implements RequestHandler {
-	public static final String MEASURE_SLOT = "Measure";
-	public static final String CALORIES = "calories";
-	public static final String CARBS = "carbs";
-	public static final String PROTEINS = "proteins";
-	public static final String FATS = "fats";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
@@ -30,7 +27,7 @@ public class GetGoalIntentHandler implements RequestHandler {
 	public Optional<Response> handle(final HandlerInput i) {
 
 		final Slot MeasureSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(MEASURE_SLOT);
+				.get(SlotString.MEASURE_SLOT);
 		String speechText = "", repromptText = "";
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
@@ -51,17 +48,17 @@ public class GetGoalIntentHandler implements RequestHandler {
 				speechText = String.format(GoalsAndMeasuresStrings.DIDNT_TELL_MEASURE_GOAL, measure_str);
 			else {
 				int amount = 0;
-				if (FATS.contains(measure_str))
+				if (NutritionalString.FATS.contains(measure_str))
 					amount = (int) user.getDailyFatsGoal();
-				else if (CARBS.contains(measure_str))
+				else if (NutritionalString.CARBS.contains(measure_str))
 					amount = (int) user.getDailyCarbsGoal();
-				else if (PROTEINS.contains(measure_str))
+				else if (NutritionalString.PROTEINS.contains(measure_str))
 					amount = (int) user.getDailyProteinGramsGoal();
-				else if (CALORIES.contains(measure_str))
+				else if (NutritionalString.CALORIES.contains(measure_str))
 					amount = (int) user.getDailyCaloriesGoal();
 				if (amount == -1)
 					speechText = String.format(GoalsAndMeasuresStrings.DIDNT_TELL_MEASURE_GOAL, measure_str);
-				else if (CALORIES.contains(measure_str))
+				else if (NutritionalString.CALORIES.contains(measure_str))
 					speechText = String.format(GoalsAndMeasuresStrings.MEASURE_GOAL_LOGGED_CALORIES, measure_str,
 							Integer.valueOf(amount));
 				else

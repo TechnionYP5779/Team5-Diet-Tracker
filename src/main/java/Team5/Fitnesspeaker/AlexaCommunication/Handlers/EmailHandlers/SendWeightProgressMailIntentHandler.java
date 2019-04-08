@@ -10,6 +10,7 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
+import Utils.Strings.IntentsNames;
 import Utils.EmailSender;
 
 public class SendWeightProgressMailIntentHandler implements RequestHandler {
@@ -47,7 +48,7 @@ public class SendWeightProgressMailIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(HandlerInput i) {
-		return i.matches(intentName("weightProgressIntent"));
+		return i.matches(intentName(IntentsNames.WEIGHT_PROGRESS_INTENT));
 	}
 
 	@Override

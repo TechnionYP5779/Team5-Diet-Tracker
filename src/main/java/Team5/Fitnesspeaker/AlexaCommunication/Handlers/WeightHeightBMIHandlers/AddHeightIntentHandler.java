@@ -13,10 +13,9 @@ import Utils.UserInfo;
 import Utils.DBUtils.DBException;
 import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.SlotString;
 
 public class AddHeightIntentHandler implements RequestHandler {
-	public static final String NUMBER_SLOT = "Number";
-
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.ADD_HEIGHT_INTENT));
@@ -25,7 +24,7 @@ public class AddHeightIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(NUMBER_SLOT);
+				.get(SlotString.NUMBER_SLOT);
 		String speechText = "", repromptText;
 
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail();
