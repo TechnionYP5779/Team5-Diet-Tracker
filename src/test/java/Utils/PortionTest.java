@@ -53,7 +53,6 @@ public class PortionTest {
 	}
 
 	@Test
-	@SuppressWarnings("static-method")
 	public void testToString() {
 		Date time = new Date();
 		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
@@ -73,7 +72,6 @@ public class PortionTest {
 	}
 
 	@Test
-	@SuppressWarnings("static-method")
 	public void testToString2() {
 		Date time = new Date();
 		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
@@ -93,7 +91,6 @@ public class PortionTest {
 	}
 
 	@Test
-	@SuppressWarnings("static-method")
 	public void testEquals() {
 		Date time = new Date();
 		assert new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)

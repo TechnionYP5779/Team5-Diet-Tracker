@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import Utils.simpleGraph;
 
-@SuppressWarnings("static-method")
 public class simpleGraphTest {
 
 	@Test

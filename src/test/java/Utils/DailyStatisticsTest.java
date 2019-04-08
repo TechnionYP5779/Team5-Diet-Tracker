@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import Utils.Portion.Type;
 
-@SuppressWarnings("static-method")
 public class DailyStatisticsTest {
 
 	@Test

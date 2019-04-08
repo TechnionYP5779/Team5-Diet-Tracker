@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,6 @@ import Utils.UserInfo.Gender;
  * @author Shalev Kuba
  * @since 2018-12-23
  */
-@SuppressWarnings("static-method")
 public class DBUtilsTest {
 
 	@Test

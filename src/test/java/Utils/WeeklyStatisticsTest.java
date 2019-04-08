@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-@SuppressWarnings("static-method")
 public class WeeklyStatisticsTest {
 
 	@Test
