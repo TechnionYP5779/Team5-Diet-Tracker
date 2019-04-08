@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 

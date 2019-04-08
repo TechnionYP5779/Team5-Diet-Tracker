@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.AgeHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -11,16 +11,16 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
-import Utils.Strings.CigarettesStrings;
+import Utils.Strings.AgeStrings;
 import Utils.Strings.GeneralString;
 import Utils.Strings.IntentsNames;
 
-public class SetCigarLimitIntentHandler implements RequestHandler{
+public class AddAgeIntentHandler implements RequestHandler {
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName(IntentsNames.CIGAR_LIMIT_INTENT));
+		return i.matches(intentName(IntentsNames.ADD_AGE_INTENT));
 	}
 
 	@Override
@@ -29,17 +29,18 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 				.get(NUMBER_SLOT);
 		String speechText = "", repromptText;
 
+		
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
-			speechText = CigarettesStrings.TELL_CIGS_LIMIT_AGAIN;
-			repromptText = CigarettesStrings.TELL_CIGS_LIMIT_AGAIN_REPEAT;
+			speechText = AgeStrings.TELL_AGE_AGAIN;
+			repromptText = AgeStrings.TELL_AGE_AGAIN_REPEAT;
 		} else {
-			final int cigarettesLimit = Integer.parseInt(NumberSlot.getValue());
+			final int age = Integer.parseInt(NumberSlot.getValue());
 
 			UserInfo u = new UserInfo();
-			u.setDailyLimitCigarettes(cigarettesLimit);
+			u.setAge(age);
 			UserInfo user = null;
 			try {
 				user = db.DBGetUserInfo();
@@ -49,11 +50,11 @@ public class SetCigarLimitIntentHandler implements RequestHandler{
 			if (user==null)
 				db.DBUpdateUserInfo(u);
 			else
-				db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
+				db.DBUpdateUserInfo(new UserInfo(user.getGender(), age,
 						user.getHeight(),
 						user.getDailyCaloriesGoal(),
 						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
-						user.getDailyFatsGoal(),cigarettesLimit));
+						user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
 
 			speechText = GeneralString.LOGGED_SUCCESSFULLY;
 			repromptText = GeneralString.LOGGED_SUCCESSFULLY_REPEAT;

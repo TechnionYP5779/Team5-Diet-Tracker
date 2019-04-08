@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeightHeightBMIHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -11,16 +11,15 @@ import com.amazon.ask.model.Slot;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
-import Utils.Strings.AgeStrings;
-import Utils.Strings.GeneralString;
+import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
 
-public class AddAgeIntentHandler implements RequestHandler {
+public class AddHeightIntentHandler implements RequestHandler{
 	public static final String NUMBER_SLOT = "Number";
 
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName(IntentsNames.ADD_AGE_INTENT));
+		return i.matches(intentName(IntentsNames.ADD_HEIGHT_INTENT));
 	}
 
 	@Override
@@ -29,18 +28,17 @@ public class AddAgeIntentHandler implements RequestHandler {
 				.get(NUMBER_SLOT);
 		String speechText = "", repromptText;
 
-		
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
 		if (NumberSlot == null) {
-			speechText = AgeStrings.TELL_AGE_AGAIN;
-			repromptText = AgeStrings.TELL_AGE_AGAIN_REPEAT;
+			speechText = HeightStrings.TELL_HEIGHT_AGAIN;
+			repromptText = HeightStrings.TELL_HEIGHT_AGAIN_REPEAT;
 		} else {
-			final int age = Integer.parseInt(NumberSlot.getValue());
+			final int height = Integer.parseInt(NumberSlot.getValue());
 
 			UserInfo u = new UserInfo();
-			u.setAge(age);
+			u.setHeight(height);
 			UserInfo user = null;
 			try {
 				user = db.DBGetUserInfo();
@@ -50,14 +48,14 @@ public class AddAgeIntentHandler implements RequestHandler {
 			if (user==null)
 				db.DBUpdateUserInfo(u);
 			else
-				db.DBUpdateUserInfo(new UserInfo(user.getGender(), age,
-						user.getHeight(),
+				db.DBUpdateUserInfo(new UserInfo(user.getGender(), user.getAge(),
+						height,
 						user.getDailyCaloriesGoal(),
 						user.getDailyProteinGramsGoal(), user.getDailyCarbsGoal(),
 						user.getDailyFatsGoal(), user.getDailyLimitCigarettes()));
 
-			speechText = GeneralString.LOGGED_SUCCESSFULLY;
-			repromptText = GeneralString.LOGGED_SUCCESSFULLY_REPEAT;
+			speechText = String.format(HeightStrings.HEIGHT_LOGGED, Integer.valueOf(height));
+			repromptText = HeightStrings.ASK_HEIGHT;
 
 		}
 

@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.CigarettesHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -7,15 +7,14 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import Utils.DBUtils;
-import Utils.UserInfo;
 import Utils.DBUtils.DBException;
-import Utils.Strings.AgeStrings;
+import Utils.Strings.CigarettesStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowOldIntentHandler implements RequestHandler{
+public class HowMuchSmokedIntentHandler implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName(IntentsNames.HOW_OLD_INTENT));
+		return i.matches(intentName(IntentsNames.HOW_MUCH_SMOKE_INTENT));
 	}
 
 	@Override
@@ -25,21 +24,21 @@ public class HowOldIntentHandler implements RequestHandler{
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
-		UserInfo user = null;
+		Optional<Integer> smoked =  Optional.empty();
 		try {
-			user = db.DBGetUserInfo();
+			smoked = db.DBGetTodayCigarettesCount();
 		} catch (DBException e) {
 			// no need to do anything
 		}
 
-		if (user==null)
-			speechText = AgeStrings.DIDNT_TELL_AGE;
+		if (!smoked.isPresent())
+			speechText = CigarettesStrings.DIDNT_SMOKED;
 		else {
-			final int age = user.getAge();
-			if (age == -1)
-				speechText = AgeStrings.DIDNT_TELL_AGE;
+			final Integer count = smoked.get();
+			if (count.intValue() == 1)
+				speechText = CigarettesStrings.SMOKED_ONE;
 			else
-				speechText = String.format(AgeStrings.AGE_IS, Integer.valueOf(age));
+				speechText = String.format(CigarettesStrings.SMOKED_MANY, count);
 
 		}
 
@@ -47,5 +46,5 @@ public class HowOldIntentHandler implements RequestHandler{
 				.withShouldEndSession(Boolean.FALSE).build();
 
 	}
-
+	
 }

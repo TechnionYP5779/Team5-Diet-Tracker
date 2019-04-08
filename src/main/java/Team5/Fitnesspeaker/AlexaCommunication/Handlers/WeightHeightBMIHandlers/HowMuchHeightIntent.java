@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeightHeightBMIHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -7,14 +7,15 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import Utils.DBUtils;
+import Utils.UserInfo;
 import Utils.DBUtils.DBException;
-import Utils.Strings.CigarettesStrings;
+import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowMuchSmokedIntentHandler implements RequestHandler{
+public class HowMuchHeightIntent implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName(IntentsNames.HOW_MUCH_SMOKE_INTENT));
+		return i.matches(intentName(IntentsNames.HOW_MUCH_HEIGHT_INTENT));
 	}
 
 	@Override
@@ -24,21 +25,21 @@ public class HowMuchSmokedIntentHandler implements RequestHandler{
 		final String UserMail=i.getServiceClientFactory().getUpsService().getProfileEmail();
 		DBUtils db = new DBUtils(UserMail);
 
-		Optional<Integer> smoked =  Optional.empty();
+		UserInfo user = null;
 		try {
-			smoked = db.DBGetTodayCigarettesCount();
+			user = db.DBGetUserInfo();
 		} catch (DBException e) {
 			// no need to do anything
 		}
 
-		if (!smoked.isPresent())
-			speechText = CigarettesStrings.DIDNT_SMOKED;
+		if (user==null)
+			speechText = HeightStrings.DIDNT_TELL_HEIGHT;
 		else {
-			final Integer count = smoked.get();
-			if (count.intValue() == 1)
-				speechText = CigarettesStrings.SMOKED_ONE;
+			final int height = user.getHeight();
+			if (height == -1)
+				speechText = HeightStrings.DIDNT_TELL_HEIGHT;
 			else
-				speechText = String.format(CigarettesStrings.SMOKED_MANY, count);
+				speechText = String.format(HeightStrings.HEIGHT_IS, Integer.valueOf(height));
 
 		}
 
@@ -46,5 +47,4 @@ public class HowMuchSmokedIntentHandler implements RequestHandler{
 				.withShouldEndSession(Boolean.FALSE).build();
 
 	}
-	
 }

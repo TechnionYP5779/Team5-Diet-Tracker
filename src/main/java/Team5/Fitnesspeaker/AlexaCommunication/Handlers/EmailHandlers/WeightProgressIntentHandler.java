@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.EmailHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 

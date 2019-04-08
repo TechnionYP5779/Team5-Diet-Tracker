@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.AgeHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -9,13 +9,13 @@ import com.amazon.ask.model.Response;
 import Utils.DBUtils;
 import Utils.UserInfo;
 import Utils.DBUtils.DBException;
-import Utils.Strings.HeightStrings;
+import Utils.Strings.AgeStrings;
 import Utils.Strings.IntentsNames;
 
-public class HowMuchHeightIntent implements RequestHandler{
+public class HowOldIntentHandler implements RequestHandler{
 	@Override
 	public boolean canHandle(final HandlerInput i) {
-		return i.matches(intentName(IntentsNames.HOW_MUCH_HEIGHT_INTENT));
+		return i.matches(intentName(IntentsNames.HOW_OLD_INTENT));
 	}
 
 	@Override
@@ -33,13 +33,13 @@ public class HowMuchHeightIntent implements RequestHandler{
 		}
 
 		if (user==null)
-			speechText = HeightStrings.DIDNT_TELL_HEIGHT;
+			speechText = AgeStrings.DIDNT_TELL_AGE;
 		else {
-			final int height = user.getHeight();
-			if (height == -1)
-				speechText = HeightStrings.DIDNT_TELL_HEIGHT;
+			final int age = user.getAge();
+			if (age == -1)
+				speechText = AgeStrings.DIDNT_TELL_AGE;
 			else
-				speechText = String.format(HeightStrings.HEIGHT_IS, Integer.valueOf(height));
+				speechText = String.format(AgeStrings.AGE_IS, Integer.valueOf(age));
 
 		}
 
@@ -47,4 +47,5 @@ public class HowMuchHeightIntent implements RequestHandler{
 				.withShouldEndSession(Boolean.FALSE).build();
 
 	}
+
 }
