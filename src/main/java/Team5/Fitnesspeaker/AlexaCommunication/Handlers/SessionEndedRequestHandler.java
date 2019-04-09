@@ -9,10 +9,12 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.SessionEndedRequest;
 
-/** this class handles session ending
+/**
+ * this class handles session ending
+ * 
  * @author Shalev Kuba
  * @since 2018-12-07
- * */
+ */
 public class SessionEndedRequestHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {

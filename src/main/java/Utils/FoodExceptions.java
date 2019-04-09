@@ -4,13 +4,13 @@
  * @since 2018-01-23*/
 package Utils;
 
-
 public class FoodExceptions {
-	public static class UnitsNotFoundExcpetion extends Exception{
-		
+	public static class UnitsNotFoundExcpetion extends Exception {
+
 		private static final long serialVersionUID = 1;
 
-		public UnitsNotFoundExcpetion() {}
+		public UnitsNotFoundExcpetion() {
+		}
 
 	}
 }

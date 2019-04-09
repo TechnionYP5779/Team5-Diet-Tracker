@@ -18,7 +18,6 @@ public interface UnitsConverter {
 	double liters_const = 1000;
 	double grams_const = 1000;
 
-
 	/**
 	 * @param liters : amount of given item in liters
 	 * @return amount of same item in milliliters if ml >=0 , -1 otherwise
@@ -40,9 +39,9 @@ public interface UnitsConverter {
 	 * @return amount of same item in gr if gr >=0 , -1 otherwise
 	 */
 	static double gramsToGrams(final double gr) {
-		return gr < 0 ? -1 : gr ;
+		return gr < 0 ? -1 : gr;
 	}
-	
+
 	/**
 	 * @param gr : amount of given item in grams
 	 * @return amount of same item in milligrams if gr >=0 , -1 otherwise
@@ -90,6 +89,7 @@ public interface UnitsConverter {
 	static double milligramsToKilograms(final double mg) {
 		return mg < 0 ? -1 : mg / Math.pow(grams_const, 2);
 	}
+
 	/********************************************************************/
 
 	/**
@@ -366,12 +366,12 @@ public interface UnitsConverter {
 	static double teaspoonsToTablespoons(final double t) {
 		return t < 0 ? -1 : t / tablespoon_teaspoon_const;
 	}
-	
+
 	/****************************************************
 	 * some weight-units conversions
 	 * 
 	 */
-	
+
 	/**
 	 * @param grams : amount of given item in grams
 	 * @return amount of same item in ounces if grams >= 0, -1 otherwise

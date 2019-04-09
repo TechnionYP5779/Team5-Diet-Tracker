@@ -33,6 +33,7 @@ public class Strings {
 		public static final String WEIGHT_PROGRESS_INTENT = "weightProgressIntent";
 		public static final String WHAT_I_ATE_INTENT = "WhatIAteIntent";
 		public static final String WHAT_IS_MY_NAME_INTENT = "WhatIsMyNameIntent";
+		public static final String PERIODIC_WEIGHT_PROGRESS = "PeriodicWeightProgress";
 	}
 
 	public static class AgeStrings {
@@ -180,6 +181,23 @@ public class Strings {
 		public static final String TELL_MEASURE_GOAL_AGAIN = "I'm not sure what is your goal. Please tell me again";
 		public static final String TELL_MEASURE_GOAL_AGAIN_REPEAT = "I will repeat, I'm not sure what is your goal. Please tell me again";
 	}
+	
+	public static class SlotString{
+		public static final String NUMBER_SLOT = "Number";
+		public static final String ADD_COUNT_SLOT = "Number";
+		public static final String DRINK_NAME_SLOT = "drink";
+		public static final String AMOUNT_SLOT = "Number";
+		public static final String FOOD_SLOT = "Food";
+		public static final String UNIT_SLOT = "Unit";
+		public static final String MEASURE_SLOT = "Measure";
+	}
+	
+	public static class NutritionalString{
+		public static final String CALORIES = "calories";
+		public static final String CARBS = "carbs";
+		public static final String PROTEINS = "proteins";
+		public static final String FATS = "fats";
+	}
 
 	public static class GeneralString {
 		public static final String LOGGED_SUCCESSFULLY = "logged succesfully";
@@ -193,7 +211,7 @@ public class Strings {
 	public static class HelpString {
 		public static final String SAY_HELP = "You can tell me what you ate, for example, i ate twenty grams of pasta or you can tell me everytime you drink,"
 				+ " for example, i drank 3 cups of water.";
-		public static final String SAY_HELP_REPEAT = "I will repeat, " +SAY_HELP;
+		public static final String SAY_HELP_REPEAT = "I will repeat, " + SAY_HELP;
 	}
 
 }

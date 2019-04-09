@@ -12,10 +12,12 @@ import Utils.Strings;
 import Utils.Strings.HelpString;
 import Utils.Strings.IntentsNames;
 
-/** this class handles help intent
+/**
+ * this class handles help intent
+ * 
  * @author Shalev Kuba
  * @since 2018-12-07
- * */
+ */
 public class HelpIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {

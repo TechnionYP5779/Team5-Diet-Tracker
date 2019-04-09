@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,11 +15,12 @@ import Utils.DBUtils.DBException;
 import Utils.Portion.Type;
 import Utils.UserInfo.Gender;
 
-/** unit tests for DBUtils
+/**
+ * unit tests for DBUtils
+ * 
  * @author Shalev Kuba
  * @since 2018-12-23
- * */
-@SuppressWarnings("static-method")
+ */
 public class DBUtilsTest {
 
 	@Test
@@ -182,25 +182,4 @@ public class DBUtilsTest {
 				Long.valueOf(portionList.stream().filter(f -> f.getValue().getName().contains("wine")).count()));
 		db.DBUtilsRemoveUserDirectory();
 	}
-
-	@Test
-	public void testBloodPressureHandling() throws DBException {
-		final String testUser = "test_user";
-		final DBUtils db = new DBUtils(testUser);
-		assert db.DBGetTodayBloodPressureMeasuresList().isEmpty();
-		db.DBPushBloodPressureMeasure(new BloodPressure(Integer.valueOf(120), Integer.valueOf(80), new Date()));
-		List<Pair<String, BloodPressure>> bloodPressureList = db.DBGetTodayBloodPressureMeasuresList();
-		assertEquals(Integer.valueOf(1), Integer.valueOf(bloodPressureList.size()));
-		assertEquals(Integer.valueOf(120), bloodPressureList.get(0).getValue().getSystolic());
-		assertEquals(Integer.valueOf(80), bloodPressureList.get(0).getValue().getDiastolic());
-		db.DBPushBloodPressureMeasure(new BloodPressure(Integer.valueOf(150), Integer.valueOf(60), new Date()));
-		bloodPressureList = db.DBGetTodayBloodPressureMeasuresList();
-		assertEquals(Integer.valueOf(2), Integer.valueOf(bloodPressureList.size()));
-		assertEquals(Long.valueOf(1), Long.valueOf(bloodPressureList.stream()
-				.filter(f -> f.getValue().getSystolic().equals(Integer.valueOf(120))).count()));
-		assertEquals(Long.valueOf(1), Long.valueOf(bloodPressureList.stream()
-				.filter(f -> f.getValue().getSystolic().equals(Integer.valueOf(150))).count()));
-		db.DBUtilsRemoveUserDirectory();
-	}
-
 }

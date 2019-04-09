@@ -53,11 +53,10 @@ public class PortionTest {
 	}
 
 	@Test
-	@SuppressWarnings("static-method")
 	public void testToString() {
 		Date time = new Date();
 		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
-		calendar.setTime(time);   // assigns calendar to given date 
+		calendar.setTime(time); // assigns calendar to given date
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
 		assertEquals(
 				"Portion name: bacon , 100.0 grams\nPortion type: FOOD\nPortion Meal: "
@@ -73,11 +72,10 @@ public class PortionTest {
 	}
 
 	@Test
-	@SuppressWarnings("static-method")
 	public void testToString2() {
 		Date time = new Date();
 		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
-		calendar.setTime(time);   // assigns calendar to given date 
+		calendar.setTime(time); // assigns calendar to given date
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
 		assertEquals(
 				"Portion name: fuzetea , 100.0 ml\nPortion type: DRINK\nPortion Meal: "
@@ -93,7 +91,6 @@ public class PortionTest {
 	}
 
 	@Test
-	@SuppressWarnings("static-method")
 	public void testEquals() {
 		Date time = new Date();
 		assert new Portion(Type.FOOD, "bacon", 100, 700, 13, 302, 30.3, 0, time)
