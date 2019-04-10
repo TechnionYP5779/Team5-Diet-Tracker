@@ -1,4 +1,4 @@
-package Utils;
+package Utils.DB;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,6 +18,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import Utils.DailyInfo;
+import Utils.Portion.Portion;
+import Utils.User.UserInfo;
 
 /**
  * this class communicate with the db for storing/querying information

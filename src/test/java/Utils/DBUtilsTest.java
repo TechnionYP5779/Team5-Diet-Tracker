@@ -11,9 +11,13 @@ import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
 
-import Utils.DBUtils.DBException;
-import Utils.Portion.Type;
-import Utils.UserInfo.Gender;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
+import Utils.Portion.Portion;
+import Utils.Portion.PortionRequestGen;
+import Utils.Portion.Portion.Type;
+import Utils.User.UserInfo;
+import Utils.User.UserInfo.Gender;
 
 /**
  * unit tests for DBUtils

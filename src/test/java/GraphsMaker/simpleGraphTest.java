@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import org.junit.Test;
 
-import Utils.simpleGraph;
+import Utils.Email.simpleGraph;
 
 public class simpleGraphTest {
 

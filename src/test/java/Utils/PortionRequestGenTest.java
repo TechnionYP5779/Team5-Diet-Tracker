@@ -5,6 +5,9 @@ package Utils;
 
 import org.junit.Test;
 
+import Utils.Portion.Portion;
+import Utils.Portion.PortionRequestGen;
+
 public class PortionRequestGenTest {
 
 	@Test

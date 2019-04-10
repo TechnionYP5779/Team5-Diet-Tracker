@@ -13,15 +13,14 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
-import Utils.DBUtils;
-//import Utils.DailyInfo;
-import Utils.Portion;
-import Utils.UserInfo;
-import Utils.DBUtils.DBException;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
+import Utils.Portion.Portion;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.NutritionalString;
 import Utils.Strings.SlotString;
+import Utils.User.UserInfo;
 
 public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 

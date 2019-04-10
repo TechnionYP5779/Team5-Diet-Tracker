@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import Utils.Portion.Type;
+import Utils.Email.DailyStatistics;
+import Utils.Portion.Portion;
+import Utils.Portion.Portion.Type;
 
 public class DailyStatisticsTest {
 

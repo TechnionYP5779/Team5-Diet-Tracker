@@ -11,12 +11,13 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.services.Pair;
-import Utils.DBUtils;
-import Utils.DailyStatistics;
-import Utils.EmailSender;
-import Utils.Portion;
-import Utils.WeeklyStatistics;
-import Utils.DBUtils.DBException;
+
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
+import Utils.Email.DailyStatistics;
+import Utils.Email.EmailSender;
+import Utils.Email.WeeklyStatistics;
+import Utils.Portion.Portion;
 
 public class SendWeeklyMailIntentHandler implements RequestHandler {
 

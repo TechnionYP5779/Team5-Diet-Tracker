@@ -7,9 +7,10 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import Utils.DBUtils;
+
 import Utils.DailyInfo;
-import Utils.DBUtils.DBException;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.SlotString;
 
 public class AddWeightIntentHandler implements RequestHandler {

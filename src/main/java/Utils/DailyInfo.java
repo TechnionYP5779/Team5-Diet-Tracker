@@ -3,6 +3,8 @@
  * @since 2018-12-25*/
 package Utils;
 
+import Utils.User.User;
+
 public class DailyInfo {
 	public double weight = -1;
 	public double dailyCalories;

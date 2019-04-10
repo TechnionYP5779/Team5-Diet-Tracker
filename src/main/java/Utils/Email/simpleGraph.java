@@ -2,7 +2,7 @@
  * The graph is save as jpg file on memory using byte[]
  * @author Or Feldman
  * @since 2018-12-26*/
-package Utils;
+package Utils.Email;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;

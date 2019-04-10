@@ -8,12 +8,13 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import Utils.DBUtils;
-import Utils.UserInfo;
-import Utils.DBUtils.DBException;
+
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
+import Utils.User.UserInfo;
 
 public class AddHeightIntentHandler implements RequestHandler {
 	@Override

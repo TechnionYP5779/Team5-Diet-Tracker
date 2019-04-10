@@ -181,8 +181,8 @@ public class Strings {
 		public static final String TELL_MEASURE_GOAL_AGAIN = "I'm not sure what is your goal. Please tell me again";
 		public static final String TELL_MEASURE_GOAL_AGAIN_REPEAT = "I will repeat, I'm not sure what is your goal. Please tell me again";
 	}
-	
-	public static class SlotString{
+
+	public static class SlotString {
 		public static final String NUMBER_SLOT = "Number";
 		public static final String ADD_COUNT_SLOT = "Number";
 		public static final String DRINK_NAME_SLOT = "drink";
@@ -191,8 +191,8 @@ public class Strings {
 		public static final String UNIT_SLOT = "Unit";
 		public static final String MEASURE_SLOT = "Measure";
 	}
-	
-	public static class NutritionalString{
+
+	public static class NutritionalString {
 		public static final String CALORIES = "calories";
 		public static final String CARBS = "carbs";
 		public static final String PROTEINS = "proteins";

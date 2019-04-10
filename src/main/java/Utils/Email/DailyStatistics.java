@@ -1,7 +1,9 @@
-package Utils;
+package Utils.Email;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import Utils.Portion.Portion;
 
 public class DailyStatistics {
 	public String cupsOfWater = "0";
