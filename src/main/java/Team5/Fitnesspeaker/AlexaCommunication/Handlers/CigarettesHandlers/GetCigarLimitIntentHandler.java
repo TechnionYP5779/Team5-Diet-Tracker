@@ -6,11 +6,12 @@ import java.util.Optional;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
-import Utils.DBUtils;
-import Utils.UserInfo;
-import Utils.DBUtils.DBException;
+
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.CigarettesStrings;
 import Utils.Strings.IntentsNames;
+import Utils.User.UserInfo;
 
 public class GetCigarLimitIntentHandler implements RequestHandler {
 	@Override

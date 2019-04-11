@@ -13,11 +13,11 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.services.Pair;
 
-import Utils.DBUtils;
-import Utils.DBUtils.DBException;
-import Utils.Portion;
-import Utils.Portion.Type;
+import Utils.Portion.Portion;
+import Utils.Portion.Portion.Type;
 import Utils.Strings;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.DrinkStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;

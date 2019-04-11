@@ -1,7 +1,7 @@
 /** this class represents a User Object
  * @author Lior Ben Yamin, Nir Chachamovitz
  * @since 2018-12-23*/
-package Utils;
+package Utils.User;
 
 import java.util.Objects;
 

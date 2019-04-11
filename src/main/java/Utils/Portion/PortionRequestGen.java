@@ -23,7 +23,7 @@
  * TODO: when it all works, refactor all kinds of search (size, units, manually) to
  *  	 seperated functions, for more fluent readability of code
  */
-package Utils;
+package Utils.Portion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +39,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import Utils.FoodExceptions.UnitsNotFoundExcpetion;
+import Utils.UnitsConverter;
+import Utils.Exceptions.FoodExceptions.UnitsNotFoundExcpetion;
 
 public class PortionRequestGen {
 

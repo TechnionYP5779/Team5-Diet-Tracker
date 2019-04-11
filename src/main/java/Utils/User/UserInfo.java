@@ -1,4 +1,4 @@
-package Utils;
+package Utils.User;
 
 public class UserInfo {
 	public enum Gender {

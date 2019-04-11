@@ -2,7 +2,7 @@
  * exceptions for using in the code.
  * @author Shaked Sapir
  * @since 2018-01-23*/
-package Utils;
+package Utils.Exceptions;
 
 public class FoodExceptions {
 	public static class UnitsNotFoundExcpetion extends Exception {

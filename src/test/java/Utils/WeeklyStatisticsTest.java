@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import Utils.Email.DailyStatistics;
+import Utils.Email.WeeklyStatistics;
+
 public class WeeklyStatisticsTest {
 
 	@Test

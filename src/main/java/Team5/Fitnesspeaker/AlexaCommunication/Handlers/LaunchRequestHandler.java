@@ -13,11 +13,11 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.LaunchRequest;
 import com.amazon.ask.model.Response;
 
-import Utils.DBUtils;
-import Utils.DBUtils.DBException;
-import Utils.Portion;
-import Utils.Portion.Type;
+import Utils.Portion.Portion;
+import Utils.Portion.Portion.Type;
 import Utils.Strings;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 
 /**
  * this class handles launch request

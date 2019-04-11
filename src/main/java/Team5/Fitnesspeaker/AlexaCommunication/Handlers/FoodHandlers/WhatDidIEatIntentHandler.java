@@ -11,11 +11,11 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 
-import Utils.DBUtils;
-import Utils.DBUtils.DBException;
-import Utils.Portion;
-import Utils.Portion.Type;
+import Utils.Portion.Portion;
+import Utils.Portion.Portion.Type;
 import Utils.Strings;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 

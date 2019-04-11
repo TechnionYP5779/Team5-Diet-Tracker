@@ -1,7 +1,7 @@
 /** This class is allows to send designed email using existing "do not reply" mail address.
  * @author Or Feldman & Igor Bashmashnikov
  * @since 2018-12-21*/
-package Utils;
+package Utils.Email;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +19,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+
+import Utils.Portion.Portion;
 
 public class EmailSender {
 

@@ -6,12 +6,13 @@ import java.util.Optional;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
-import Utils.DBUtils;
+
 import Utils.DailyInfo;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.BMIStrings;
 import Utils.Strings.IntentsNames;
-import Utils.UserInfo;
-import Utils.DBUtils.DBException;
+import Utils.User.UserInfo;
 
 public class BMIIntentHandler implements RequestHandler {
 

@@ -11,11 +11,11 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
-import Utils.DBUtils;
-import Utils.DBUtils.DBException;
-import Utils.Portion.Type;
-import Utils.PortionRequestGen;
+import Utils.Portion.PortionRequestGen;
+import Utils.Portion.Portion.Type;
 import Utils.Strings;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;

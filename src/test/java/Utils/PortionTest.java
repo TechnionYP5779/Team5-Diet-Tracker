@@ -11,7 +11,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import Utils.Portion.Type;
+import Utils.Portion.Portion;
+import Utils.Portion.Portion.Type;
 
 /**
  * @author Shaked Sapir

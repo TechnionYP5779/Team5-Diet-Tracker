@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import Utils.DBUtils;
-import Utils.DBUtils.DBException;
-import Utils.DailyStatistics;
-import Utils.EmailSender;
-import Utils.Portion;
+
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
+import Utils.Email.DailyStatistics;
+import Utils.Email.EmailSender;
+import Utils.Portion.Portion;
 
 public class SendDailyMailIntentHandler implements RequestHandler {
 

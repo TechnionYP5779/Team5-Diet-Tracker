@@ -7,7 +7,11 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import org.junit.Test;
-import Utils.EmailSender;
+
+import Utils.Email.DailyStatistics;
+import Utils.Email.EmailSender;
+import Utils.Email.WeeklyStatistics;
+import Utils.Portion.Portion;
 
 public class EmailSenderTest {
 

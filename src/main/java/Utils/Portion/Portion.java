@@ -2,7 +2,7 @@
  *  all nutritional values are saved as the amount is 100 grams of product.
  * @author Shaked Sapir
  * @since 2018-12-17*/
-package Utils;
+package Utils.Portion;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
