@@ -132,55 +132,64 @@ public class PortionRequestGenTest {
 		} 
 	}
 	
+	/** 
+	 * This function computes the "good/bad" words rate in the portion's name
+	 * in USDA , i.e. the following rate:
+	 * Portion_rate = (number of matching words)/(number of total words, without parenthesis content) 
+	 * @param search the substring to look for inside @code str 
+	 * @param str the original string to look in
+	 * @return Portion_rate, as explained above
+	 */
 	static double computeRate(String search,String str) {
-		int par_index=str.indexOf(" (");
+		
 		String clean_string=str.toLowerCase();
+
+		/** get rid of parenthesis **/
+		int par_index=str.indexOf(" (");
 		if(par_index!=-1) {
 			clean_string=clean_string.substring(0, par_index);
 		}
 		
 		//TODO: handle when search is more than one word
-		int lastIndex = 0;
-		int countOccurrences = 0;
-
-		while(lastIndex != -1){
-
-		    lastIndex = clean_string.indexOf(search,lastIndex);
-
-		    if(lastIndex != -1){
-		    	countOccurrences ++;
-		        lastIndex += search.length();
-		    }
-		}
 		
-		int num_of_words=count_Words(clean_string);
+		int count_occurrances = (clean_string.split(search, -1).length)-1;
+
+		/** splits the original @code clean_string with delimiter,
+		 * currently it is a blank space, we should consider the option
+		 * for a comma (',')
+		 */
+		int num_of_words = clean_string.split(" ",-1).length;
 		
-		double rate=countOccurrences/((double)num_of_words);
+		double rate=count_occurrances/((double)num_of_words);
+				
+		//TODO for now we assume we cannot use our converter,
+		//handle situation that we can and treat "raw" accordingly
 		
-		//TODO: for now we assume we cannot use our converter.
+		/** currently, a constant of 1/3 is added to the result
+		 *  rate for "raw" appearance.
+		 */
 		
 		if(clean_string.contains("raw")) rate+=((double)1)/3;
 		
 		return rate;
-		
 	}
 	
-	 public static int count_Words(String str)
-	    {
-	       int count = 0;
-	        if (!(" ".equals(str.substring(0, 1))) || !(" ".equals(str.substring(str.length() - 1))))
-	        {
-	            for (int i = 0; i < str.length(); i++)
-	            {
-	                if (str.charAt(i) == ' ')
-	                {
-	                    count++;
-	                }
-	            }
-	            count = count + 1; 
-	        }
-	        return count; // returns 0 if string starts or ends with space " ".
-	    }
-	 
+//	 public static int count_Words(String str)
+//	    {
+//	       int count = 0;
+//	        if (!(" ".equals(str.substring(0, 1))) || !(" ".equals(str.substring(str.length() - 1))))
+//	        {
+//	            for (int i = 0; i < str.length(); i++)
+//	            {
+//	                if (str.charAt(i) == ' ')
+//	                {
+//	                    count++;
+//	                }
+//	            }
+//	            count = count + 1; 
+//	        }
+//	        return count; // returns 0 if string starts or ends with space " ".
+//	    }
+//	 
 	
 }
