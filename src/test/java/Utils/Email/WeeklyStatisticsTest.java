@@ -1,4 +1,4 @@
-package Utils;
+package Utils.Email;
 
 import static org.junit.Assert.*;
 

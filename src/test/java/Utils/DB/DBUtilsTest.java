@@ -1,4 +1,4 @@
-package Utils;
+package Utils.DB;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
 
+import Utils.DailyInfo;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
 import Utils.Portion.Portion;

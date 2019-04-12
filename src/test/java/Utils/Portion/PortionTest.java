@@ -1,7 +1,7 @@
 /**add here document
  * @author Fname Sname
  * @since year-month-day*/
-package Utils;
+package Utils.Portion;
 
 import static org.junit.Assert.assertEquals;
 

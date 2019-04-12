@@ -1,4 +1,4 @@
-package Utils;
+package Utils.Email;
 
 import java.util.ArrayList;
 import java.util.Calendar;

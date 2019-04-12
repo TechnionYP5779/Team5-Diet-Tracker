@@ -1,7 +1,7 @@
 /** a test module for class PortionRequestGen.
  * @author Shaked Sapir
  * @since 2018-12-17*/
-package Utils;
+package Utils.Portion;
 
 import org.junit.Test;
 
