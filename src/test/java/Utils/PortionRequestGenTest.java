@@ -61,7 +61,7 @@ public class PortionRequestGenTest {
 	/** a test to check that we can search for food in "raw" version. such as eggs, fruits..**/
 	public void new_algorithm() {
 		String input_name="banana";
-		String unit="tbsp";
+		String unit="small";
 		try {
 			final JSONObject myResponseClean = PortionRequestGen.readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="+input_name+"&ds=Standard%20Reference&sort=r&max=5&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 			final JSONObject myResponseRaw = PortionRequestGen.readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="+input_name+"%20raw"+"&ds=Standard%20Reference&sort=r&max=2&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
@@ -87,9 +87,9 @@ public class PortionRequestGenTest {
 			}
 			);
 			
-			for(Pair<String, String> p : portion_list) {
+			/*for(Pair<String, String> p : portion_list) {
 				System.out.println("the res of "+p.getName().toLowerCase()+" is :"+computeRate(input_name,p.getName()));
-			}
+			}*/
 			//now the list is sorted
 			
 			for(Pair<String, String> p : portion_list) {
