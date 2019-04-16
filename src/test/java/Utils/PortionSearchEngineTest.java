@@ -30,5 +30,18 @@ public  class PortionSearchEngineTest {
 		assertEquals("instruction based commands", PortionSearchEngine.StringToCanonicalForm(" instruction-based    commands "));
 		assertEquals("instruction based commands", PortionSearchEngine.StringToCanonicalForm(" instruction-based    commands(must be removed)"));
 	}
+	
+	@Test
+	public void ComputeRateTest() {
+		assertEquals((double)1/4, PortionSearchEngine.ComputeRate("avocado", "abc", "one two avocado two"),0.01);
+		assertEquals((double)1/2, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two"),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two raw"),0.01);
+		assertEquals((double)2/5+1, PortionSearchEngine.ComputeRate("two", "grams", "one two avocado two raw"),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two raw (two two)"),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two, avocado((two two) two raw"),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one-two, avocado((two two) two raw"),0.01);
+
+	}
+	
 
 }
