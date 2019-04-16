@@ -34,19 +34,20 @@ public class PortionSearchEngine {
 	 *            is without parenthesis
 	 * @return number of words in the given sentence
 	 */
-	private static int NumOfWordsInSentence(String str) {
-		int count = 0;
+	static int NumOfWordsInSentence(String str) {
+		
+		String cleanStr = str.replaceAll("-", " ");
+		cleanStr = cleanStr.trim().replaceAll(" +", " ");
 		boolean spareSpacesFlag = false;
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) != ' ')
+		int count = cleanStr.isEmpty()? 0 : 1;
+		for (int i = 0; i < cleanStr.length(); i++) {
+			if (cleanStr.charAt(i) != ' ')
 				spareSpacesFlag = true;
-			else if (spareSpacesFlag && i != str.length() - 1) {
+			else if (spareSpacesFlag && i != cleanStr.length() - 1) {
 				count++;
 				spareSpacesFlag = false;
 			}
 		}
-		if (count > 0 && str.charAt(str.length() - 1) == ' ')
-			count--;
 		return count;
 	}
 
@@ -55,11 +56,12 @@ public class PortionSearchEngine {
 	 * @param str - a string
 	 * @return a canonical form string of the given string
 	 */
-	private static String StringToCanonicalForm(String str) {
-		// rule 1: No parenthesis
-		String cleanStr = str.replaceAll("\\(.*\\)", "");
-		// rule 2: no "-"
-		cleanStr = cleanStr.replaceAll("-", "");
+	static String StringToCanonicalForm(String str) {
+		// rule 1: no "-"
+		String cleanStr = str.replaceAll("-", " ");
+		// rule 2: No parenthesis
+		cleanStr = cleanStr.replaceAll("\\(.*\\)", " ");
+		
 		// rule 3: No spare spaces
 		// rule 4: No leading or trailing whitespace
 		cleanStr = cleanStr.trim().replaceAll(" +", " ");
@@ -75,7 +77,7 @@ public class PortionSearchEngine {
 	 * @param str - a given substring
 	 * @return number of occurrences of substr in str
 	 */
-	private static int CountOccurrencesOfSubstring(String str, String substr) {
+	static int CountOccurrencesOfSubstring(String str, String substr) {
 		int count = 0, fromIndex = 0;
 
 		while ((fromIndex = str.indexOf(substr, fromIndex)) != -1) {
