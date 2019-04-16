@@ -4,6 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.amazon.ask.model.services.Pair;
+
+import Utils.PortionSearchEngine.SearchResults;
+
 @SuppressWarnings("static-method")
 public  class PortionSearchEngineTest {
 
@@ -27,8 +31,8 @@ public  class PortionSearchEngineTest {
 		assertEquals("", PortionSearchEngine.StringToCanonicalForm("      "));
 		assertEquals("a", PortionSearchEngine.StringToCanonicalForm("    a  "));
 		assertEquals("a b", PortionSearchEngine.StringToCanonicalForm("    a   b "));
-		assertEquals("instruction based commands", PortionSearchEngine.StringToCanonicalForm(" instruction-based    commands "));
-		assertEquals("instruction based commands", PortionSearchEngine.StringToCanonicalForm(" instruction-based    commands(must be removed)"));
+		assertEquals("instruction based commands", PortionSearchEngine.StringToCanonicalForm(" instruction-baSed    commands "));
+		assertEquals("instruction based commands", PortionSearchEngine.StringToCanonicalForm(" instruction-baseD    commands(must be removed)"));
 	}
 	
 	@Test
@@ -40,6 +44,29 @@ public  class PortionSearchEngineTest {
 		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two raw (two two)"),0.01);
 		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two, avocado((two two) two raw"),0.01);
 		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one-two, avocado((two two) two raw"),0.01);
+
+	}
+	
+	@Test
+	public void PortionSearchTest() {
+		Pair<SearchResults, Portion> tempPair=PortionSearchEngine.PortionSearch("saadshgerh","small",Portion.Type.FOOD,1);
+		assertEquals(SearchResults.SEARCH_NO_RESULTS, tempPair.getName());
+		
+		tempPair=PortionSearchEngine.PortionSearch("apPle","small",Portion.Type.FOOD,1);
+		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
+		assertEquals(149.0, tempPair.getValue().getAmount(),0.1);
+		
+		tempPair=PortionSearchEngine.PortionSearch("pizZA","slice",Portion.Type.FOOD,1);
+		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
+		assertEquals(280.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
+		
+		tempPair=PortionSearchEngine.PortionSearch("nature VALLey","bar",Portion.Type.FOOD,1);
+		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
+		
+		tempPair=PortionSearchEngine.PortionSearch("sprITe","can",Portion.Type.FOOD,1);
+		assertEquals(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, tempPair.getName());
+		assertEquals(40.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
+
 
 	}
 	

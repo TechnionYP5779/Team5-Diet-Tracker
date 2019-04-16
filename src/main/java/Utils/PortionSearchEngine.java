@@ -108,8 +108,9 @@ public class PortionSearchEngine {
 			countOccurrences += CountOccurrencesOfSubstring(cleanStr, word);
 
 		double rate = countOccurrences / ((double) numOfWords);
-
-		// TODO: to expand it more than just gram
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		// TODO: to expand it more than just gram, and tests it
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		if (unit.contains("gram"))
 			rate += 1;
 		else if (cleanStr.contains("raw"))
@@ -162,6 +163,7 @@ public class PortionSearchEngine {
 			double amount) {
 		try {
 			String freeTextToReq=freeText.replaceAll(" ", "%20");
+			freeTextToReq=freeTextToReq.toLowerCase();
 			// Do the requests
 			final JSONObject responseWithoutRaw = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="
 					+ freeTextToReq + "&ds=Standard%20Reference&sort=r&max=" + MAX_ELEMENTS_WITHOUT_RAW
