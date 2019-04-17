@@ -132,6 +132,7 @@ public class PortionSearchEngine {
 		double unit_to_g = 0.0;
 		try {
 			/** now we can find the right converter-method to invoke, using reflection*/
+			//TODO: handle convertions of liquids to milliliters
 			String converter_func_name = post_processed_units+"ToGrams";	
 			Method converter_method = Class.forName(UnitsConverter.class.getName()).getDeclaredMethod(converter_func_name, double.class);
 			
@@ -272,6 +273,8 @@ public class PortionSearchEngine {
 			//TODO: change the '1' to either the proper convertion, if exists, or :
 			//TODO: the default USDA's gram units for some label that we need to choose
 			Portion portion=GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(),1);
+			
+			/** set the boolean flag to "true" if the convertion exists **/
 			final boolean convertionExists = CheckConvertions(unit,amount)>-1;
 			double rateFirst = ComputeRate(freeText, unit, portion_list.get(0).getName(),convertionExists);
 			if (rateFirst < 1 / 3) 

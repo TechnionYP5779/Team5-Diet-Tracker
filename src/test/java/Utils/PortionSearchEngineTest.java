@@ -2,6 +2,7 @@ package Utils;
 
 import static org.junit.Assert.*;
 
+import org.json.JSONObject;
 import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
@@ -69,5 +70,36 @@ public  class PortionSearchEngineTest {
 
 	}
 	
+	/** basic tests to check if the converter works 
+	 * @throws Exception **/
+	@Test 
+	public void CheckConvertionsTest1() throws Exception {
+		assertEquals((double)1, PortionSearchEngine.CheckConvertions("grams", 1.0),0.01);
+		assertEquals((double)1000, PortionSearchEngine.CheckConvertions("kilograms", 1.0),0.01);
+		assertEquals((double)0.001, PortionSearchEngine.CheckConvertions("milligrams", 1.0),0.01);
+		assertEquals((double)28.3495, PortionSearchEngine.CheckConvertions("ounce", 1.0),0.01);
+		assertEquals((double)28.3495, PortionSearchEngine.CheckConvertions("ounces", 1.0),0.01);
+		assertEquals((double)-1, PortionSearchEngine.CheckConvertions("gallon", 1.0),0.01);
+
+		
+	}
+	/** more advanced tests to check if the converter works,
+	 * try to take the strings from a real JSON-object as we actually do 
+	 * @throws Exception **/
+	@Test
+	public void CheckConvertionsTest2() throws Exception{
+		
+		/** an example for a pre-defined convertion in the converter,
+		 * ounces convertion to grams is defined in our converter **/
+		final JSONObject res1 = PortionRequestGen.readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=45094075&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
+		assertEquals(1+(double)2/8,PortionSearchEngine.ComputeRate("bacon","ounce",res1.getJSONObject("report").getJSONObject("food").getString("name"),
+						PortionSearchEngine.CheckConvertions("ounce",2)>=0),0.01);
+		
+		/** an example for non-defined convertion in the converter:
+		 *  a soda "can" is not defined in converter, neither towards liters nor grams **/
+		final JSONObject res2 = PortionRequestGen.readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=14145&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
+		assertEquals((double)1/7,PortionSearchEngine.ComputeRate("sprite","can",res2.getJSONObject("report").getJSONObject("food").getString("name"),
+						PortionSearchEngine.CheckConvertions("can",2)>=0),0.01);
+	}
 
 }
