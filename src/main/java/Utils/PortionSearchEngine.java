@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -95,8 +96,7 @@ public class PortionSearchEngine {
 	 * @param unit      - the measuring unit
 	 * @return the rate of str according to the search string searchStr
 	 */
-	static double ComputeRate(String searchStr, String unit, String str) {
-		// turns string to canonical form
+	static double ComputeRate(String searchStr, String unit, String str,final boolean convertionExists) {
 		String cleanSearchStr = StringToCanonicalForm(searchStr);
 		String cleanStr = StringToCanonicalForm(str);
 
@@ -111,12 +111,42 @@ public class PortionSearchEngine {
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		// TODO: to expand it more than just gram, and tests it
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		if (unit.contains("gram"))
+		if (convertionExists)
 			rate += 1;
 		else if (cleanStr.contains("raw"))
 			rate += ((double) 1) / 3;
 
 		return rate;
+	}
+	
+	/**
+	 * @author Shaked Sapir
+	 * @param units - the portion units provided by user
+	 * @param amount - the portion quantity / amount provided by user
+	 * @return the amount of portion after the convertion if a proper convertion exists, otherwise -1
+	 * @throws NoSuchMethodException if the converter has no proper method for @code units
+	 */
+	
+	static double CheckConvertions(final String units, final double amount) throws Exception{
+		String post_processed_units = "s".equals(units.substring(units.length() - 1))? units : units+"s";
+		double unit_to_g = 0.0;
+		try {
+			/** now we can find the right converter-method to invoke, using reflection*/
+			String converter_func_name = post_processed_units+"ToGrams";	
+			Method converter_method = Class.forName(UnitsConverter.class.getName()).getDeclaredMethod(converter_func_name, double.class);
+			
+			
+			/** calculate the amount in grams of the original unit**/
+			unit_to_g = (double) converter_method.invoke(UnitsConverter.class,amount);
+			/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
+
+		} catch(NoSuchMethodException  e) {
+			/** TODO if reached here, then we have a lack in convertion methods, we should add
+			 *  one and notify the user about this
+			 */
+			unit_to_g = -1;
+		}
+		return unit_to_g;
 	}
 
 	// -------------------------------------------------------------------------
@@ -204,7 +234,7 @@ public class PortionSearchEngine {
 			portion_list.sort(new Comparator<Pair<String, String>>() {
 				@Override
 				public int compare(Pair<String, String> p1, Pair<String, String> p2) {
-					double res = ComputeRate(freeText, unit, p1.getName()) - ComputeRate(freeText, unit, p2.getName());
+					double res = ComputeRate(freeText, unit, p1.getName(),false) - ComputeRate(freeText, unit, p2.getName(),false);
 					if (res > 0)
 						return -1;
 					if (res < 0)
@@ -231,6 +261,7 @@ public class PortionSearchEngine {
 				}
 			}
 
+			// no full success
 			final JSONObject nutrientsResponse = PortionRequestGen
 					.readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=" + portion_list.get(0).getValue()
 							+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
@@ -238,10 +269,11 @@ public class PortionSearchEngine {
 			final JSONArray nut_arr = nutrientsResponse.getJSONObject("report").getJSONObject("food")
 					.getJSONArray("nutrients");
 			
+			//TODO: change the '1' to either the proper convertion, if exists, or :
+			//TODO: the default USDA's gram units for some label that we need to choose
 			Portion portion=GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(),1);
-			
-			// no full success
-			double rateFirst = ComputeRate(freeText, unit, portion_list.get(0).getName());
+			final boolean convertionExists = CheckConvertions(unit,amount)>-1;
+			double rateFirst = ComputeRate(freeText, unit, portion_list.get(0).getName(),convertionExists);
 			if (rateFirst < 1 / 3) 
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_BAD_ESTIMATED_SUCCESS, portion);
 			else 

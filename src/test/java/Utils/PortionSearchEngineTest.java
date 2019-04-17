@@ -37,13 +37,13 @@ public  class PortionSearchEngineTest {
 	
 	@Test
 	public void ComputeRateTest() {
-		assertEquals((double)1/4, PortionSearchEngine.ComputeRate("avocado", "abc", "one two avocado two"),0.01);
-		assertEquals((double)1/2, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two"),0.01);
-		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two raw"),0.01);
-		assertEquals((double)2/5+1, PortionSearchEngine.ComputeRate("two", "grams", "one two avocado two raw"),0.01);
-		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two raw (two two)"),0.01);
-		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two, avocado((two two) two raw"),0.01);
-		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one-two, avocado((two two) two raw"),0.01);
+		assertEquals((double)1/4, PortionSearchEngine.ComputeRate("avocado", "abc", "one two avocado two",false),0.01);
+		assertEquals((double)1/2, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two",false),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two raw",false),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "grams", "one two avocado two raw",false),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two avocado two raw (two two)",false),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one two, avocado((two two) two raw",false),0.01);
+		assertEquals((double)2/5+(double)1/3, PortionSearchEngine.ComputeRate("two", "abc", "one-two, avocado((two two) two raw",false),0.01);
 
 	}
 	
@@ -66,7 +66,6 @@ public  class PortionSearchEngineTest {
 		tempPair=PortionSearchEngine.PortionSearch("sprITe","can",Portion.Type.FOOD,1);
 		assertEquals(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, tempPair.getName());
 		assertEquals(40.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
-
 
 	}
 	
