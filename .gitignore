@@ -25,3 +25,12 @@ hs_err_pid*
 
 /credentials/
 db_credentials.json
+
+/Team5-Fitnesspeaker/FoodsDB_server/creds/
+tests_creds.json
+
+
+/Team5-Fitnesspeaker/FoodsDB_server/
+server_key.pem
+
+
