@@ -3,6 +3,8 @@
  * @since 2018-12-17*/
 package Utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,6 +19,7 @@ import com.amazon.ask.model.services.Pair;
 
 public class PortionRequestGenTest {
 
+	/** this test is currently not relevant due to changes in converter**/
 	@Test
 	/** a simple test to check a simple conversion between units**/
 	public void test_grams() {
@@ -25,7 +28,7 @@ public class PortionRequestGenTest {
 
 		assert s1.contains("Nutritional Values per 100 grams:\nCalories: 89.0\nProteins: 1.09\n"
 				+ "Carbohydrates: 22.84\nFats: 0.33\n");
-		assert p.getAmount() == 0.05;
+		assertEquals(0.05,p.getAmount(),0.01);
 		
 	}
 	
