@@ -109,7 +109,7 @@ public class PortionSearchEngine {
 
 		double rate = countOccurrences / ((double) numOfWords);
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		// TODO: to expand it more than just gram, and tests it
+		// Now it handles any kind of conversion
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		if (convertionExists)
 			rate += 1;
@@ -123,31 +123,47 @@ public class PortionSearchEngine {
 	 * @author Shaked Sapir
 	 * @param units - the portion units provided by user
 	 * @param amount - the portion quantity / amount provided by user
-	 * @return the amount of portion after the convertion if a proper convertion exists, otherwise -1
+	 * @return the amount of portion after the conversion if a proper conversion exists, otherwise -1
 	 * @throws NoSuchMethodException if the converter has no proper method for @code units
 	 */
 	
 	static double CheckConvertions(final String units, final double amount) throws Exception{
 		String post_processed_units = "s".equals(units.substring(units.length() - 1))? units : units+"s";
-		double unit_to_g = 0.0;
+		double unit_to_g = 0.0, unit_to_l = 0.0;
 		try {
-			/** now we can find the right converter-method to invoke, using reflection*/
-			//TODO: handle convertions of liquids to milliliters
-			String converter_func_name = post_processed_units+"ToGrams";	
-			Method converter_method = Class.forName(UnitsConverter.class.getName()).getDeclaredMethod(converter_func_name, double.class);
-			
+			/** now we can find the right converter-method to invoke for solids, using reflection*/
+			String converter_to_grams_func_name = post_processed_units+"ToGrams";
+			Method grams_converter_method = Class.forName(UnitsConverter.class.getName()).
+					getDeclaredMethod(converter_to_grams_func_name, double.class);
 			
 			/** calculate the amount in grams of the original unit**/
-			unit_to_g = (double) converter_method.invoke(UnitsConverter.class,amount);
+			unit_to_g = (double) grams_converter_method.invoke(UnitsConverter.class,amount);
 			/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
 
 		} catch(NoSuchMethodException  e) {
-			/** TODO if reached here, then we have a lack in convertion methods, we should add
+			/** TODO if reached here, then we have a lack in conversion methods, we should add
 			 *  one and notify the user about this
 			 */
 			unit_to_g = -1;
 		}
-		return unit_to_g;
+		try {
+			/** now we can find the right converter-method to invoke for liquids, using reflection*/
+			String converter_to_liters_func_name = post_processed_units+"ToLiters";
+			Method liters_converter_method = Class.forName(UnitsConverter.class.getName()).
+					getDeclaredMethod(converter_to_liters_func_name, double.class);
+			
+			
+			/** calculate the amount in grams of the original unit**/
+			unit_to_l = (double) liters_converter_method.invoke(UnitsConverter.class,amount);
+			/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
+
+		} catch(NoSuchMethodException  e) {
+			/** TODO if reached here, then we have a lack in conversion methods, we should add
+			 *  one and notify the user about this
+			 */
+			unit_to_l = -1;
+		}
+		return Math.max(unit_to_g, unit_to_l);
 	}
 
 	// -------------------------------------------------------------------------
@@ -270,11 +286,11 @@ public class PortionSearchEngine {
 			final JSONArray nut_arr = nutrientsResponse.getJSONObject("report").getJSONObject("food")
 					.getJSONArray("nutrients");
 			
-			//TODO: change the '1' to either the proper convertion, if exists, or :
+			//TODO: change the '1' to either the proper conversion, if exists, or :
 			//TODO: the default USDA's gram units for some label that we need to choose
 			Portion portion=GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(),1);
 			
-			/** set the boolean flag to "true" if the convertion exists **/
+			/** set the boolean flag to "true" if the conversion exists **/
 			final boolean convertionExists = CheckConvertions(unit,amount)>-1;
 			double rateFirst = ComputeRate(freeText, unit, portion_list.get(0).getName(),convertionExists);
 			if (rateFirst < 1 / 3) 

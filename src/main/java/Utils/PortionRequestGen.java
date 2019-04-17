@@ -172,6 +172,23 @@ public class PortionRequestGen {
 							 */
 							label_found = false;
 						}
+						try {
+							/** now we can find the right converter-method to invoke, using reflection*/
+							String converter_func_name = post_processed_units+"ToGramsTrivial";	
+							Method converter_method = Class.forName(UnitsConverter.class.getName()).getDeclaredMethod(converter_func_name, double.class);
+							
+							
+							/** calculate the amount in grams of the original unit**/
+							unit_to_g = (double) converter_method.invoke(UnitsConverter.class,amount);
+							/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
+							nutritions.add(Double.valueOf(value_per_100_g));
+							label_found = true;
+						} catch(NoSuchMethodException  e) {
+							/** TODO if reached here, then we have a lack in convertion methods, we should add
+							 *  one and notify the user about this
+							 */
+							label_found = false;
+						}
 					}
 					/** if we didn't find the label, check if there is a size measure label in the
 					 *  JSON object, for portions like raw fruits, vegetables...*/
