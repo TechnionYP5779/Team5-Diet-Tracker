@@ -7,13 +7,13 @@ import org.junit.Test;
 
 public class FoodsDBTest {
 	
-	
+	private final String testingEmail="nwerncgwuinrgw2764nr283h_test@gmail.com";
 	
 	@Test
-	public void testAteToday() throws FoodsDBException {
+	public void testAddDeleteUser() throws FoodsDBException {
 		FoodsDB db =new FoodsDB();
-		JSONObject nutvals = db.NutVal4T4Today("or@gmail.com");
-		System.out.println(nutvals);
+		db.addUser(testingEmail);
+		db.deleteUser(testingEmail);
 	}
 
 }

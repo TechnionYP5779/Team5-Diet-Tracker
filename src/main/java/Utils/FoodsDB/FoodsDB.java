@@ -48,7 +48,7 @@ public class FoodsDB {
 		 String result;
 		 try {
 			 response = ( JSONObject) jParser.parse(res);
-				result =  (String) response.get("result");
+			 result =  (String) response.get("result");
 			} catch (Exception e) {
 				throw new CantReadResponseExc();
 			}
@@ -78,5 +78,49 @@ public class FoodsDB {
 			}
 		 return response;
 	 }
+	 
+	 public void addUser(String email) throws FoodsDBException {
+		 String res= new HttpSender()
+					.setMethod2POST()
+					.setUrl(url+"/user")
+					.setJsonBody("{\"email\": "+ "\""+email+"\"}")
+					.send();
+		 
 	
+		 if(res=="")
+			 throw new CantSendRequestExc();
+		 
+		 String result="";
+		 try {
+			 JSONObject response = ( JSONObject) jParser.parse(res);
+			 result =  (String) response.get("result");
+			} catch (Exception e) {
+				throw new CantReadResponseExc();
+			}
+		 if(!result.equals("OK"))
+			  throw new databaseExc();
+	 }
+	 
+	 public void deleteUser(String email) throws FoodsDBException {
+		 String res= new HttpSender()
+					.setMethod2DELETE()
+					.setUrl(url+"/user")
+					.setJsonBody("{\"email\": "+ "\""+email+"\"}")
+					.send();
+		 
+	
+		 if(res=="")
+			 throw new CantSendRequestExc();
+		 
+		 String result="";
+		 try {
+			 JSONObject response = ( JSONObject) jParser.parse(res);
+			 result =  (String) response.get("result");
+			} catch (Exception e) {
+				throw new CantReadResponseExc();
+			}
+		 if(!result.equals("OK"))
+			  throw new databaseExc();
+	 }
+
 }
