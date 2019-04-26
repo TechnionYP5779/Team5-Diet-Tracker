@@ -19,13 +19,13 @@ public class FoodsDB {
 			"}";
 	
 	
-	 FoodsDB() throws FoodsDBException{
+	public FoodsDB() throws FoodsDBException{
 		 
 		 // reading url from the credential file
 		 jParser = new JSONParser();
 		 JSONObject creds;
 		 try {
-			creds = ( JSONObject) jParser.parse(new FileReader("c:\\file.json"));
+			creds = ( JSONObject) jParser.parse(new FileReader(credPath));
 			url =  (String) creds.get("url");
 		} catch (Exception e) {
 			throw new CantReadCredsExc(this.credPath);
@@ -33,10 +33,10 @@ public class FoodsDB {
 		
 	 }
 	 
-	 void UserAte(String email, String food, int amount ) throws FoodsDBException {
+	public  void UserAte(String email, String food, int amount ) throws FoodsDBException {
 		 String res= new HttpSender()
 					.setMethod2POST()
-					.setUrl(url)
+					.setUrl(url+"/ate")
 					.setJsonBody(String.format(ateAsJson, food,email,amount))
 					.send();
 		 
@@ -60,8 +60,23 @@ public class FoodsDB {
 	 
 	 
 	 
-	 JSONObject  NutVal4T4Today(String email) throws FoodsDBException {
-		 return null;
+	 public JSONObject  NutVal4T4Today(String email) throws FoodsDBException {
+		 String res= new HttpSender()
+					.setMethod2GET()
+					.setUrl(url+"/atetoday?email="+email)
+					.send();
+		 
+	
+		 if(res=="")
+			 throw new CantSendRequestExc();
+		 
+		 JSONObject response=null;
+		 try {
+			 response = ( JSONObject) jParser.parse(res);
+			} catch (Exception e) {
+				throw new CantReadResponseExc();
+			}
+		 return response;
 	 }
 	
 }

@@ -1,7 +1,7 @@
 var makeDB = require("../../src/database/DietTrackerDB");
 var fs = require('fs');
 var credInfo = JSON.parse(fs.readFileSync('../../creds/tests_creds.json', 'utf8'));
-var db = new DB(credInfo.host, credInfo.user, credInfo.password, credInfo.db);
+var db = new makeDB(credInfo.host, credInfo.user, credInfo.password, credInfo.db);
 var assert = require("assert");
 
 // test objects

@@ -9,7 +9,7 @@ public class HttpSender {
     private URL url;
     private String method;
     private String parameters=null;
-    String error="";
+    public String error="";
     boolean wasError=false;
     private String contentType = null;
 
