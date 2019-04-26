@@ -27,6 +27,8 @@ var getAction = function(res){
   this.success= function(result){res.json( result[0])};
 };
 
+var deleteAction = postAction;
+
 app.post("/user", function(req, res) {
   db.addUser(req.body,new postAction(res));
 });
@@ -47,6 +49,10 @@ app.get("/atetoday", function(req, res) {
   db.getAteTodayAmount(req.query.email, new getAction(res));
 });
 
+
+app.delete("/user",function(req,res){
+  db.deleteUser(req.body,new deleteAction(res));
+})
 
 // error 404
 app.get('*', function(req, res){
