@@ -37,6 +37,7 @@
 		<skipTests>${someModule.skip.tests}</skipTests>
 		<someModule.test.includes>**/*Test.java</someModule.test.includes>
 		<someModule.test.excludes>**/*DBUtilsTest.java</someModule.test.excludes>
+		<someModule.test.excludes>**/*FoodsDBTest.java</someModule.test.excludes>
 	</properties>
 
 

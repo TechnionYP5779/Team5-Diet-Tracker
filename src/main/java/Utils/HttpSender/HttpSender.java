@@ -24,6 +24,10 @@ public class HttpSender {
         this.method="POST";
         return this;
     }
+    public HttpSender setMethod2DELETE(){
+        this.method="DELETE";
+        return this;
+    }
     public HttpSender setUrl(String url){
         try {
             this.url=new URL(url);
