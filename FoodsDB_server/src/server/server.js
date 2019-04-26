@@ -40,11 +40,11 @@ app.post("/ate", function(req, res) {
 });
 
 app.get("/user", function(req, res) {
-  db.getUser(req.body, new getAction(res))
+  db.getUser(req.query, new getAction(res))
 });
 
 app.get("/atetoday", function(req, res) {
-  db.getAteTodayAmount(req.body.email, new getAction(res));
+  db.getAteTodayAmount(req.query.email, new getAction(res));
 });
 
 
