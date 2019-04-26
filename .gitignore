@@ -33,4 +33,6 @@ tests_creds.json
 /Team5-Fitnesspeaker/FoodsDB_server/
 server_key.pem
 
+/
+foods_db_creds.json
 

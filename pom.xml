@@ -39,7 +39,17 @@
 		<someModule.test.excludes>**/*DBUtilsTest.java</someModule.test.excludes>
 	</properties>
 
+
 	<dependencies>
+	
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<dependency>
+    		<groupId>com.googlecode.json-simple</groupId>
+    		<artifactId>json-simple</artifactId>
+    		<version>1.1</version>
+		</dependency>
+
+	
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 		<dependency>
 			<groupId>org.mockito</groupId>

@@ -13,18 +13,18 @@ public class HttpSender {
     boolean wasError=false;
     private String contentType = null;
 
-    HttpSender(){}
+    public HttpSender(){}
 
-    HttpSender setMethod2GET(){
+    public HttpSender setMethod2GET(){
         this.method="GET";
         return this;
     }
 
-    HttpSender setMethod2POST(){
+    public HttpSender setMethod2POST(){
         this.method="POST";
         return this;
     }
-    HttpSender setUrl(String url){
+    public HttpSender setUrl(String url){
         try {
             this.url=new URL(url);
         } catch (MalformedURLException e) {
@@ -33,13 +33,13 @@ public class HttpSender {
         }
         return this;
     }
-    HttpSender setJsonParams(String p){
+    public HttpSender setJsonBody(String p){
         this.parameters=p;
         this.contentType="application/json";
         return this;
     }
 
-    String send(){
+    public String send(){
         String ret="";
         if(wasError)
             return "";
