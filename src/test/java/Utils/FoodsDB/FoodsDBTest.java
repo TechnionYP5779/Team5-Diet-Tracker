@@ -15,5 +15,16 @@ public class FoodsDBTest {
 		db.addUser(testingEmail);
 		db.deleteUser(testingEmail);
 	}
+	
+	@Test
+	public void testAteToday() throws FoodsDBException {
+		FoodsDB db =new FoodsDB();
+		db.addUser(testingEmail);
+		db.UserAte(testingEmail, "cheese", 100);
+		JSONObject vals= db.NutVal4T4Today(testingEmail);
+		if((Long)vals.get("Protein") != 4 || (Long)vals.get("Fat") != 10 )
+			fail("wrong nutritional values");
+		db.deleteUser(testingEmail);
+	}
 
 }

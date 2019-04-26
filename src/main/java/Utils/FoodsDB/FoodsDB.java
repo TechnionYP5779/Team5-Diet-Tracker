@@ -5,6 +5,12 @@ import org.json.simple.parser.JSONParser;
 import Utils.HttpSender.HttpSender;
 
 
+/*
+ * each query to the database such is composed 2 parts:
+ * the first one makes an http request to the API and get the response
+ * the second one parse the response and throw exception if needed
+ * 
+ */
 public class FoodsDB {
 
 	private final String credPath="./foods_db_creds.json";
