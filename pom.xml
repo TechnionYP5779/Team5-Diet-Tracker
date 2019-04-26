@@ -20,6 +20,7 @@
 				<configuration>
 					<excludes>
 						<exclude>${someModule.test.excludes}</exclude>
+						<exclude>${someModule.test.excludes2}</exclude>
 					</excludes>
 					<includes>
 						<include>${someModule.test.includes}</include>
@@ -37,7 +38,7 @@
 		<skipTests>${someModule.skip.tests}</skipTests>
 		<someModule.test.includes>**/*Test.java</someModule.test.includes>
 		<someModule.test.excludes>**/*DBUtilsTest.java</someModule.test.excludes>
-		<someModule.test.excludes>**/*FoodsDBTest.java</someModule.test.excludes>
+		<someModule.test.excludes2>**/*FoodsDBTest.java</someModule.test.excludes2>
 	</properties>
 
 
