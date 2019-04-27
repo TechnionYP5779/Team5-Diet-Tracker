@@ -260,7 +260,10 @@ public class PortionSearchEngine {
 				}
 			});
 
+//			for(Pair<String,String> p : portion_list)
+//				System.out.println(p.getValue() + " , "+p.getName());
 			for (Pair<String, String> p : portion_list) {
+
 				final JSONObject nutrientsResponse = PortionRequestGen
 						.readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=" + p.getValue()
 								+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
@@ -269,8 +272,13 @@ public class PortionSearchEngine {
 						.getJSONArray("nutrients");
 
 				final JSONArray measures_arr = nut_arr.getJSONObject(0).getJSONArray("measures");
-				if(!(measures_arr.get(0).equals(null))) {
-					for (int i = 0; i < measures_arr.length(); ++i) {
+				
+				/** we have to validate that there are values in measures_arr, and if so -
+				 * we ensure that it doesn't contain only "null"
+				 */
+				int measures_arr_len = measures_arr.length();
+				if(measures_arr_len>0 && !(measures_arr.get(0).equals(null))) {
+					for (int i = 0; i < measures_arr_len; ++i) {
 						if (measures_arr.getJSONObject(i).getString("label").contains(unit))
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
