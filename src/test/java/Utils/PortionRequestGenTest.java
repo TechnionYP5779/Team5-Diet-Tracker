@@ -102,12 +102,12 @@ public class PortionRequestGenTest {
 				final JSONArray measures_arr = myResponse.getJSONObject("report").getJSONObject("food").getJSONArray("nutrients").getJSONObject(0).getJSONArray("measures");
 				for (int i = 0; i < measures_arr.length(); ++i) {
 					if(measures_arr.getJSONObject(i).getString("label").contains(unit)) {
-						System.out.println("The ndbno:");
-						System.out.println(p.getValue());
-						System.out.println("The name:");
-						System.out.println(p.getName());
-						System.out.println("The selected measure:");
-						System.out.println(measures_arr.getJSONObject(i).toString());
+//						System.out.println("The ndbno:");
+//						System.out.println(p.getValue());
+//						System.out.println("The name:");
+//						System.out.println(p.getName());
+//						System.out.println("The selected measure:");
+//						System.out.println(measures_arr.getJSONObject(i).toString());
 						return;
 					}
 				}
@@ -123,11 +123,11 @@ public class PortionRequestGenTest {
 		/** get (from json) the array that stores the nutritional values we want **/
 		final JSONArray measures_arr = myResponse.getJSONObject("report").getJSONObject("food").getJSONArray("nutrients").getJSONObject(0).getJSONArray("measures");
 		
-				System.out.println("The ndbno:");
-				System.out.println(portion_list.get(0).getValue());
-				System.out.println("The name:");
-				System.out.println(portion_list.get(0).getName());
-				return;
+//				System.out.println("The ndbno:");
+//				System.out.println(portion_list.get(0).getValue());
+//				System.out.println("The name:");
+//				System.out.println(portion_list.get(0).getName());
+//				return;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -220,9 +220,9 @@ public class PortionSearchEngine {
 					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 
 			List<Pair<String, String>> portion_list = new ArrayList<>();
-
 			// check for error in the "WithoutRaw" request
 			if (responseWithoutRaw.has("list")) {
+
 				int sizeNoRaw = responseWithoutRaw.getJSONObject("list").getInt("end");
 				for (int i = 0; i < sizeNoRaw; i++)
 					portion_list.add(new Pair<String, String>(
@@ -235,6 +235,7 @@ public class PortionSearchEngine {
 
 			// check for error in the "WithRaw" request
 			if (responseWithRaw.has("list")) {
+			
 				int sizeRaw = responseWithRaw.getJSONObject("list").getInt("end");
 				for (int i = 0; i < sizeRaw; i++)
 					portion_list.add(new Pair<String, String>(
@@ -244,8 +245,7 @@ public class PortionSearchEngine {
 									.getString("ndbno")));
 
 			}
-
-			if (portion_list.isEmpty())
+			if (portion_list.isEmpty()) 
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_NO_RESULTS, null);
 
 			portion_list.sort(new Comparator<Pair<String, String>>() {
@@ -269,13 +269,16 @@ public class PortionSearchEngine {
 						.getJSONArray("nutrients");
 
 				final JSONArray measures_arr = nut_arr.getJSONObject(0).getJSONArray("measures");
-				for (int i = 0; i < measures_arr.length(); ++i) {
-					if (measures_arr.getJSONObject(i).getString("label").contains(unit))
-						return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
-								GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
-										measures_arr.getJSONObject(i).getDouble("eqv")));
-
+				if(!(measures_arr.get(0).equals(null))) {
+					for (int i = 0; i < measures_arr.length(); ++i) {
+						if (measures_arr.getJSONObject(i).getString("label").contains(unit))
+							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
+									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
+											measures_arr.getJSONObject(i).getDouble("eqv")));
+	
+					}
 				}
+
 			}
 
 			// no full success
@@ -285,7 +288,7 @@ public class PortionSearchEngine {
 
 			final JSONArray nut_arr = nutrientsResponse.getJSONObject("report").getJSONObject("food")
 					.getJSONArray("nutrients");
-			
+
 			//TODO: change the '1' to either the proper conversion, if exists, or :
 			//TODO: the default USDA's gram units for some label that we need to choose
 			Portion portion=GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(),1);

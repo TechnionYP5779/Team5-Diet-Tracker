@@ -133,5 +133,12 @@ public  class PortionSearchEngineTest {
 		assertEquals((double)1/7,PortionSearchEngine.ComputeRate("sprite","can",res.getJSONObject("report").getJSONObject("food").getString("name"),
 						PortionSearchEngine.CheckConvertions("can",2)>=0),0.01);
 	}
+	
+	@Test
+	public void compareOldVsNewAlgorithm() {
+		Pair<SearchResults,Portion> tempPair=PortionSearchEngine.PortionSearch("noodles","gram",Portion.Type.FOOD,1);
+//		System.out.println(tempPair.getValue().name);
+
+	}
 
 }
