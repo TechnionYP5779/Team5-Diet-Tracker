@@ -3,9 +3,10 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers.FoodHandlers;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
-import org.json.simple.JSONObject;
-
+import java.util.stream.Collectors;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.model.IntentRequest;
@@ -14,8 +15,7 @@ import com.amazon.ask.model.Slot;
 
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
-import Utils.FoodsDB.FoodsDB;
-import Utils.FoodsDB.FoodsDBException;
+import Utils.Portion.Portion;
 import Utils.Strings.GoalsAndMeasuresStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.NutritionalString;
@@ -55,30 +55,29 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 
 		final String UserMail = i.getServiceClientFactory().getUpsService().getProfileEmail().replace(".", "_dot_");
 		DBUtils db = new DBUtils(UserMail);
-		
-		
+
+		List<Portion> FoodList = new LinkedList<>();
 		// retrieving the information
-		JSONObject nutvals=null;
-		
-			try {
-				FoodsDB dbf=new FoodsDB();
-				nutvals= dbf.NutVal4T4Today(UserMail);
-			} catch (FoodsDBException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		
+		try {
+			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).collect(Collectors.toList());
+		} catch (DBException e) {
+			// no need to do anything
+		}
 		final String measure_str = measureSlot.getValue();
 		double total_measure = 0;
-		if (NutritionalString.FATS.contains(measure_str))
-			total_measure=(double) nutvals.get("Fat");
+		for (final Portion p : FoodList) {
+			double measure = 0;
+			double amount = p.getAmount();
+			if (NutritionalString.FATS.contains(measure_str))
+				measure = p.getFats_per_100_grams();
 			else if (NutritionalString.CARBS.contains(measure_str))
-				total_measure=(double) nutvals.get("Carbohydrate");
+				measure = p.getCarbs_per_100_grams();
 			else if (NutritionalString.PROTEINS.contains(measure_str))
-				total_measure=(double) nutvals.get("Protein");
+				measure = p.getProteins_per_100_grams();
 			else if (NutritionalString.CALORIES.contains(measure_str))
-				total_measure=(double) nutvals.get("Calorie");
-			
+				measure = p.getCalories_per_100_grams();
+			total_measure += measure * ((double) amount / 100);
+		}
 		total_measure += (total_measure % 50 > 0 ? 50 : 0) - (total_measure % 50);
 
 		// after we got the total measure we look for the goal

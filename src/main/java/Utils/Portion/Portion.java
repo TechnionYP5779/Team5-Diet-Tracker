@@ -106,17 +106,7 @@ public class Portion {
 		this.time = null;
 		this.meal = Meal.BREAKFAST;
 	}
-	
-	public static  int  toGrams(String units, int val) {
-		
-		units.toLowerCase();
-		if(units.equals("gram")||units.equals("grams"))
-			return val;
-		
-		return 100;
-	}
-		
-	
+
 	@Override
 	public boolean equals(final Object o) {
 		if (o == this)
