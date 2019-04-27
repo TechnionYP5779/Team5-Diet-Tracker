@@ -12,10 +12,12 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
 import Utils.Portion.PortionRequestGen;
+import Utils.Portion.Portion;
 import Utils.Portion.Portion.Type;
 import Utils.Strings;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
+import Utils.FoodsDB.FoodsDB;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
@@ -68,20 +70,13 @@ public class AddFoodIntentHandler implements RequestHandler {
 		final Integer amount = Integer.valueOf(Integer.parseInt(AmountSlot.getValue()));
 		final String units = UnitSlot.getValue(), added_food = foodSlot.getValue();
 		// initialize database object with the user mail
-		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
+		String UserEmail=i.getServiceClientFactory().getUpsService().getProfileEmail();
+		
 
 		// insert the portion to the DB
 		try {
-			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
-					Double.valueOf(amount.intValue()).doubleValue(), units));
-		} catch (final DBException e) {
-			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
-					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
-					.withShouldEndSession(Boolean.FALSE).build();
-			/**
-			 * right now, the only other specific option we take care of is the option that
-			 * we didn't find the portion units in the DB or in our modules.
-			 */
+			final FoodsDB db =new FoodsDB();
+			db.UserAte(UserEmail, added_food, Portion.toGrams(units, amount));
 		} catch (final Exception e) {
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
 					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
