@@ -136,7 +136,7 @@ public  class PortionSearchEngineTest {
 	
 	@Test
 	public void compareOldVsNewAlgorithm() {
-		Pair<SearchResults,Portion> tempPair=PortionSearchEngine.PortionSearch("bean","gram",Portion.Type.FOOD,1);
+		Pair<SearchResults,Portion> tempPair=PortionSearchEngine.PortionSearch("date","gram",Portion.Type.FOOD,1);
 		System.out.println(tempPair.getName());
 		System.out.println(tempPair.getValue().name);
 

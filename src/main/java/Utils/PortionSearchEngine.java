@@ -233,7 +233,10 @@ public class PortionSearchEngine {
 					+ freeTextToReq + "&ds=Standard%20Reference&sort=r&max=" + MAX_ELEMENTS_WITHOUT_RAW
 					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 			final JSONObject responseWithRaw = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="
-					+ freeTextToReq + "%20raw" + "&ds=Standard%20Reference&sort=r&max=" + MAX_ELEMENTS_WITH_RAW
+					+ freeTextToReq + "%20raw" + "&0&max=" + MAX_ELEMENTS_WITH_RAW
+					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
+			final JSONObject responseWithBranded = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="
+					+ freeTextToReq +"&ds=Branded%20Food%20Products&sort=r&max=" + MAX_ELEMENTS_WITH_BRANDED
 					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 
 			List<Pair<String, String>> portion_list = new ArrayList<>();
@@ -264,13 +267,13 @@ public class PortionSearchEngine {
 			}
 
 			// check for error in the "WithBranded" request
-			if (responseWithRaw.has("list")) {
-				int sizeBranded = responseWithRaw.getJSONObject("list").getInt("end");
+			if (responseWithBranded.has("list")) {
+				int sizeBranded = responseWithBranded.getJSONObject("list").getInt("end");
 				for (int i = 0; i < sizeBranded; i++)
 					portion_list.add(new Pair<String, String>(
-							responseWithRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
+							responseWithBranded.getJSONObject("list").getJSONArray("item").getJSONObject(i)
 									.getString("name"),
-							responseWithRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
+							responseWithBranded.getJSONObject("list").getJSONArray("item").getJSONObject(i)
 									.getString("ndbno")));
 
 			}
