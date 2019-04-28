@@ -22,11 +22,13 @@ public class PortionSearchEngine {
 
 	private static final String MAX_ELEMENTS_WITHOUT_RAW = "5";
 	private static final String MAX_ELEMENTS_WITH_RAW = "2";
+	private static final String MAX_ELEMENTS_WITH_BRANDED = "2";
 	private static final String[] Nutritional_values = { "Energy", "Protein", "Carbohydrate, by difference",
 			"Total lipid (fat)" };
 
 	public enum SearchResults {
-		SEARCH_FULL_SUCCESS, SEARCH_GOOD_ESTIMATED_SUCCESS,SEARCH_BAD_ESTIMATED_SUCCESS, SEARCH_NO_RESULTS, SEARCH_ERROR
+		SEARCH_FULL_SUCCESS, SEARCH_GOOD_ESTIMATED_SUCCESS, SEARCH_BAD_ESTIMATED_SUCCESS, SEARCH_NO_RESULTS,
+		SEARCH_ERROR
 	}
 
 	/**
@@ -36,11 +38,11 @@ public class PortionSearchEngine {
 	 * @return number of words in the given sentence
 	 */
 	static int NumOfWordsInSentence(String str) {
-		
+
 		String cleanStr = str.replaceAll("-", " ");
 		cleanStr = cleanStr.trim().replaceAll(" +", " ");
 		boolean spareSpacesFlag = false;
-		int count = cleanStr.isEmpty()? 0 : 1;
+		int count = cleanStr.isEmpty() ? 0 : 1;
 		for (int i = 0; i < cleanStr.length(); i++) {
 			if (cleanStr.charAt(i) != ' ')
 				spareSpacesFlag = true;
@@ -62,7 +64,7 @@ public class PortionSearchEngine {
 		String cleanStr = str.replaceAll("-", " ");
 		// rule 2: No parenthesis
 		cleanStr = cleanStr.replaceAll("\\(.*\\)", " ");
-		
+
 		// rule 3: No spare spaces
 		// rule 4: No leading or trailing whitespace
 		cleanStr = cleanStr.trim().replaceAll(" +", " ");
@@ -96,7 +98,7 @@ public class PortionSearchEngine {
 	 * @param unit      - the measuring unit
 	 * @return the rate of str according to the search string searchStr
 	 */
-	static double ComputeRate(String searchStr, String unit, String str,final boolean convertionExists) {
+	static double ComputeRate(String searchStr, String unit, String str, final boolean convertionExists) {
 		String cleanSearchStr = StringToCanonicalForm(searchStr);
 		String cleanStr = StringToCanonicalForm(str);
 
@@ -108,9 +110,9 @@ public class PortionSearchEngine {
 			countOccurrences += CountOccurrencesOfSubstring(cleanStr, word);
 
 		double rate = countOccurrences / ((double) numOfWords);
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		// Now it handles any kind of conversion
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		if (convertionExists)
 			rate += 1;
 		else if (cleanStr.contains("raw"))
@@ -118,48 +120,63 @@ public class PortionSearchEngine {
 
 		return rate;
 	}
-	
+
 	/**
 	 * @author Shaked Sapir
-	 * @param units - the portion units provided by user
+	 * @param units  - the portion units provided by user
 	 * @param amount - the portion quantity / amount provided by user
-	 * @return the amount of portion after the conversion if a proper conversion exists, otherwise -1
-	 * @throws NoSuchMethodException if the converter has no proper method for @code units
+	 * @return the amount of portion after the conversion if a proper conversion
+	 *         exists, otherwise -1
+	 * @throws NoSuchMethodException if the converter has no proper method for @code
+	 *                               units
 	 */
-	
-	static double CheckConvertions(final String units, final double amount) throws Exception{
-		String post_processed_units = "s".equals(units.substring(units.length() - 1))? units : units+"s";
+
+	static double CheckConvertions(final String units, final double amount) throws Exception {
+		String post_processed_units = "s".equals(units.substring(units.length() - 1)) ? units : units + "s";
 		double unit_to_g = 0.0, unit_to_l = 0.0;
 		try {
-			/** now we can find the right converter-method to invoke for solids, using reflection*/
-			String converter_to_grams_func_name = post_processed_units+"ToGrams";
-			Method grams_converter_method = Class.forName(UnitsConverter.class.getName()).
-					getDeclaredMethod(converter_to_grams_func_name, double.class);
-			
-			/** calculate the amount in grams of the original unit**/
-			unit_to_g = (double) grams_converter_method.invoke(UnitsConverter.class,amount);
-			/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
+			/**
+			 * now we can find the right converter-method to invoke for solids, using
+			 * reflection
+			 */
+			String converter_to_grams_func_name = post_processed_units + "ToGrams";
+			Method grams_converter_method = Class.forName(UnitsConverter.class.getName())
+					.getDeclaredMethod(converter_to_grams_func_name, double.class);
 
-		} catch(NoSuchMethodException  e) {
-			/** TODO if reached here, then we have a lack in conversion methods, we should add
-			 *  one and notify the user about this
+			/** calculate the amount in grams of the original unit **/
+			unit_to_g = (double) grams_converter_method.invoke(UnitsConverter.class, amount);
+			/**
+			 * probably we dont have to calc the exact amount as it is calculated in
+			 * DailyInfo.java
+			 **/
+
+		} catch (NoSuchMethodException e) {
+			/**
+			 * TODO if reached here, then we have a lack in conversion methods, we should
+			 * add one and notify the user about this
 			 */
 			unit_to_g = -1;
 		}
 		try {
-			/** now we can find the right converter-method to invoke for liquids, using reflection*/
-			String converter_to_liters_func_name = post_processed_units+"ToLiters";
-			Method liters_converter_method = Class.forName(UnitsConverter.class.getName()).
-					getDeclaredMethod(converter_to_liters_func_name, double.class);
-			
-			
-			/** calculate the amount in grams of the original unit**/
-			unit_to_l = (double) liters_converter_method.invoke(UnitsConverter.class,amount);
-			/** probably we dont have to calc the exact amount as it is calculated in DailyInfo.java**/
+			/**
+			 * now we can find the right converter-method to invoke for liquids, using
+			 * reflection
+			 */
+			String converter_to_liters_func_name = post_processed_units + "ToLiters";
+			Method liters_converter_method = Class.forName(UnitsConverter.class.getName())
+					.getDeclaredMethod(converter_to_liters_func_name, double.class);
 
-		} catch(NoSuchMethodException  e) {
-			/** TODO if reached here, then we have a lack in conversion methods, we should add
-			 *  one and notify the user about this
+			/** calculate the amount in grams of the original unit **/
+			unit_to_l = (double) liters_converter_method.invoke(UnitsConverter.class, amount);
+			/**
+			 * probably we dont have to calc the exact amount as it is calculated in
+			 * DailyInfo.java
+			 **/
+
+		} catch (NoSuchMethodException e) {
+			/**
+			 * TODO if reached here, then we have a lack in conversion methods, we should
+			 * add one and notify the user about this
 			 */
 			unit_to_l = -1;
 		}
@@ -209,14 +226,18 @@ public class PortionSearchEngine {
 	public static Pair<SearchResults, Portion> PortionSearch(String freeText, String unit, final Portion.Type t,
 			double amount) {
 		try {
-			String freeTextToReq=freeText.replaceAll(" ", "%20");
-			freeTextToReq=freeTextToReq.toLowerCase();
+			String freeTextToReq = freeText.replaceAll(" ", "%20");
+			freeTextToReq = freeTextToReq.toLowerCase();
 			// Do the requests
 			final JSONObject responseWithoutRaw = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="
 					+ freeTextToReq + "&ds=Standard%20Reference&sort=r&max=" + MAX_ELEMENTS_WITHOUT_RAW
 					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 			final JSONObject responseWithRaw = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="
 					+ freeTextToReq + "%20raw" + "&ds=Standard%20Reference&sort=r&max=" + MAX_ELEMENTS_WITH_RAW
+					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
+
+			final JSONObject responseWithBranded = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="
+					+ freeTextToReq + "%20raw" + "&ds=Branded%20Food%20Products&sort=r&max=" + MAX_ELEMENTS_WITH_BRANDED
 					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 
 			List<Pair<String, String>> portion_list = new ArrayList<>();
@@ -245,13 +266,26 @@ public class PortionSearchEngine {
 
 			}
 
+			// check for error in the "WithBranded" request
+			if (responseWithRaw.has("list")) {
+				int sizeBranded = responseWithRaw.getJSONObject("list").getInt("end");
+				for (int i = 0; i < sizeBranded; i++)
+					portion_list.add(new Pair<String, String>(
+							responseWithRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
+									.getString("name"),
+							responseWithRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
+									.getString("ndbno")));
+
+			}
+
 			if (portion_list.isEmpty())
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_NO_RESULTS, null);
 
 			portion_list.sort(new Comparator<Pair<String, String>>() {
 				@Override
 				public int compare(Pair<String, String> p1, Pair<String, String> p2) {
-					double res = ComputeRate(freeText, unit, p1.getName(),false) - ComputeRate(freeText, unit, p2.getName(),false);
+					double res = ComputeRate(freeText, unit, p1.getName(), false)
+							- ComputeRate(freeText, unit, p2.getName(), false);
 					if (res > 0)
 						return -1;
 					if (res < 0)
@@ -285,19 +319,19 @@ public class PortionSearchEngine {
 
 			final JSONArray nut_arr = nutrientsResponse.getJSONObject("report").getJSONObject("food")
 					.getJSONArray("nutrients");
-			
-			//TODO: change the '1' to either the proper conversion, if exists, or :
-			//TODO: the default USDA's gram units for some label that we need to choose
-			Portion portion=GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(),1);
-			
+
+			// TODO: change the '1' to either the proper conversion, if exists, or :
+			// TODO: the default USDA's gram units for some label that we need to choose
+			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), 1);
+
 			/** set the boolean flag to "true" if the conversion exists **/
-			final boolean convertionExists = CheckConvertions(unit,amount)>-1;
-			double rateFirst = ComputeRate(freeText, unit, portion_list.get(0).getName(),convertionExists);
-			if (rateFirst < 1 / 3) 
+			final boolean convertionExists = CheckConvertions(unit, amount) > -1;
+			double rateFirst = ComputeRate(freeText, unit, portion_list.get(0).getName(), convertionExists);
+			if (rateFirst < 1 / 3)
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_BAD_ESTIMATED_SUCCESS, portion);
-			else 
+			else
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, portion);
-			
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return new Pair<SearchResults, Portion>(SearchResults.SEARCH_ERROR, null);
