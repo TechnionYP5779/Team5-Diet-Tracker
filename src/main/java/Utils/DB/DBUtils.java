@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import Utils.CustomFood;
 import Utils.DailyInfo;
 import Utils.Portion.Portion;
 import Utils.User.UserInfo;
@@ -613,5 +614,42 @@ public class DBUtils {
 			throw new DBException();
 		}
 		return dayList;
+	}
+
+	public void pushCustomFood(final CustomFood food) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
+		try {
+			if (dbRef != null)
+				dbRef.push().setValueAsync(food).get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new DBException();
+		}
+	}
+
+	public List<Pair<String, CustomFood>> getCustomFoods() throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
+		final List<Pair<String, CustomFood>> foodsList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot foodSnapshot : s.getChildren())
+					foodsList.add(new Pair<>(foodSnapshot.getKey(), foodSnapshot.getValue(CustomFood.class)));
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+		return foodsList;
 	}
 }
