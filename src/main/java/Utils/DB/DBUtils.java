@@ -626,7 +626,7 @@ public class DBUtils {
 		}
 	}
 
-	public List<Pair<String, CustomFood>> getCustomFoods() throws DBException {
+	public List<Pair<String, CustomFood>> DBGetCustomFoods() throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
 		final List<Pair<String, CustomFood>> foodsList = new LinkedList<>();
 		final CountDownLatch done = new CountDownLatch(1);
@@ -651,5 +651,31 @@ public class DBUtils {
 			throw new DBException();
 		}
 		return foodsList;
+	}
+
+	public CustomFood DBGetCustomFoodByKey(final String food_key) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods").child(food_key);
+		final List<CustomFood> foodList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		if (dbRef == null)
+			return foodList.isEmpty() ? null : foodList.get(0);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				foodList.add(s.getValue(CustomFood.class));
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			throw new DBException();
+		}
+		return foodList.isEmpty() ? null : foodList.get(0);
 	}
 }
