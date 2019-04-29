@@ -616,7 +616,7 @@ public class DBUtils {
 		return dayList;
 	}
 
-	public void pushCustomFood(final CustomFood food) throws DBException {
+	public void DBPushCustomFood(final CustomFood food) throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
 		try {
 			if (dbRef != null)
