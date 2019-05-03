@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers.TestAPI;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.API;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -53,7 +53,7 @@ public class APIate  implements RequestHandler{
 			FoodsDB db =new FoodsDB();
 			db.UserAte(email, foodSlot.getValue(), Integer.parseInt(numberSlot.getValue()));
 		} catch (FoodsDBException e) {
-			speechText = repromptText = "server error occured";
+			speechText = repromptText = e.specError();
 		}
 		
 		return input.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)

@@ -9,10 +9,10 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AgeHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CigarettesHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers.HowManyDrinksIntentHandler;
-import Team5.Fitnesspeaker.AlexaCommunication.Handlers.EmailHandlers.*;
-import Team5.Fitnesspeaker.AlexaCommunication.Handlers.FoodHandlers.*;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.EmailHandlers.*;import Team5.Fitnesspeaker.AlexaCommunication.Handlers.FoodHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.GoalsHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.WeightHeightBMIHandlers.*;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.API.*;
 
 /**
  * this class initializes the intents handlers
@@ -36,7 +36,8 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new SendWeightProgressMailIntentHandler(), new SendWeeklyMailIntentHandler(),
 						new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),
 						new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler(),
-						new AddWeightGoalIntentHandler(), new PeriodicWeightProgressIntentHandler())
+						new AddWeightGoalIntentHandler(), new PeriodicWeightProgressIntentHandler(),
+						new APIate())
 				.withSkillId(skillID).build();
 	}
 

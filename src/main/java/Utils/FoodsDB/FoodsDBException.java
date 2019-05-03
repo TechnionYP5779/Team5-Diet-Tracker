@@ -12,7 +12,7 @@ public class FoodsDBException extends Exception {
 	
 	protected FoodsDBException() {}
 	
-	String specError() { return new String(error);}
+	public String specError() { return new String(error);}
 	
 
 }
