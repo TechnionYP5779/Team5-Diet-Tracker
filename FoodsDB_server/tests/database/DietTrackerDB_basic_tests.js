@@ -47,7 +47,7 @@ var deleteAteTest = {
   };
 
   var getAteTodayAmountTest = {
-    success: function() {
+    success: function(res) {
       db.deleteAte(deleteAteTest);
     },
     failure: function() {
