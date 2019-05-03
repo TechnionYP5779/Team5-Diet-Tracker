@@ -37,7 +37,7 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 						new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),
 						new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler(),
 						new AddWeightGoalIntentHandler(), new PeriodicWeightProgressIntentHandler(),
-						new APIate())
+						new APIate(), new APIgetValues())
 				.withSkillId(skillID).build();
 	}
 
