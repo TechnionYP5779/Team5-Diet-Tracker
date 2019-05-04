@@ -1,26 +1,28 @@
 package Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import Utils.Portion.Portion;
+import Utils.Portion.Portion.Type;
 
 //For now doesn't have portion list - maybe should add
 
 public class CustomFood {
 	public final String name;
 	public Date time;
-	//public List<Portion> portions;
+	// public List<Portion> portions;
 	public double calories;
 	public double proteins;
 	public double carbs;
 	public double fats;
-	
+
 	public CustomFood() {
 		this.name = "garbage";
 		this.time = new Date();
-		//this.portions = new ArrayList<>();
+		// this.portions = new ArrayList<>();
 		this.calories = 0;
 		this.proteins = 0;
 		this.carbs = 0;
@@ -30,19 +32,18 @@ public class CustomFood {
 	public CustomFood(String name) {
 		this.name = name;
 		this.time = new Date();
-		//this.portions = new ArrayList<>();
+		// this.portions = new ArrayList<>();
 		this.calories = 0;
 		this.proteins = 0;
 		this.carbs = 0;
 		this.fats = 0;
 	}
-	
-	public CustomFood(String name, Date time, double calories, double proteins, double carbs,
-			double fats) {
+
+	public CustomFood(String name, Date time, double calories, double proteins, double carbs, double fats) {
 		super();
 		this.name = name;
 		this.time = time;
-		//this.portions = new ArrayList<>(portions);
+		// this.portions = new ArrayList<>(portions);
 		this.calories = calories;
 		this.proteins = proteins;
 		this.carbs = carbs;
@@ -56,7 +57,7 @@ public class CustomFood {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		final CustomFood food = (CustomFood) o;
-		return this.name.equals(food.name) && this.time.equals(food.time) 
+		return this.name.equals(food.name) && this.time.equals(food.time)
 				&& Double.compare(this.calories, food.calories) == 0
 				&& Double.compare(this.proteins, food.proteins) == 0 && Double.compare(this.carbs, food.carbs) == 0
 				&& Double.compare(this.fats, food.fats) == 0;
@@ -64,7 +65,10 @@ public class CustomFood {
 
 	@Override
 	public String toString() {
-		return name + " taken in " + time + ".\nhas:\n";
+		return "Portion name: " + this.name + "."
+				+ "\n----------------------------------\nNutritional Values per 100 grams:\nCalories: " + this.calories
+				+ "\nProteins: " + this.proteins + "\nCarbohydrates: " + this.carbs + "\nFats: " + this.fats
+				+ "\nAlchohol by volume: " + (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time);
 	}
 
 	public Date getTime() {
@@ -74,7 +78,6 @@ public class CustomFood {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-
 
 	public String getName() {
 		return name;
