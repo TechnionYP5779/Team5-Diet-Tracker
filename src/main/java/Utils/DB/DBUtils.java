@@ -3,6 +3,7 @@ package Utils.DB;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -626,15 +627,17 @@ public class DBUtils {
 		}
 	}
 
-	public List<Pair<String, CustomFood>> DBGetCustomFoods() throws DBException {
+	public HashMap<String, CustomFood> DBGetCustomFoods() throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
-		final List<Pair<String, CustomFood>> foodsList = new LinkedList<>();
+		final HashMap<String, CustomFood> foodsMap = new HashMap<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				for (final DataSnapshot foodSnapshot : s.getChildren())
-					foodsList.add(new Pair<>(foodSnapshot.getKey(), foodSnapshot.getValue(CustomFood.class)));
+				for (final DataSnapshot foodSnapshot : s.getChildren()) {
+					CustomFood f = foodSnapshot.getValue(CustomFood.class);
+					foodsMap.put(f.getName(), f);
+				}
 				done.countDown();
 			}
 
@@ -650,32 +653,6 @@ public class DBUtils {
 			// should not get here, if it does, it is database error- nothing we can do
 			throw new DBException();
 		}
-		return foodsList;
-	}
-
-	public CustomFood DBGetCustomFoodByKey(final String food_key) throws DBException {
-		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods").child(food_key);
-		final List<CustomFood> foodList = new LinkedList<>();
-		final CountDownLatch done = new CountDownLatch(1);
-		if (dbRef == null)
-			return foodList.isEmpty() ? null : foodList.get(0);
-		dbRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(final DataSnapshot s) {
-				foodList.add(s.getValue(CustomFood.class));
-				done.countDown();
-			}
-
-			@Override
-			public void onCancelled(final DatabaseError e) {
-				System.out.println("The read failed: " + e.getCode());
-			}
-		});
-		try {
-			done.await();
-		} catch (final InterruptedException e1) {
-			throw new DBException();
-		}
-		return foodList.isEmpty() ? null : foodList.get(0);
+		return foodsMap;
 	}
 }

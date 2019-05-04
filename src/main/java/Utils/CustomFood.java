@@ -6,23 +6,47 @@ import java.util.List;
 
 import Utils.Portion.Portion;
 
+//For now doesn't have portion list - maybe should add
+
 public class CustomFood {
 	public final String name;
 	public Date time;
-	public List<Portion> portions;
+	//public List<Portion> portions;
 	public double calories;
 	public double proteins;
 	public double carbs;
 	public double fats;
-
-	public CustomFood(String name) {
-		this.name = name;
+	
+	public CustomFood() {
+		this.name = "garbage";
 		this.time = new Date();
-		this.portions = new ArrayList<>();
+		//this.portions = new ArrayList<>();
 		this.calories = 0;
 		this.proteins = 0;
 		this.carbs = 0;
 		this.fats = 0;
+	}
+
+	public CustomFood(String name) {
+		this.name = name;
+		this.time = new Date();
+		//this.portions = new ArrayList<>();
+		this.calories = 0;
+		this.proteins = 0;
+		this.carbs = 0;
+		this.fats = 0;
+	}
+	
+	public CustomFood(String name, Date time, double calories, double proteins, double carbs,
+			double fats) {
+		super();
+		this.name = name;
+		this.time = time;
+		//this.portions = new ArrayList<>(portions);
+		this.calories = calories;
+		this.proteins = proteins;
+		this.carbs = carbs;
+		this.fats = fats;
 	}
 
 	@Override
@@ -32,7 +56,7 @@ public class CustomFood {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		final CustomFood food = (CustomFood) o;
-		return this.name.equals(food.name) && this.time.equals(food.time) && this.portions.equals(food.portions)
+		return this.name.equals(food.name) && this.time.equals(food.time) 
 				&& Double.compare(this.calories, food.calories) == 0
 				&& Double.compare(this.proteins, food.proteins) == 0 && Double.compare(this.carbs, food.carbs) == 0
 				&& Double.compare(this.fats, food.fats) == 0;
@@ -40,7 +64,7 @@ public class CustomFood {
 
 	@Override
 	public String toString() {
-		return name + " taken in " + time + ".\nhas:\n" + portions.toString();
+		return name + " taken in " + time + ".\nhas:\n";
 	}
 
 	public Date getTime() {
@@ -51,20 +75,13 @@ public class CustomFood {
 		this.time = time;
 	}
 
-	public List<Portion> getPortions() {
-		return portions;
-	}
-
-	public void setPortions(List<Portion> portions) {
-		this.portions = portions;
-	}
 
 	public String getName() {
 		return name;
 	}
 
 	public void addPortion(Portion p) {
-		this.portions.add(p);
+//		this.portions.add(p);
 		this.calories = p.getCalories_per_100_grams() * p.getAmount();
 		this.fats = p.getFats_per_100_grams() * p.getAmount();
 		this.carbs = p.getCarbs_per_100_grams() * p.getAmount();

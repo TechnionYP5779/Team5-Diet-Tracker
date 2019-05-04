@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -192,21 +193,30 @@ public class DBUtilsTest {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
-		assertNull(db.DBGetCustomFoodByKey("123"));
 		assert db.DBGetCustomFoods().isEmpty();
 		Portion banana = PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, 52, "grams");
 		Portion apple = PortionRequestGen.generatePortionWithAmount("apple", Type.FOOD, 52, "grams");
 		Portion orange = PortionRequestGen.generatePortionWithAmount("orange", Type.FOOD, 52, "grams");
+		Portion tomato = PortionRequestGen.generatePortionWithAmount("tomato", Type.FOOD, 52, "grams");
+		Portion cucumber = PortionRequestGen.generatePortionWithAmount("cucumber", Type.FOOD, 52, "grams");
 		CustomFood fruitSalad = new CustomFood("fruit_salad");
 		fruitSalad.addPortion(banana);
 		fruitSalad.addPortion(apple);
 		fruitSalad.addPortion(orange);
+		CustomFood salad = new CustomFood("salad");
+		fruitSalad.addPortion(tomato);
+		fruitSalad.addPortion(cucumber);
 		db.DBPushCustomFood(fruitSalad);
-//		CustomFood f = db.DBGetCustomFoodByKey("fruit_salad");
-//		assertNotNull(f);
-//		assertEquals("fruit_salad", f.getName());
-//		List<Pair<String, CustomFood>>  lf =  db.DBGetCustomFoods();
-//		assertNotNull(lf);
+		db.DBPushCustomFood(salad);
+		HashMap<String, CustomFood>  lf =  db.DBGetCustomFoods();
+		assertNotNull(lf);
+		assert !lf.isEmpty();
+		CustomFood f = lf.get("fruit_salad");
+		assertEquals("fruit_salad", f.getName());
+		assertEquals(fruitSalad, f);
+		CustomFood ff = lf.get("salad");
+		assertEquals("salad", ff.getName());
+		assertEquals(salad, ff);
 		db.DBUtilsRemoveUserDirectory();
 	}
 }
