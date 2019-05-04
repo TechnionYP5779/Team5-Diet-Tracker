@@ -10,11 +10,19 @@ public class CustomFood {
 	public final String name;
 	public Date time;
 	public List<Portion> portions;
+	public double calories;
+	public double proteins;
+	public double carbs;
+	public double fats;
 
 	public CustomFood(String name) {
 		this.name = name;
 		this.time = new Date();
 		this.portions = new ArrayList<>();
+		this.calories = 0;
+		this.proteins = 0;
+		this.carbs = 0;
+		this.fats = 0;
 	}
 
 	@Override
@@ -24,7 +32,10 @@ public class CustomFood {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		final CustomFood food = (CustomFood) o;
-		return this.name.equals(food.name) && this.time.equals(food.time) && this.portions.equals(food.portions);
+		return this.name.equals(food.name) && this.time.equals(food.time) && this.portions.equals(food.portions)
+				&& Double.compare(this.calories, food.calories) == 0
+				&& Double.compare(this.proteins, food.proteins) == 0 && Double.compare(this.carbs, food.carbs) == 0
+				&& Double.compare(this.fats, food.fats) == 0;
 	}
 
 	@Override
@@ -54,5 +65,9 @@ public class CustomFood {
 
 	public void addPortion(Portion p) {
 		this.portions.add(p);
+		this.calories = p.getCalories_per_100_grams() * p.getAmount();
+		this.fats = p.getFats_per_100_grams() * p.getAmount();
+		this.carbs = p.getCarbs_per_100_grams() * p.getAmount();
+		this.proteins = p.getProteins_per_100_grams() * p.getAmount();
 	}
 }
