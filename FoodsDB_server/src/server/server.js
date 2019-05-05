@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 var DB = require("../database/DietTrackerDB");
 var fs = require('fs');
 var credInfo = JSON.parse(fs.readFileSync('../../creds/tests_creds.json', 'utf8'));
-var db = new DB(credInfo.host, credInfo.user, credInfo.password, credInfo.db);
+var db = new DB(credInfo.host, credInfo.user, credInfo.password, "dtdb");
 
 app.listen(8080, function() {
   console.log("Example app listening on port 8080!");
@@ -38,7 +38,14 @@ app.post("/food", function(req, res) {
 });
 
 app.post("/ate", function(req, res) {
-  db.addUserAte(req.body.email, req.body.food_name, req.body.amount, new postAction(res));
+  db.searchFood(req.body.food_name.split(" ").filter(x=>x!==""),{
+    success: function(result){
+      db.addUserAte(req.body.email,result, req.body.amount, new postAction(res));
+    },
+    failure: function(err){
+      res.json({ result: err.result });
+    }
+  });
 });
 
 app.get("/user", function(req, res) {
