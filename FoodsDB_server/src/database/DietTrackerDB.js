@@ -14,15 +14,18 @@ function makeDB(host, user, password, database) {
   this.createUsers = buildTables.createUsers;
   this.createFood = buildTables.creatFood;
   this.createAte = buildTables.createAte;
+  this.createPortion = buildTables.createPortion;
   this.deleteUsers = dropTables.deleteUsers;
-  this.deleteFood = dropTables.deleteFood;
+  this.deleteFoods = dropTables.deleteFood;
   this.deleteAte = dropTables.deleteAte;
   this.addUser = inserts.addUser;
   this.addFood = inserts.addFood;
   this.addUserAte = inserts.addUserAte;
+  this.addPortion = inserts.addPortion;
   this.getUser = gets.getUser;
   this.getAteTodayAmount = gets.getAteTodayAmount;
   this.deleteUser=deletes.deleteUser;
+  this.deleteFood=deletes.deleteFood;
   this.searchFood=foodsearches.searchFood;
   this.handler = function(status, action) {
     if (status.error) action.failure(status.error);

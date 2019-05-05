@@ -23,25 +23,15 @@ var assert = require("assert");
     }
   };
   
-  var deleteFoodTest = {
+  var deleteAteTest = {
     success: function() {
       db.deleteUsers(deleteUsersTest);
     },
     failure: function() {
-      assert.fail("failed at deleting food table");
+      assert.fail("failed at deleting ate table");
     }
   };
   
-  var deleteAteTest = {
-      success: function() {
-        db.deleteFood(deleteFoodTest);
-      },
-      failure: function() {
-        assert.fail("failed at deleting ate table");
-      }
-    };
-
-
   var values4NonExistingUserTest = {
     success: function() {
         assert.fail("a query for non existing user should not success");
@@ -60,7 +50,7 @@ var assert = require("assert");
   }
 };
 
-var createFoodTest = {
+var createUsersTest = {
   success: function() {
     db.createAte(createAteTest);
   },
@@ -69,13 +59,5 @@ var createFoodTest = {
   }
 };
 
-var createUsersTest = {
-  success: function() {
-    db.createFood(createFoodTest);
-  },
-  failure: function() {
-    assert.fail("failed at creating users table");
-  }
-};
 
 db.createUsers(createUsersTest);

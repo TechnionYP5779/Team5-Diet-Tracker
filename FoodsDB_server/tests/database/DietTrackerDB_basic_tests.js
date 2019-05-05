@@ -7,7 +7,7 @@ var assert = require("assert");
 // test objects
 
 var food = {
-  food_name: "Beef, cured, pastrami",
+  food_name: "Beef, SIMPLETEST, pastrami",
   Protein: 4,
   Fat: 1.2
 };
@@ -39,7 +39,7 @@ var deleteFoodTest = {
 
 var deleteAteTest = {
     success: function() {
-      db.deleteFood(deleteFoodTest);
+      db.deleteFood(food.food_name,deleteFoodTest);
     },
     failure: function() {
       assert.fail("failed at deleting ate table");
@@ -79,7 +79,8 @@ var addFoodTest={
     success: function() {
         db.addUserAte(user.email,food.food_name,100,addAteTest)
       },
-      failure: function() {
+      failure: function(err) {
+        console.log(err);
         assert.fail("failed at adding food");
       }
 }
@@ -102,18 +103,9 @@ var createAteTest = {
   }
 };
 
-var createFoodTest = {
-  success: function() {
-    db.createAte(createAteTest);
-  },
-  failure: function() {
-    assert.fail("failed at creating food table");
-  }
-};
-
 var createUsersTest = {
   success: function() {
-    db.createFood(createFoodTest);
+    db.createAte(createAteTest);
   },
   failure: function() {
     assert.fail("failed at creating users table");

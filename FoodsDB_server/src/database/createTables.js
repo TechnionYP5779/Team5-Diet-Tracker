@@ -59,4 +59,19 @@ function ca(action) {
     dbHandler({ error: err }, action);
   });
 }
-module.exports = { createUsers: cu, creatFood: cf, createAte: ca };
+
+function cp(action){
+  var pool = this.pool;
+  var dbHandler = this.handler;
+  var sql="CREATE TABLE portion (" +
+  "food_name VARCHAR(255)," +
+  "measure VARCHAR(255)," +
+  "weight INT NOT NULL," +
+  "FOREIGN KEY (food_name) REFERENCES food(food_name) ON DELETE CASCADE" +
+  ")";;
+  pool.query(sql,function(err){
+    dbHandler({error: err},action);
+  })
+}
+
+module.exports = { createUsers: cu, creatFood: cf, createAte: ca ,createPortion: cp};

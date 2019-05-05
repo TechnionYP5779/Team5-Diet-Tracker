@@ -22,23 +22,15 @@ var user = {
     }
   };
   
-  var deleteFoodTest = {
+  var deleteAteTest = {
     success: function() {
       db.deleteUsers(deleteUsersTest);
     },
     failure: function() {
-      assert.fail("failed at deleting food table");
+      assert.fail("failed at deleting ate table");
     }
   };
   
-  var deleteAteTest = {
-      success: function() {
-        db.deleteFood(deleteFoodTest);
-      },
-      failure: function() {
-        assert.fail("failed at deleting ate table");
-      }
-    };
 
   var addUserTest2 = {
     success: function() {
@@ -76,22 +68,14 @@ var user = {
     }
   };
   
-  var createFoodTest = {
-    success: function() {
-      db.createAte(createAteTest);
-    },
-    failure: function() {
-      assert.fail("failed at creating food table");
-    }
-  };
-  
   var createUsersTest = {
     success: function() {
-      db.createFood(createFoodTest);
+      db.createAte(createAteTest);
     },
     failure: function() {
       assert.fail("failed at creating users table");
     }
   };
+  
 
 db.createUsers(createUsersTest);

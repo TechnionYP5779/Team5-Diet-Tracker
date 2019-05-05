@@ -29,6 +29,14 @@ db_credentials.json
 /Team5-Fitnesspeaker/FoodsDB_server/creds/
 tests_creds.json
 
+/Team5-Fitnesspeaker/FoodsDB_server/creds/
+production_creds.json
+
+/Team5-Fitnesspeaker/FoodsDB_server/scripts/
+foodNut.xlsx
+
+/Team5-Fitnesspeaker/FoodsDB_server/scripts/
+foodPortion.xlsx
 
 /Team5-Fitnesspeaker/FoodsDB_server/
 server_key.pem

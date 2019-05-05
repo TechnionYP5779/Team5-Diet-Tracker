@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require("body-parser");
 var DB = require("../database/DietTrackerDB");
 var fs = require('fs');
-var credInfo = JSON.parse(fs.readFileSync('../../creds/tests_creds.json', 'utf8'));
+var credInfo = JSON.parse(fs.readFileSync('../../creds/production_creds.json', 'utf8'));
 var db = new DB(credInfo.host, credInfo.user, credInfo.password, "dtdb");
 
 app.listen(8080, function() {
@@ -40,7 +40,12 @@ app.post("/food", function(req, res) {
 app.post("/ate", function(req, res) {
   db.searchFood(req.body.food_name.split(" ").filter(x=>x!==""),{
     success: function(result){
+      if(result===null || result===undefined){
+        res.json({ result: "food not found" });
+      }
+      else{
       db.addUserAte(req.body.email,result, req.body.amount, new postAction(res));
+      }
     },
     failure: function(err){
       res.json({ result: err.result });

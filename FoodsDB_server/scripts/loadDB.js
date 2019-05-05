@@ -1,4 +1,7 @@
-var db = require("./DietTrackerDB");
+var DB = require("./../src/database/DietTrackerDB");
+var fs = require('fs');
+var credInfo = JSON.parse(fs.readFileSync('../creds/tests_creds.json', 'utf8'));
+var db = new DB(credInfo.host, credInfo.user, credInfo.password, credInfo.db);
 var XLSX = require("xlsx");
 
 tagMeaning = {
@@ -26,7 +29,7 @@ tagMeaning = {
 // read and parse foods.xslx
 
 var data = [];
-var workbook = XLSX.readFile("foods.xlsx");
+var workbook = XLSX.readFile("foodNut.xlsx");
 var sheet_name_list = workbook.SheetNames;
 sheet_name_list.forEach(function(y) {
   var worksheet = workbook.Sheets[y];
@@ -65,6 +68,11 @@ sheet_name_list.forEach(function(y) {
 var currFood = {};
 var foods = [];
 var i = 0;
+var emptyAction={
+  success: f=>{},
+  failure: f=>{}
+};
+
 
 data.forEach(function f(foodInfo) {
   if (foodInfo["Long_Desc"] !== currFood["food_name"]) {
@@ -80,7 +88,5 @@ data.forEach(function f(foodInfo) {
 
 foods[i] = currFood;
 for (var j = 1; j <= i; j++) {
-  db.addFood(foods[j]);
+  db.addFood(foods[j],emptyAction);
 }
-
-db.closeCon();

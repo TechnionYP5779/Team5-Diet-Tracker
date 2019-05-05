@@ -37,7 +37,7 @@ function addFood(food, action) {
 function addUser(user, action) {
   var pool = this.pool;
   var dbHandler = this.handler;
-  sql = "INSERT INTO users (email) VALUES ?";
+  var sql = "INSERT INTO users (email) VALUES ?";
   var values = [[user.email]];
   pool.query(sql, [values], function(err) {
     dbHandler({ error: err }, action);
@@ -48,7 +48,7 @@ function addUserAte(email, food_name, amount, action) {
   var pool = this.pool;
   var dbHandler = this.handler;
   var d = new Date();
-  sql = "INSERT INTO ate (email, food_name, at_time, amount) VALUES ?";
+  var sql = "INSERT INTO ate (email, food_name, at_time, amount) VALUES ?";
   var values = [
     [
       email,
@@ -72,8 +72,25 @@ function addUserAte(email, food_name, amount, action) {
   });
 }
 
+function addPortion({food_name,measure,weight},action){
+  var pool = this.pool;
+  var dbHandler = this.handler;
+  var sql =  "INSERT INTO portion (food_name, measure, weight) VALUES ?";
+  var values= [
+    [
+      food_name,
+      measure,
+      weight
+    ]
+  ];
+  pool.query(sql, [values], function(err) {
+    dbHandler({ error: err }, action);
+  });
+}
+
 module.exports = {
   addUser: addUser,
   addFood: addFood,
-  addUserAte
+  addUserAte: addUserAte,
+  addPortion: addPortion
 };
