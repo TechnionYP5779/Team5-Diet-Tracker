@@ -34,6 +34,7 @@ public class Strings {
 		public static final String WHAT_I_ATE_INTENT = "WhatIAteIntent";
 		public static final String WHAT_IS_MY_NAME_INTENT = "WhatIsMyNameIntent";
 		public static final String PERIODIC_WEIGHT_PROGRESS = "PeriodicWeightProgress";
+		public static final String ADD_CUSTOM_MEAL_INTENT = "AddCustomMeal";
 	}
 
 	public static class AgeStrings {
