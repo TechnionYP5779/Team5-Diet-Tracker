@@ -189,7 +189,7 @@ public class DBUtilsTest {
 	}
 
 	@Test
-	public void testCustomFoodHandling() throws DBException {
+	public void testCustomMealHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -199,22 +199,22 @@ public class DBUtilsTest {
 		Portion orange = PortionRequestGen.generatePortionWithAmount("orange", Type.FOOD, 52, "grams");
 		Portion tomato = PortionRequestGen.generatePortionWithAmount("tomato", Type.FOOD, 52, "grams");
 		Portion cucumber = PortionRequestGen.generatePortionWithAmount("cucumber", Type.FOOD, 52, "grams");
-		CustomFood fruitSalad = new CustomFood("fruit_salad");
+		CustomMeal fruitSalad = new CustomMeal("fruit_salad");
 		fruitSalad.addPortion(banana);
 		fruitSalad.addPortion(apple);
 		fruitSalad.addPortion(orange);
-		CustomFood salad = new CustomFood("salad");
+		CustomMeal salad = new CustomMeal("salad");
 		fruitSalad.addPortion(tomato);
 		fruitSalad.addPortion(cucumber);
 		db.DBPushCustomFood(fruitSalad);
 		db.DBPushCustomFood(salad);
-		HashMap<String, CustomFood>  lf =  db.DBGetCustomFoods();
+		HashMap<String, CustomMeal>  lf =  db.DBGetCustomFoods();
 		assertNotNull(lf);
 		assert !lf.isEmpty();
-		CustomFood f = lf.get("fruit_salad");
+		CustomMeal f = lf.get("fruit_salad");
 		assertEquals("fruit_salad", f.getName());
 		assertEquals(fruitSalad, f);
-		CustomFood ff = lf.get("salad");
+		CustomMeal ff = lf.get("salad");
 		assertEquals("salad", ff.getName());
 		assertEquals(salad, ff);
 		db.DBUtilsRemoveUserDirectory();

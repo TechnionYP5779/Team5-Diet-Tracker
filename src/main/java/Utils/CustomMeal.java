@@ -10,7 +10,7 @@ import Utils.Portion.Portion.Type;
 
 //For now doesn't have portion list - maybe should add
 
-public class CustomFood {
+public class CustomMeal {
 	public final String name;
 	public Date time;
 	// public List<Portion> portions;
@@ -19,7 +19,7 @@ public class CustomFood {
 	public double carbs;
 	public double fats;
 
-	public CustomFood() {
+	public CustomMeal() {
 		this.name = "garbage";
 		this.time = new Date();
 		// this.portions = new ArrayList<>();
@@ -29,7 +29,7 @@ public class CustomFood {
 		this.fats = 0;
 	}
 
-	public CustomFood(String name) {
+	public CustomMeal(String name) {
 		this.name = name;
 		this.time = new Date();
 		// this.portions = new ArrayList<>();
@@ -39,7 +39,7 @@ public class CustomFood {
 		this.fats = 0;
 	}
 
-	public CustomFood(String name, Date time, double calories, double proteins, double carbs, double fats) {
+	public CustomMeal(String name, Date time, double calories, double proteins, double carbs, double fats) {
 		super();
 		this.name = name;
 		this.time = time;
@@ -56,7 +56,7 @@ public class CustomFood {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		final CustomFood food = (CustomFood) o;
+		final CustomMeal food = (CustomMeal) o;
 		return this.name.equals(food.name) && this.time.equals(food.time)
 				&& Double.compare(this.calories, food.calories) == 0
 				&& Double.compare(this.proteins, food.proteins) == 0 && Double.compare(this.carbs, food.carbs) == 0

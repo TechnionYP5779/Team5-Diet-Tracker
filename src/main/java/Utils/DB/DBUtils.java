@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Utils.CustomFood;
+import Utils.CustomMeal;
 import Utils.DailyInfo;
 import Utils.Portion.Portion;
 import Utils.User.UserInfo;
@@ -617,7 +617,7 @@ public class DBUtils {
 		return dayList;
 	}
 
-	public void DBPushCustomFood(final CustomFood food) throws DBException {
+	public void DBPushCustomFood(final CustomMeal food) throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
 		try {
 			if (dbRef != null)
@@ -627,15 +627,15 @@ public class DBUtils {
 		}
 	}
 
-	public HashMap<String, CustomFood> DBGetCustomFoods() throws DBException {
+	public HashMap<String, CustomMeal> DBGetCustomFoods() throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
-		final HashMap<String, CustomFood> foodsMap = new HashMap<>();
+		final HashMap<String, CustomMeal> foodsMap = new HashMap<>();
 		final CountDownLatch done = new CountDownLatch(1);
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
 				for (final DataSnapshot foodSnapshot : s.getChildren()) {
-					CustomFood f = foodSnapshot.getValue(CustomFood.class);
+					CustomMeal f = foodSnapshot.getValue(CustomMeal.class);
 					foodsMap.put(f.getName(), f);
 				}
 				done.countDown();
