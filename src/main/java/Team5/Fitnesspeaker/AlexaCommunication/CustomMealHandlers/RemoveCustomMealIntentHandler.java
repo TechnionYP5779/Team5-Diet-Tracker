@@ -15,11 +15,11 @@ import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
 
-public class AddCustomMealIntentHandler implements RequestHandler {
+public class RemoveCustomMealIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(HandlerInput input) {
-		return input.matches(intentName(IntentsNames.ADD_CUSTOM_MEAL_INTENT));
+		return input.matches(intentName(IntentsNames.REMOVE_CUSTOM_MEAL_INTENT));
 	}
 
 	@Override
@@ -37,9 +37,9 @@ public class AddCustomMealIntentHandler implements RequestHandler {
 					.withShouldEndSession(Boolean.FALSE).build();
 		
 		//TODO check if custom meal already in users meals
-			//TODO if not then add it to users meals and tell him to say his ingredients
+			//TODO if not then tell him there is no such meal 
 			
-			//TODO if present then alert the user and tell him to delete it if he wants a new one in the same name
+			//TODO if present then remove the meal
 
 		return null;
 	}

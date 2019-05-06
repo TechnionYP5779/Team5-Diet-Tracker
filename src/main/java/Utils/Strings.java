@@ -35,6 +35,7 @@ public class Strings {
 		public static final String WHAT_IS_MY_NAME_INTENT = "WhatIsMyNameIntent";
 		public static final String PERIODIC_WEIGHT_PROGRESS = "PeriodicWeightProgress";
 		public static final String ADD_CUSTOM_MEAL_INTENT = "AddCustomMeal";
+		public static final String REMOVE_CUSTOM_MEAL_INTENT = "RemoveCustomMeal";
 	}
 
 	public static class AgeStrings {
@@ -84,6 +85,7 @@ public class Strings {
 		public static final String TELL_FOOD_UNITS_AGAIN = "I'm not sure about the units of what you ate, Please tell me again";
 		public static final String TELL_FOOD_UNITS_AGAIN_REPEAT = "I will repeat, I'm not sure about the units of what you ate, Please tell me again";
 		public static final String WATER_BEFORE_MEAL_TIP = " Remember to drink a cup of water before the meal. ";
+		public static final String TELL_CUSTOM_MEAL_AGAIN = "Tell your custom meal again.";
 	}
 
 	public static class HeightStrings {
@@ -191,6 +193,7 @@ public class Strings {
 		public static final String FOOD_SLOT = "Food";
 		public static final String UNIT_SLOT = "Unit";
 		public static final String MEASURE_SLOT = "Measure";
+		public static final String CUSTOM_MEAL_SLOT = "meal";
 	}
 
 	public static class NutritionalString {
