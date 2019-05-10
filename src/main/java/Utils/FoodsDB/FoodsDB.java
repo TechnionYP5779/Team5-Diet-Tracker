@@ -22,6 +22,7 @@ public class FoodsDB {
 			"  \"food_name\": \"%s\",\r\n" + 
 			"  \"email\": \"%s\",\r\n" + 
 			"  \"amount\": %d\r\n" + 
+			"  \"measure\": %s\r\n" + 
 			"}";
 	
 	
@@ -38,12 +39,12 @@ public class FoodsDB {
 		} 
 		
 	 }
-	 
-	public  void UserAte(String email, String food, int amount ) throws FoodsDBException {
+	
+	private void userAte_inn(String email, String food, int amount ,String measure) throws FoodsDBException {
 		 String res= new HttpSender()
 					.setMethod2POST()
 					.setUrl(url+"/ate")
-					.setJsonBody(String.format(ateAsJson, food,email,amount))
+					.setJsonBody(String.format(ateAsJson, food,email,amount,measure))
 					.send();
 		 
 		 // empty response means error when sending the request
@@ -61,11 +62,17 @@ public class FoodsDB {
 		 
 		  if(!result.equals("OK"))
 			  throw new databaseExc(result);
+	}
+	 
+	public  void UserAte(String email, String food, int amount ) throws FoodsDBException {
+		userAte_inn(email,food,amount,"grams");
 	 }
-	 
-	 
-	 
-	 
+	
+	
+	public  void UserAte(String email, String food, int amount ,String measure) throws FoodsDBException {
+		userAte_inn(email,food,amount,measure);
+	 }
+	 	 
 	 public JSONObject  NutVal4T4Today(String email) throws FoodsDBException {
 		 String res= new HttpSender()
 					.setMethod2GET()
