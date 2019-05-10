@@ -23,6 +23,38 @@ public class APIate  implements RequestHandler{
 		return input.matches(intentName("APIate"));
 	}
 
+	private String fit2USDA(String p) {
+		String res=p;
+	     switch(p) {
+		  case "ounces":
+		      res="oz";
+		      break;
+		  case "ounce":
+			    res="oz";
+			    break;
+		  case "tablespoons":
+			    res="tbsp";
+			    break;
+		  case "tablespoon":
+			    res="tbsp";
+			    break;
+		  case "pound":
+			    res="lb";
+			    break;
+		  case "pounds":
+			    res="lb";
+			    break;
+		  case "teaspoon":
+			    res="tsp";
+			    break;
+		  case "teaspoons":
+			    res="tsp";
+			    break;
+		  default:
+	}
+	     return res;
+}
+	
 	@Override
 	public Optional<Response> handle(HandlerInput input) {
 		
@@ -33,8 +65,11 @@ public class APIate  implements RequestHandler{
 		Slot  foodSlot = ((IntentRequest) input.getRequestEnvelope().getRequest()).getIntent().getSlots()
 			    .get(SlotString.FOOD_SLOT);
 		
+		Slot  portionSlot = ((IntentRequest) input.getRequestEnvelope().getRequest()).getIntent().getSlots()
+			    .get(SlotString.PORTION_SLOT);
+		
 		String speechText, repromptText = "";
-		if (numberSlot == null)
+		if (numberSlot == null && portionSlot==null)
 			return input.getResponseBuilder()
 					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, DrinkStrings.TELL_DRINKS_AMOUNT_AGAIN)
 					.withSpeech(DrinkStrings.TELL_DRINKS_AMOUNT_AGAIN)
@@ -51,6 +86,9 @@ public class APIate  implements RequestHandler{
 		speechText = repromptText = "logged successfully";
 		try {
 			FoodsDB db =new FoodsDB();
+			if(portionSlot!=null) {
+				db.UserAte(email,foodSlot.getValue(), (numberSlot == null) ? 1 : Integer.parseInt(numberSlot.getValue()),fit2USDA(portionSlot.getValue()));
+			}
 			db.UserAte(email, foodSlot.getValue(), Integer.parseInt(numberSlot.getValue()));
 		} catch (FoodsDBException e) {
 			speechText = repromptText = e.specError();
