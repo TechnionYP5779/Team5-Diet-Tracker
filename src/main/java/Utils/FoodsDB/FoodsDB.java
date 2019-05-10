@@ -60,7 +60,7 @@ public class FoodsDB {
 			}
 		 
 		  if(!result.equals("OK"))
-			  throw new databaseExc();
+			  throw new databaseExc(result);
 	 }
 	 
 	 

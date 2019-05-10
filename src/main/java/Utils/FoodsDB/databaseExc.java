@@ -10,5 +10,9 @@ public class databaseExc extends FoodsDBException{
 	public databaseExc() {
 		this.error="database exception";
 	}
+	
+	public databaseExc(String err) {
+		this.error=err;
+	}
 
 }
