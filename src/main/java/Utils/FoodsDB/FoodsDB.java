@@ -21,8 +21,8 @@ public class FoodsDB {
 	private final String ateAsJson ="{\r\n" + 
 			"  \"food_name\": \"%s\",\r\n" + 
 			"  \"email\": \"%s\",\r\n" + 
-			"  \"amount\": %d\r\n" + 
-			"  \"measure\": %s\r\n" + 
+			"  \"amount\": %d,\r\n" + 
+			"  \"measure\": \"%s\"\r\n" + 
 			"}";
 	
 	
