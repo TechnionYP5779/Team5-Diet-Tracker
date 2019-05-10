@@ -27,6 +27,7 @@ function makeDB(host, user, password, database) {
   this.deleteUser=deletes.deleteUser;
   this.deleteFood=deletes.deleteFood;
   this.searchFood=foodsearches.searchFood;
+  this.searchFoodWithPortion= foodsearches.searchFoodWithPortion;
   this.handler = function(status, action) {
     if (status.error) action.failure(status.error);
     else action.success(status.result);

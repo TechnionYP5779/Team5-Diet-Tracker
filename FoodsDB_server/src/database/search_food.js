@@ -48,6 +48,16 @@ var seachQuery=function(words){
     }
     return query;
 }
+var searchQueryWithPortion=function(words,portion){
+    var query="";
+    query="select food_name, weight from portion where measure like concat('%',"+mysql.escape(portion)+",'%') AND ("
+    for( i=0;i<words.length;i++){
+        query+="food_name like concat('%',"+mysql.escape(words[i])+",'%')";
+        query+= (i!== words.length-1) ? " OR " : "";
+    }
+    query+=" )";
+    return query;
+}
 
 
 var searchFood=function(words,action){
@@ -72,4 +82,26 @@ var searchFood=function(words,action){
       });
 }
 
-module.exports = { searchFood: searchFood};
+var searchFoodWithPortion=function(words,portion,action){
+    var pool = this.pool;
+    var dbHandler = this.handler;
+    words=words.map(w=> ((p.isPlural(w)) ? p.singular(w) : w));
+    words=words.map(w=> w.toLowerCase());
+    portion = (p.isPlural(portion) ) ? p.singular(portion) : portion;
+
+    var doubleWords=[];
+    for(i=0;i<words.length-1;i++){
+        doubleWords.push(words[i]+" "+words[i+1]);
+    }
+    query=searchQueryWithPortion(words,portion);
+    pool.query(query, function(err,res) {
+        if(!err)
+        var ranked = res.map(function(f){return {name:f.food_name, rank: rankFood(words,doubleWords,f.food_name), weight: f.weight}});
+        var bestFood= ranked.reduce(compareRanks,{rank:[13,0,0,0,0,0,0,0,0,0,0,0,0,0]});
+        if(bestFood.name===undefined)
+            bestFood=undefined;
+        dbHandler({ error: err, result:bestFood }, action);
+      });
+}
+
+module.exports = { searchFood: searchFood,searchFoodWithPortion: searchFoodWithPortion};
