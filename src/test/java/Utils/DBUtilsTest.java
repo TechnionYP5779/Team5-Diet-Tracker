@@ -193,7 +193,7 @@ public class DBUtilsTest {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
-		assert db.DBGetCustomFoods().isEmpty();
+		assert db.DBGetCustomMeals().isEmpty();
 		Portion banana = PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, 52, "grams");
 		Portion apple = PortionRequestGen.generatePortionWithAmount("apple", Type.FOOD, 52, "grams");
 		Portion orange = PortionRequestGen.generatePortionWithAmount("orange", Type.FOOD, 52, "grams");
@@ -206,9 +206,9 @@ public class DBUtilsTest {
 		CustomMeal salad = new CustomMeal("salad");
 		fruitSalad.addPortion(tomato);
 		fruitSalad.addPortion(cucumber);
-		db.DBPushCustomFood(fruitSalad);
-		db.DBPushCustomFood(salad);
-		HashMap<String, CustomMeal>  lf =  db.DBGetCustomFoods();
+		db.DBPushCustomMeal(fruitSalad);
+		db.DBPushCustomMeal(salad);
+		HashMap<String, CustomMeal>  lf =  db.DBGetCustomMeals();
 		assertNotNull(lf);
 		assert !lf.isEmpty();
 		CustomMeal f = lf.get("fruit_salad");

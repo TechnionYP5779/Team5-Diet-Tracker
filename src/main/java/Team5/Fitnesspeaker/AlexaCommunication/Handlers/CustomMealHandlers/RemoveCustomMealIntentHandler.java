@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.CustomMealHandlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -11,7 +11,7 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
 import Utils.Strings;
-import Utils.Strings.FoodStrings;
+import Utils.Strings.CustomMealStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
 
@@ -32,8 +32,8 @@ public class RemoveCustomMealIntentHandler implements RequestHandler {
 		
 		if (mealSLot == null)
 			return input.getResponseBuilder()
-					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_CUSTOM_MEAL_AGAIN)
-					.withSpeech(FoodStrings.TELL_CUSTOM_MEAL_AGAIN).withReprompt(FoodStrings.TELL_CUSTOM_MEAL_AGAIN)
+					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.TELL_CUSTOM_MEAL_AGAIN)
+					.withSpeech(CustomMealStrings.TELL_CUSTOM_MEAL_AGAIN).withReprompt(CustomMealStrings.TELL_CUSTOM_MEAL_AGAIN)
 					.withShouldEndSession(Boolean.FALSE).build();
 		
 		//TODO check if custom meal already in users meals

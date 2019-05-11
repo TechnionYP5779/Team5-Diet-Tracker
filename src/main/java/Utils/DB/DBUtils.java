@@ -617,7 +617,7 @@ public class DBUtils {
 		return dayList;
 	}
 
-	public void DBPushCustomFood(final CustomMeal food) throws DBException {
+	public void DBPushCustomMeal(final CustomMeal food) throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
 		try {
 			if (dbRef != null)
@@ -627,7 +627,7 @@ public class DBUtils {
 		}
 	}
 
-	public HashMap<String, CustomMeal> DBGetCustomFoods() throws DBException {
+	public HashMap<String, CustomMeal> DBGetCustomMeals() throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
 		final HashMap<String, CustomMeal> foodsMap = new HashMap<>();
 		final CountDownLatch done = new CountDownLatch(1);

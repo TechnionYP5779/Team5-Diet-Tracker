@@ -85,7 +85,6 @@ public class Strings {
 		public static final String TELL_FOOD_UNITS_AGAIN = "I'm not sure about the units of what you ate, Please tell me again";
 		public static final String TELL_FOOD_UNITS_AGAIN_REPEAT = "I will repeat, I'm not sure about the units of what you ate, Please tell me again";
 		public static final String WATER_BEFORE_MEAL_TIP = " Remember to drink a cup of water before the meal. ";
-		public static final String TELL_CUSTOM_MEAL_AGAIN = "Tell your custom meal again.";
 	}
 
 	public static class HeightStrings {
@@ -201,6 +200,13 @@ public class Strings {
 		public static final String CARBS = "carbs";
 		public static final String PROTEINS = "proteins";
 		public static final String FATS = "fats";
+	}
+	
+	public static class CustomMealStrings{
+		public static final String TELL_CUSTOM_MEAL_AGAIN = "Tell your custom meal again.";
+		public static final String CUSTOM_MEAL_ADDING_ERROR = "There was a problem added your custom meal, please try again.";
+		public static final String CUSTOM_MEAL_EXISTS = "The custom meal you want to add exists, please use other name.";
+		public static final String CUSTOM_MEAL_LOGGED = "Your custom meal logged succesfully, add ingerdients to it by saying add ingredient to my custom meal";
 	}
 
 	public static class GeneralString {
