@@ -208,7 +208,7 @@ public class DBUtilsTest {
 		fruitSalad.addPortion(cucumber);
 		db.DBPushCustomMeal(fruitSalad);
 		db.DBPushCustomMeal(salad);
-		HashMap<String, CustomMeal>  lf =  db.DBGetCustomMeals();
+		HashMap<String, CustomMeal> lf = db.DBGetCustomMeals();
 		assertNotNull(lf);
 		assert !lf.isEmpty();
 		CustomMeal f = lf.get("fruit_salad");
@@ -217,6 +217,10 @@ public class DBUtilsTest {
 		CustomMeal ff = lf.get("salad");
 		assertEquals("salad", ff.getName());
 		assertEquals(salad, ff);
+		assert !db.DBRemoveCustomMeal("pasta");
+		assert db.DBRemoveCustomMeal("fruit_salad");
+		HashMap<String, CustomMeal> lf2 = db.DBGetCustomMeals();
+		assert !lf2.containsKey("fruit_salad");
 		db.DBUtilsRemoveUserDirectory();
 	}
 }
