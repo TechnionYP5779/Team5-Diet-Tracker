@@ -201,12 +201,15 @@ public class Strings {
 		public static final String PROTEINS = "proteins";
 		public static final String FATS = "fats";
 	}
-	
-	public static class CustomMealStrings{
+
+	public static class CustomMealStrings {
 		public static final String TELL_CUSTOM_MEAL_AGAIN = "Tell your custom meal again.";
 		public static final String CUSTOM_MEAL_ADDING_ERROR = "There was a problem added your custom meal, please try again.";
 		public static final String CUSTOM_MEAL_EXISTS = "The custom meal you want to add exists, please use other name.";
 		public static final String CUSTOM_MEAL_LOGGED = "Your custom meal logged succesfully, add ingerdients to it by saying add ingredient to my custom meal";
+		public static final String CUSTOM_MEAL_REMOVE_ERROR = "There was a problem removing custom meal, please try again.";
+		public static final String CUSTOM_MEAL_DOESNT_EXISTS = "The custom meal you want to remove doesnt exist.";
+		public static final String CUSTOM_MEAL_REMOVE_SUCCESS = "Your custom meal removed succesfully.";
 	}
 
 	public static class GeneralString {
