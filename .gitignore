@@ -25,3 +25,6 @@ hs_err_pid*
 
 /credentials/
 db_credentials.json
+
+/FoodsDB_server/
+foods_db_creds.json
