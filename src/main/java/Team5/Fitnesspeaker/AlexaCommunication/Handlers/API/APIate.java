@@ -64,7 +64,8 @@ public class APIate  implements RequestHandler{
 				.get(SlotString.NUMBER_SLOT);
 		Slot  foodSlot = ((IntentRequest) input.getRequestEnvelope().getRequest()).getIntent().getSlots()
 			    .get(SlotString.FOOD_SLOT);
-		
+		Slot  drinkSlot = ((IntentRequest) input.getRequestEnvelope().getRequest()).getIntent().getSlots()
+			    .get(SlotString.DRINK_NAME_SLOT);
 		Slot  portionSlot = ((IntentRequest) input.getRequestEnvelope().getRequest()).getIntent().getSlots()
 			    .get(SlotString.PORTION_SLOT);
 		
@@ -76,22 +77,25 @@ public class APIate  implements RequestHandler{
 					.withReprompt(DrinkStrings.TELL_DRINKS_AMOUNT_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE)
 					.build();
 
-		if (foodSlot == null)
+		if (foodSlot == null|| drinkSlot==null)
 			return input.getResponseBuilder()
 					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText = DrinkStrings.TELL_DRINKS_AGAIN)
 					.withSpeech(speechText = DrinkStrings.TELL_DRINKS_AGAIN)
 					.withReprompt(repromptText = DrinkStrings.TELL_DRINKS_AGAIN_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 		
+		String food2report = (foodSlot == null || foodSlot.getValue() == null) ? drinkSlot.getValue() : foodSlot.getValue();
 		speechText = repromptText = "logged successfully";
 		try {
 			FoodsDB db =new FoodsDB();
-			if(portionSlot!=null) {
-				db.UserAte(email,foodSlot.getValue(), (numberSlot == null) ? 1 : Integer.parseInt(numberSlot.getValue()),fit2USDA(portionSlot.getValue()));
+			if(portionSlot!=null && portionSlot.getValue()!=null) {
+				db.UserAte(email,food2report, (numberSlot == null) ? 1 : Integer.parseInt(numberSlot.getValue()),fit2USDA(portionSlot.getValue()));
 			}
-			db.UserAte(email, foodSlot.getValue(), Integer.parseInt(numberSlot.getValue()));
+			else {
+			db.UserAte(email, food2report, Integer.parseInt(numberSlot.getValue()));
+			}
 		} catch (FoodsDBException e) {
-			speechText = repromptText = e.specError();
+			speechText = e.specError();
 		}
 		
 		return input.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)
