@@ -47,20 +47,20 @@ public class AddFoodIntentHandler implements RequestHandler {
 
 		String speechText;
 		final String repromptText = "";
-
-		if (foodSlot == null)
+		
+		if (foodSlot.getValue() == null)
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_AGAIN).withReprompt(FoodStrings.TELL_FOOD_AGAIN_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 
-		if (AmountSlot == null)
+		if (AmountSlot.getValue() == null)
 			return i.getResponseBuilder()
 					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
 					.withReprompt(FoodStrings.TELL_FOOD_AMOUNT_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE)
 					.build();
 
-		if (UnitSlot == null)
+		if (UnitSlot.getValue() == null)
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_UNITS_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_UNITS_AGAIN)
 					.withReprompt(FoodStrings.TELL_FOOD_UNITS_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE).build();
