@@ -36,6 +36,7 @@ public class Strings {
 		public static final String PERIODIC_WEIGHT_PROGRESS = "PeriodicWeightProgress";
 		public static final String ADD_CUSTOM_MEAL_INTENT = "AddCustomMeal";
 		public static final String REMOVE_CUSTOM_MEAL_INTENT = "RemoveCustomMeal";
+		public static final String ADD_INGREDIENT_MEAL_INTENT = "AddCustomMealIngredient";
 	}
 
 	public static class AgeStrings {
