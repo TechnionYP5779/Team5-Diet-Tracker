@@ -204,8 +204,8 @@ public class DBUtilsTest {
 		fruitSalad.addPortion(apple);
 		fruitSalad.addPortion(orange);
 		CustomMeal salad = new CustomMeal("salad");
-		fruitSalad.addPortion(tomato);
-		fruitSalad.addPortion(cucumber);
+		salad.addPortion(tomato);
+		salad.addPortion(cucumber);
 		db.DBPushCustomMeal(fruitSalad);
 		db.DBPushCustomMeal(salad);
 		HashMap<String, CustomMeal> lf = db.DBGetCustomMeals();
@@ -221,6 +221,10 @@ public class DBUtilsTest {
 		assert db.DBRemoveCustomMeal("fruit_salad");
 		HashMap<String, CustomMeal> lf2 = db.DBGetCustomMeals();
 		assert !lf2.containsKey("fruit_salad");
+		assert !db.DBUpdateCustomMeal("my_salad", banana);
+		assert db.DBUpdateCustomMeal("salad", orange);
+		salad.addPortion(orange);
+		assertEquals(salad, db.DBGetCustomMeal("salad"));
 		db.DBUtilsRemoveUserDirectory();
 	}
 }

@@ -84,9 +84,9 @@ public class CustomMeal {
 
 	public void addPortion(Portion p) {
 //		this.portions.add(p);
-		this.calories = p.getCalories_per_100_grams() * p.getAmount();
-		this.fats = p.getFats_per_100_grams() * p.getAmount();
-		this.carbs = p.getCarbs_per_100_grams() * p.getAmount();
-		this.proteins = p.getProteins_per_100_grams() * p.getAmount();
+		this.calories = p.getCalories_per_100_grams() * p.getAmount() / 100;
+		this.fats = p.getFats_per_100_grams() * p.getAmount() / 100;
+		this.carbs = p.getCarbs_per_100_grams() * p.getAmount() / 100;
+		this.proteins = p.getProteins_per_100_grams() * p.getAmount() / 100;
 	}
 }

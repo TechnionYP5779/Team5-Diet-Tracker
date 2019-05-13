@@ -656,6 +656,38 @@ public class DBUtils {
 		return foodsMap;
 	}
 
+	public CustomMeal DBGetCustomMeal(final String mealName) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
+		final HashMap<String, CustomMeal> foodsMap = new HashMap<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot foodSnapshot : s.getChildren()) {
+					CustomMeal f = foodSnapshot.getValue(CustomMeal.class);
+					foodsMap.put(f.getName(), f);
+				}
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+
+		if (foodsMap.containsKey(mealName))
+			return foodsMap.get(mealName);
+		return null;
+	}
+
 	public boolean DBRemoveCustomMeal(final String meal) throws DBException {
 		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
 		final HashMap<String, String> foodsMap = new HashMap<>();
@@ -693,6 +725,16 @@ public class DBUtils {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		return true;
+	}
+
+	public boolean DBUpdateCustomMeal(final String mealName, final Portion portionToAdd) throws DBException {
+		CustomMeal meal = DBGetCustomMeal(mealName);
+		if (meal == null)
+			return false;
+		meal.addPortion(portionToAdd);
+		DBRemoveCustomMeal(mealName);
+		DBPushCustomMeal(meal);
 		return true;
 	}
 }
