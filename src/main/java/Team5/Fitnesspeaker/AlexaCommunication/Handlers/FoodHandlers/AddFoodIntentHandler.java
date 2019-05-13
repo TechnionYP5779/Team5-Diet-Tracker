@@ -43,7 +43,13 @@ public class AddFoodIntentHandler implements RequestHandler {
 				AmountSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 						.get(SlotString.AMOUNT_SLOT),
 				UnitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-						.get(SlotString.UNIT_SLOT);
+						.get(SlotString.UNIT_SLOT),
+				foodSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+						.get(SlotString.FOOD_SLOT2),
+				AmountSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.AMOUNT_SLOT2),
+				UnitSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.UNIT_SLOT2);
 
 		String speechText;
 		final String repromptText = "";
@@ -89,6 +95,32 @@ public class AddFoodIntentHandler implements RequestHandler {
 		}
 
 		speechText = String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food);
+		
+		if(foodSlot2.getValue()!= null) {
+			final Integer amount2 = Integer.valueOf(Integer.parseInt(AmountSlot2.getValue()));
+			final String units2 = UnitSlot2.getValue(), added_food2 = foodSlot2.getValue();
+			// initialize database object with the user mail
+
+			// insert the portion to the DB
+			try {
+				db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food2, Type.FOOD,
+						Double.valueOf(amount2.intValue()).doubleValue(), units2));
+			} catch (final DBException e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+				/**
+				 * right now, the only other specific option we take care of is the option that
+				 * we didn't find the portion units in the DB or in our modules.
+				 */
+			} catch (final Exception e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+			}
+
+			speechText += String.format(FoodStrings.FOOD_LOGGED, amount2, units2, added_food2);
+		}
 
 		final Random rand = new Random();
 		if (rand.nextInt(6) == 2)
