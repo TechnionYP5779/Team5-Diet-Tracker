@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONObject;
+
 import com.amazon.ask.model.services.Pair;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -678,5 +680,24 @@ public class DBUtils {
 			throw new DBException();
 		}
 		return dayList;
+	}
+	
+	/**
+	 * add portion to cache
+	 * 
+	 * @author Shalev Kuba
+	 * @param searchedText - the text the user said to the Alexa
+	 * when he invoked the searching
+	 * @param portionResponse - the json response that was chosen
+	 * @throws DBException on error
+	 */
+	public void DBAddPortionToCache(final String searchedText,final JSONObject portionResponse) throws DBException {
+		try {
+			database.getReference().child(user_mail).child("portionCache")
+			.child(searchedText).setValueAsync(portionResponse).get();
+		} catch (ExecutionException | InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
 	}
 }
