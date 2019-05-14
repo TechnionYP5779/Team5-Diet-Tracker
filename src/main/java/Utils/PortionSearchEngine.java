@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 import com.amazon.ask.model.services.Pair;
 
+import Utils.DBUtils.DBException;
+
 public class PortionSearchEngine {
 
 	private static final String MAX_ELEMENTS_WITHOUT_RAW = "5";
@@ -318,8 +320,7 @@ public class PortionSearchEngine {
 						if (measures_arr.getJSONObject(i).getString("label").contains(unit))
 							
 							//cache since it was full success
-							final DBUtils db = new DBUtils(userEmail);
-							db.DBAddPortionToCache(freeTextToReq, nutrientsResponse);
+							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
@@ -378,4 +379,25 @@ public class PortionSearchEngine {
 		return new Portion(t, name, unit_to_g, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
 				nutritions.get(2).doubleValue(), nutritions.get(3).doubleValue());
 	}
+	
+	
+	/**
+	 * @author ShalevKuba
+	 * 
+	 * add the response to the cache of the user
+	 * 
+	 * @param response   - the Json response
+	 * @param userText        - the text the user said
+	 * @param userEmail      - the user mail
+	 */
+	static void AddResponseToCache(String userEmail,String userText, JSONObject response) {
+		final DBUtils db = new DBUtils(userEmail);
+		try {
+			db.DBAddPortionToCache(userText, response);
+		} catch (DBException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
+	}
+	
 }
