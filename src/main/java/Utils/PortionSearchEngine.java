@@ -234,7 +234,13 @@ public class PortionSearchEngine {
 		try {
 			String freeTextToReq = freeText.replaceAll(" ", "%20");
 			freeTextToReq = freeTextToReq.toLowerCase();
-			// Do the requests
+			//check the cache
+			Optional<Portion> optCachePortion=GetPortionFromCache(userEmail,freeTextToReq, unit,t);
+			if(!(optCachePortion.isEmpty())) 
+				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
+						optCachePortion.get()); 
+			
+			// Do the requests - the cache didnt help
 			final JSONObject responseWithoutRaw = readJsonFromUrl("https://api.nal.usda.gov/ndb/search/?format=json&q="
 					+ freeTextToReq + "&ds=Standard%20Reference&sort=r&max=" + MAX_ELEMENTS_WITHOUT_RAW
 					+ "&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
