@@ -700,4 +700,42 @@ public class DBUtils {
 			throw new DBException();
 		}
 	}
+	
+	/**
+	 * returns the json response that was cached for the given text
+	 * 
+	 * @author Shalev Kuba
+	 * @param searchedText - the text the user said to the Alexa
+	 * when he invoked the searching
+	 * @return optional with the json response that was cached for the given text
+	 * or empty optional if the cache is empty for the given text
+	 * @throws DBException on error
+	 */
+	public Optional<JSONObject> DBGetPortionFromCache(final String searchedText) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("portionCache").child(searchedText);
+		final List<JSONObject> jsonObjectList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				final JSONObject json = s.getValue(JSONObject.class);
+				if (json != null)
+					jsonObjectList.add(json);
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+		return jsonObjectList.isEmpty() ? Optional.empty() : Optional.ofNullable(jsonObjectList.get(0));;
+	}
 }
