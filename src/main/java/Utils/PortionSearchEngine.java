@@ -218,13 +218,14 @@ public class PortionSearchEngine {
 	 * @param unit     - the measuring unit we got from the user
 	 * @param t        - type of the portion
 	 * @param amount   - amount (according to the unit given)
+	 * @param userEmail   - the mail of the user
 	 * @return type is SearchResults. This function returns value which represents
 	 *         the search result.
 	 * @return pair of searching result and the desired portion if the searching was
 	 *         successful.
 	 */
 	public static Pair<SearchResults, Portion> PortionSearch(String freeText, String unit, final Portion.Type t,
-			double amount) {
+			double amount,String userEmail) {
 		try {
 			String freeTextToReq = freeText.replaceAll(" ", "%20");
 			freeTextToReq = freeTextToReq.toLowerCase();
@@ -315,6 +316,11 @@ public class PortionSearchEngine {
 				if (measures_arr_len > 0 && !(measures_arr.get(0).equals(null))) {
 					for (int i = 0; i < measures_arr_len; ++i) {
 						if (measures_arr.getJSONObject(i).getString("label").contains(unit))
+							
+							//cache since it was full success
+							final DBUtils db = new DBUtils(userEmail);
+							db.DBAddPortionToCache(freeTextToReq, nutrientsResponse);
+							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
 											measures_arr.getJSONObject(i).getDouble("eqv")));
