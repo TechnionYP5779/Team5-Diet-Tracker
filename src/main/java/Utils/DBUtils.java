@@ -736,6 +736,6 @@ public class DBUtils {
 			// should not get here, if it does, it is database error- nothing we can do
 			throw new DBException();
 		}
-		return jsonObjectList.isEmpty() ? Optional.empty() : Optional.ofNullable(jsonObjectList.get(0));;
+		return jsonObjectList.isEmpty() ? Optional.empty() : Optional.ofNullable(jsonObjectList.get(0));
 	}
 }
