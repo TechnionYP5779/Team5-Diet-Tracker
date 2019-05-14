@@ -11,14 +11,17 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.amazon.ask.model.services.Pair;
+import com.google.gson.JsonObject;
 
 import Utils.DBUtils.DBException;
+import Utils.Portion.Type;
 
 public class PortionSearchEngine {
 
@@ -317,7 +320,7 @@ public class PortionSearchEngine {
 				int measures_arr_len = measures_arr.length();
 				if (measures_arr_len > 0 && !(measures_arr.get(0).equals(null))) {
 					for (int i = 0; i < measures_arr_len; ++i) {
-						if (measures_arr.getJSONObject(i).getString("label").contains(unit))
+						if (measures_arr.getJSONObject(i).getString("label").toLowerCase().contains(unit))
 							
 							//cache since it was full success
 							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
@@ -398,6 +401,47 @@ public class PortionSearchEngine {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	/**
+	 * @author ShalevKuba
+	 * 
+	 *
+	 * 
+	 * @param unit   - the unit the user used
+	 * @param t - the type of the portion
+	 * @param userText        - the text the user said
+	 * @param userEmail      - the user mail
+	 * @return optional of portion if the unit is consistent with the cache, otherwise returns empty optional
+	 */
+	static Optional<Portion> GetPortionFromCache(String userEmail,String userText, String unit,Type t) {
+		final DBUtils db = new DBUtils(userEmail);
+		try {
+			Optional<JSONObject> optJsonResponse=db.DBGetPortionFromCache(userText);
+			if(optJsonResponse.isEmpty()) return Optional.empty();
+			JSONObject jsonResponse=optJsonResponse.get();
+			
+			
+			final JSONArray nut_arr = jsonResponse.getJSONObject("report").getJSONObject("food")
+					.getJSONArray("nutrients");
+
+			final JSONArray measures_arr = nut_arr.getJSONObject(0).getJSONArray("measures");
+
+			// searching for the unit
+			int measures_arr_len = measures_arr.length();
+			if (measures_arr_len > 0 && !(measures_arr.get(0).equals(null))) {
+				for (int i = 0; i < measures_arr_len; ++i) {
+					if (measures_arr.getJSONObject(i).getString("label").toLowerCase().contains(unit))
+						
+						return Optional.ofNullable(GetPortionFromNutrientsResponse(nut_arr, t, userText,
+										measures_arr.getJSONObject(i).getDouble("eqv")));
+				}
+			}
+		} catch (DBException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
+		return Optional.empty();
 	}
 	
 }
