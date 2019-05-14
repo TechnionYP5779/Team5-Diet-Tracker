@@ -694,7 +694,7 @@ public class DBUtils {
 	public void DBAddPortionToCache(final String searchedText,final JSONObject portionResponse) throws DBException {
 		try {
 			database.getReference().child(user_mail).child("portionCache")
-			.child(searchedText).setValueAsync(portionResponse).get();
+			.child(searchedText).setValueAsync(portionResponse.toString()).get();
 		} catch (ExecutionException | InterruptedException e) {
 			// should not get here, if it does, it is database error- nothing we can do
 			throw new DBException();
@@ -718,7 +718,12 @@ public class DBUtils {
 		dbRef.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(final DataSnapshot s) {
-				final JSONObject json = s.getValue(JSONObject.class);
+				String jsonStr=s.getValue(String.class);
+				JSONObject json = null;
+				if (jsonStr != null) {
+					json =new JSONObject(jsonStr);
+				}
+					
 				if (json != null)
 					jsonObjectList.add(json);
 				done.countDown();

@@ -50,31 +50,32 @@ public  class PortionSearchEngineTest {
 	
 	@Test
 	public void PortionSearchTest() {
-		Pair<SearchResults, Portion> tempPair=PortionSearchEngine.PortionSearch("saadshgerh","small",Portion.Type.FOOD,1);
+		Pair<SearchResults, Portion> tempPair=PortionSearchEngine.PortionSearch("saadshgerh","small",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_NO_RESULTS, tempPair.getName());
 		
-		tempPair=PortionSearchEngine.PortionSearch("apPle","small",Portion.Type.FOOD,1);
+		tempPair=PortionSearchEngine.PortionSearch("apPle","small",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
+		System.out.println(tempPair.getValue().toString());
 		assertEquals(149.0, tempPair.getValue().getAmount(),0.1);
 		
 		/**  ---NEXT 2 tests:---
 		 * check that units can be given in singular or plural, and give
 		 * the same result
 		 */
-		tempPair=PortionSearchEngine.PortionSearch("banana","grams",Portion.Type.FOOD,1);
+		tempPair=PortionSearchEngine.PortionSearch("banana","grams",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, tempPair.getName());
 		
-		tempPair=PortionSearchEngine.PortionSearch("banana","gram",Portion.Type.FOOD,1);
+		tempPair=PortionSearchEngine.PortionSearch("banana","gram",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, tempPair.getName());
 		
-		tempPair=PortionSearchEngine.PortionSearch("pizZA","slice",Portion.Type.FOOD,1);
+		tempPair=PortionSearchEngine.PortionSearch("pizZA","slice",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
 		assertEquals(280.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
 		
-		tempPair=PortionSearchEngine.PortionSearch("nature VALLey","bar",Portion.Type.FOOD,1);
+		tempPair=PortionSearchEngine.PortionSearch("nature VALLey","bar",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
 		
-		tempPair=PortionSearchEngine.PortionSearch("sprITe","can",Portion.Type.FOOD,1);
+		tempPair=PortionSearchEngine.PortionSearch("sprITe","can",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, tempPair.getName());
 		assertEquals(40.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
 
@@ -136,7 +137,7 @@ public  class PortionSearchEngineTest {
 	
 	@Test
 	public void compareOldVsNewAlgorithm() {
-		Pair<SearchResults,Portion> tempPair=PortionSearchEngine.PortionSearch("date","gram",Portion.Type.FOOD,1);
+		Pair<SearchResults,Portion> tempPair=PortionSearchEngine.PortionSearch("date","gram",Portion.Type.FOOD,1,"test_user");
 		System.out.println(tempPair.getName());
 		System.out.println(tempPair.getValue().name);
 
