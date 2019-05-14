@@ -329,7 +329,7 @@ public class PortionSearchEngine {
 						if (measures_arr.getJSONObject(i).getString("label").contains(unit)) {
 							
 							//cache since it was full success
-							//AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
+							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
