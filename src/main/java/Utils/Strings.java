@@ -194,6 +194,7 @@ public class Strings {
 		public static final String UNIT_SLOT = "Unit";
 		public static final String MEASURE_SLOT = "Measure";
 		public static final String CUSTOM_MEAL_SLOT = "meal";
+		public static final String INGREDIANT_SLOT = "ingredient";
 	}
 
 	public static class NutritionalString {
@@ -211,6 +212,9 @@ public class Strings {
 		public static final String CUSTOM_MEAL_REMOVE_ERROR = "There was a problem removing custom meal, please try again.";
 		public static final String CUSTOM_MEAL_DOESNT_EXISTS = "The custom meal you want to remove doesnt exist.";
 		public static final String CUSTOM_MEAL_REMOVE_SUCCESS = "Your custom meal removed succesfully.";
+		public static final String TELL_INGREDIANT_AGAIN = "Tell your ingrediant again.";
+		public static final String CUSTOM_MEAL_UPDATE_ERROR = "There was a problem adding ingrediant to custom meal, please try again.";
+		public static final String ADDED_INGREDIANT = "You successfully added an ingrediant to your custom meal.";
 	}
 
 	public static class GeneralString {
