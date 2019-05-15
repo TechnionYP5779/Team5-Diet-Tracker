@@ -8,6 +8,7 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AgeHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CigarettesHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers.AddCustomMealIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers.AddIngredientToMealIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers.RemoveCustomMealIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers.HowManyDrinksIntentHandler;
@@ -38,7 +39,7 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 				new SetGoalIntentHandler(), new GetGoalIntentHandler(), new SetCigarLimitIntentHandler(),
 				new GetCigarLimitIntentHandler(), new AddWeightGoalIntentHandler(),
 				new PeriodicWeightProgressIntentHandler(), new AddCustomMealIntentHandler(),
-				new RemoveCustomMealIntentHandler(), new AddCustomMealIntentHandler()).withSkillId(skillID).build();
+				new RemoveCustomMealIntentHandler(), new AddIngredientToMealIntentHandler()).withSkillId(skillID).build();
 	}
 
 	public FitnesspeakerStreamHandler() {
