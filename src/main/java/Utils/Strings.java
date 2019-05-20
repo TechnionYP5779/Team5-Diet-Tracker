@@ -37,6 +37,7 @@ public class Strings {
 		public static final String ADD_CUSTOM_MEAL_INTENT = "AddCustomMeal";
 		public static final String REMOVE_CUSTOM_MEAL_INTENT = "RemoveCustomMeal";
 		public static final String ADD_INGREDIENT_MEAL_INTENT = "AddCustomMealIngredient";
+		public static final String EAT_CUSTOM_MEAL_INTENT = "EatingCustomMeal";
 	}
 
 	public static class AgeStrings {
@@ -215,6 +216,8 @@ public class Strings {
 		public static final String TELL_INGREDIANT_AGAIN = "Tell your ingrediant again.";
 		public static final String CUSTOM_MEAL_UPDATE_ERROR = "There was a problem adding ingrediant to custom meal, please try again.";
 		public static final String ADDED_INGREDIANT = "You successfully added an ingrediant to your custom meal.";
+		public static final String TELL_INGREDIENT_UNITS_AGAIN = "Tell the units of the ingredient again";
+		public static final String TELL_INGREDIENT_AMOUNT_AGAIN = "Tell the amount of the ingredient again";
 	}
 
 	public static class GeneralString {

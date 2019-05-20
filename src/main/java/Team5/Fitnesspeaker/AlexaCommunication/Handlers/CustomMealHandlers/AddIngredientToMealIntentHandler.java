@@ -47,9 +47,9 @@ public class AddIngredientToMealIntentHandler implements RequestHandler {
 
 		if (numberSlot == null)
 			return input.getResponseBuilder()
-					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
-					.withSpeech(FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
-					.withReprompt(FoodStrings.TELL_FOOD_AMOUNT_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE)
+					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.TELL_INGREDIENT_AMOUNT_AGAIN)
+					.withSpeech(CustomMealStrings.TELL_INGREDIENT_AMOUNT_AGAIN)
+					.withReprompt(CustomMealStrings.TELL_INGREDIENT_AMOUNT_AGAIN).withShouldEndSession(Boolean.FALSE)
 					.build();
 
 		if (ingrediantSlot == null)
@@ -60,14 +60,40 @@ public class AddIngredientToMealIntentHandler implements RequestHandler {
 
 		if (unitSlot == null)
 			return input.getResponseBuilder()
-					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_UNITS_AGAIN)
-					.withSpeech(FoodStrings.TELL_FOOD_UNITS_AGAIN)
-					.withReprompt(FoodStrings.TELL_FOOD_UNITS_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE).build();
+					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.TELL_INGREDIENT_UNITS_AGAIN)
+					.withSpeech(CustomMealStrings.TELL_INGREDIENT_UNITS_AGAIN)
+					.withReprompt(CustomMealStrings.TELL_INGREDIENT_UNITS_AGAIN).withShouldEndSession(Boolean.FALSE).build();
 
 		final String meal = mealSlot.getValue();
 		final Integer amount = Integer.valueOf(Integer.parseInt(numberSlot.getValue()));
 		final String ingrediant = ingrediantSlot.getValue();
 		final String unit = unitSlot.getValue();
+		
+		if (meal == null)
+			return input.getResponseBuilder()
+					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.TELL_CUSTOM_MEAL_AGAIN)
+					.withSpeech(CustomMealStrings.TELL_CUSTOM_MEAL_AGAIN)
+					.withReprompt(CustomMealStrings.TELL_CUSTOM_MEAL_AGAIN).withShouldEndSession(Boolean.FALSE).build();
+
+		if (amount == null)
+			return input.getResponseBuilder()
+					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.TELL_INGREDIENT_AMOUNT_AGAIN)
+					.withSpeech(CustomMealStrings.TELL_INGREDIENT_AMOUNT_AGAIN)
+					.withReprompt(CustomMealStrings.TELL_INGREDIENT_AMOUNT_AGAIN).withShouldEndSession(Boolean.FALSE)
+					.build();
+
+		if (ingrediant == null)
+			return input.getResponseBuilder()
+					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.TELL_INGREDIANT_AGAIN)
+					.withSpeech(CustomMealStrings.TELL_INGREDIANT_AGAIN)
+					.withReprompt(CustomMealStrings.TELL_INGREDIANT_AGAIN).withShouldEndSession(Boolean.FALSE).build();
+
+		if (unit == null)
+			return input.getResponseBuilder()
+					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.TELL_INGREDIENT_UNITS_AGAIN)
+					.withSpeech(CustomMealStrings.TELL_INGREDIENT_UNITS_AGAIN)
+					.withReprompt(CustomMealStrings.TELL_INGREDIENT_UNITS_AGAIN).withShouldEndSession(Boolean.FALSE).build();
+		
 		final DBUtils db = new DBUtils(input.getServiceClientFactory().getUpsService().getProfileEmail());
 
 		Portion ingrediantPortion = PortionRequestGen.generatePortionWithAmount(ingrediant, Type.FOOD,

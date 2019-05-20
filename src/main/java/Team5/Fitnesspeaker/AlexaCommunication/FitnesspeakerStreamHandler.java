@@ -9,6 +9,7 @@ import Team5.Fitnesspeaker.AlexaCommunication.Handlers.AgeHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CigarettesHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers.AddCustomMealIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers.AddIngredientToMealIntentHandler;
+import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers.EatCustomMealIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.CustomMealHandlers.RemoveCustomMealIntentHandler;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers.*;
 import Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers.HowManyDrinksIntentHandler;
@@ -28,18 +29,21 @@ public class FitnesspeakerStreamHandler extends SkillStreamHandler {
 
 	@SuppressWarnings("unchecked")
 	private static Skill getSkill() {
-		return Skills.standard().addRequestHandlers(new WhatDidIEatIntentHandler(), new AddFoodIntentHandler(),
-				new LaunchRequestHandler(), new CancelandStopIntentHandler(), new SessionEndedRequestHandler(),
-				new HelpIntentHandler(), new FallbackIntentHandler(), new AddDrinkIntentHandler(),
-				new HowManyDrinksIntentHandler(), new SetAgeIntentHandler(), new GetAgeIntentHandler(),
-				new AddWeightIntentHandler(), new AddHeightIntentHandler(), new GetWeightIntentHandler(),
-				new GetHeightIntentHandler(), new SendDailyMailIntentHandler(), new AddSmokeIntentHandler(),
-				new HowMuchSmokedIntentHandler(), new HowMuchNutritionalValuesIntentHandler(),
-				new SendWeightProgressMailIntentHandler(), new SendWeeklyMailIntentHandler(), new BMIIntentHandler(),
-				new SetGoalIntentHandler(), new GetGoalIntentHandler(), new SetCigarLimitIntentHandler(),
-				new GetCigarLimitIntentHandler(), new AddWeightGoalIntentHandler(),
-				new PeriodicWeightProgressIntentHandler(), new AddCustomMealIntentHandler(),
-				new RemoveCustomMealIntentHandler(), new AddIngredientToMealIntentHandler()).withSkillId(skillID).build();
+		return Skills.standard()
+				.addRequestHandlers(new WhatDidIEatIntentHandler(), new AddFoodIntentHandler(),
+						new LaunchRequestHandler(), new CancelandStopIntentHandler(), new SessionEndedRequestHandler(),
+						new HelpIntentHandler(), new FallbackIntentHandler(), new AddDrinkIntentHandler(),
+						new HowManyDrinksIntentHandler(), new SetAgeIntentHandler(), new GetAgeIntentHandler(),
+						new AddWeightIntentHandler(), new AddHeightIntentHandler(), new GetWeightIntentHandler(),
+						new GetHeightIntentHandler(), new SendDailyMailIntentHandler(), new AddSmokeIntentHandler(),
+						new HowMuchSmokedIntentHandler(), new HowMuchNutritionalValuesIntentHandler(),
+						new SendWeightProgressMailIntentHandler(), new SendWeeklyMailIntentHandler(),
+						new BMIIntentHandler(), new SetGoalIntentHandler(), new GetGoalIntentHandler(),
+						new SetCigarLimitIntentHandler(), new GetCigarLimitIntentHandler(),
+						new AddWeightGoalIntentHandler(), new PeriodicWeightProgressIntentHandler(),
+						new AddCustomMealIntentHandler(), new RemoveCustomMealIntentHandler(),
+						new AddIngredientToMealIntentHandler(), new EatCustomMealIntentHandler())
+				.withSkillId(skillID).build();
 	}
 
 	public FitnesspeakerStreamHandler() {
