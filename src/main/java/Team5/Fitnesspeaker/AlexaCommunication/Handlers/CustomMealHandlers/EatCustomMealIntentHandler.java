@@ -11,6 +11,7 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
+import Utils.CustomMeal;
 import Utils.Strings;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
@@ -71,7 +72,15 @@ public class EatCustomMealIntentHandler implements RequestHandler {
 
 		try {
 			try {
-				db.DBPushFood(db.DBGetCustomMeal(meal).toPortion(amount));
+				CustomMeal customaMeal = db.DBGetCustomMeal(meal);
+				if (customaMeal == null) {
+					return input.getResponseBuilder()
+							.withSimpleCard(Strings.GLOBAL_SESSION_NAME, CustomMealStrings.CUSTOM_MEAL_DOESNT_EXISTS)
+							.withSpeech(CustomMealStrings.CUSTOM_MEAL_DOESNT_EXISTS)
+							.withReprompt(CustomMealStrings.CUSTOM_MEAL_DOESNT_EXISTS)
+							.withShouldEndSession(Boolean.FALSE).build();
+				}
+				db.DBPushFood(customaMeal.toPortion(amount));
 			} catch (DBException e) {
 				return input.getResponseBuilder()
 						.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
