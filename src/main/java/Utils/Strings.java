@@ -69,7 +69,9 @@ public class Strings {
 	public static class FoodStrings {
 		public static final String DIDNT_EAT_ANYTHING = "you haven't eaten anything today yet. Please Tell me when you do";
 		public static final String DRINK_LIQUID_TIP = " Remember to drink liquids after the meal. ";
-		public static final String FOOD_LOGGED = "You logged %d %s of %s, bon appetit!";
+		public static final String FOOD_LOGGED_START = "You logged ";
+		public static final String FOOD_LOGGED = " %d %s of %s , ";
+		public static final String FOOD_LOGGED_END = " bon appetit!";
 		public static final String FOOD_LOGGING_PROBLEM = "There was a problem with the portion logging, Please tell me again";
 		public static final String FOOD_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with the portion logging,  Please tell me again";
 		public static final String FOOD_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the food in different units, in grams for example";
@@ -193,6 +195,12 @@ public class Strings {
 		public static final String AMOUNT_SLOT2 = "NumberTwo";
 		public static final String FOOD_SLOT2 = "FoodTwo";
 		public static final String UNIT_SLOT2 = "UnitTwo";
+		public static final String AMOUNT_SLOT3 = "NumberThree";
+		public static final String FOOD_SLOT3 = "FoodThree";
+		public static final String UNIT_SLOT3 = "UnitThree";
+		public static final String AMOUNT_SLOT4 = "NumberFour";
+		public static final String FOOD_SLOT4 = "FoodFour";
+		public static final String UNIT_SLOT4 = "UnitFour";
 	}
 
 	public static class NutritionalString {
