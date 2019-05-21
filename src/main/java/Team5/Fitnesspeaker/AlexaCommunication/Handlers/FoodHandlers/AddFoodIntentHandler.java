@@ -96,13 +96,8 @@ public class AddFoodIntentHandler implements RequestHandler {
 		// initialize database object with the user mail
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
 		
-		final Integer amount = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
-		final String units = unitSlot.getValue(), added_food = foodSlot.getValue();
-
-		// insert the portion to the DB
 		try {
-			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
-					Double.valueOf(amount.intValue()).doubleValue(), units));
+			speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
 		} catch (final DBException e) {
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
 					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
@@ -116,19 +111,12 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
-
-		speechText = String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food);
 		
 		// now we will enter the second food if we got it
 		
 		if(foodSlot2.getValue()!= null) {
-			final Integer amount2 = Integer.valueOf(Integer.parseInt(amountSlot2.getValue()));
-			final String units2 = unitSlot2.getValue(), added_food2 = foodSlot2.getValue();
-
-			// insert the portion to the DB
 			try {
-				db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food2, Type.FOOD,
-						Double.valueOf(amount2.intValue()).doubleValue(), units2));
+				speechText += addFoodToDB(amountSlot2,unitSlot2,foodSlot2,db);
 			} catch (final DBException e) {
 				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
 						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
@@ -142,8 +130,6 @@ public class AddFoodIntentHandler implements RequestHandler {
 						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
 						.withShouldEndSession(Boolean.FALSE).build();
 			}
-
-			speechText += String.format(FoodStrings.FOOD_LOGGED, amount2, units2, added_food2);
 		}
 		
 		// now we will enter the third food if we got it
