@@ -3,6 +3,7 @@ package Utils.DB;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import Utils.CustomMeal;
 import Utils.DailyInfo;
 import Utils.Portion.Portion;
 import Utils.User.UserInfo;
@@ -613,5 +615,126 @@ public class DBUtils {
 			throw new DBException();
 		}
 		return dayList;
+	}
+
+	public void DBPushCustomMeal(final CustomMeal food) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
+		try {
+			if (dbRef != null)
+				dbRef.push().setValueAsync(food).get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new DBException();
+		}
+	}
+
+	public HashMap<String, CustomMeal> DBGetCustomMeals() throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
+		final HashMap<String, CustomMeal> foodsMap = new HashMap<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot foodSnapshot : s.getChildren()) {
+					CustomMeal f = foodSnapshot.getValue(CustomMeal.class);
+					foodsMap.put(f.getName(), f);
+				}
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+		return foodsMap;
+	}
+
+	public CustomMeal DBGetCustomMeal(final String mealName) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
+		final HashMap<String, CustomMeal> foodsMap = new HashMap<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot foodSnapshot : s.getChildren()) {
+					CustomMeal f = foodSnapshot.getValue(CustomMeal.class);
+					foodsMap.put(f.getName(), f);
+				}
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+
+		if (foodsMap.containsKey(mealName))
+			return foodsMap.get(mealName);
+		return null;
+	}
+
+	public boolean DBRemoveCustomMeal(final String meal) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("custom_foods");
+		final HashMap<String, String> foodsMap = new HashMap<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				for (final DataSnapshot foodSnapshot : s.getChildren()) {
+					CustomMeal f = foodSnapshot.getValue(CustomMeal.class);
+					foodsMap.put(f.getName(), foodSnapshot.getKey());
+				}
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+
+		if (!foodsMap.containsKey(meal))
+			return false;
+		String key = foodsMap.get(meal);
+		final DatabaseReference dbRef2 = database.getReference().child(user_mail).child("custom_foods").child(key);
+		try {
+			dbRef2.removeValueAsync().get();
+		} catch (InterruptedException | ExecutionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return true;
+	}
+
+	public boolean DBUpdateCustomMeal(final String mealName, final Portion portionToAdd) throws DBException {
+		CustomMeal meal = DBGetCustomMeal(mealName);
+		if (meal == null)
+			return false;
+		meal.addPortion(portionToAdd);
+		DBRemoveCustomMeal(mealName);
+		DBPushCustomMeal(meal);
+		return true;
 	}
 }

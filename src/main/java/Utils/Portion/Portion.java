@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class Portion {
 	public enum Type {
-		FOOD, DRINK
+		FOOD, DRINK, MEAL
 	}
 
 	// todo: maybe add supper? and brunch?
