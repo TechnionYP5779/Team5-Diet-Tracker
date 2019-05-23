@@ -64,6 +64,10 @@ public class DBUtils {
 		database = FirebaseDatabase.getInstance();
 		this.user_mail = String.valueOf(user_mail).replace(".", "_dot_");
 	}
+	
+	public String DBGetEmail() {
+		return this.user_mail;
+	}
 
 	/**
 	 * Pushes a given portion to user Food directory.

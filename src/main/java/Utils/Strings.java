@@ -71,6 +71,8 @@ public class Strings {
 		public static final String FOOD_LOGGED = "You logged %d %s of %s, bon appetit!";
 		public static final String FOOD_LOGGING_PROBLEM = "There was a problem with the portion logging, Please tell me again";
 		public static final String FOOD_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with the portion logging,  Please tell me again";
+		public static final String FOOD_NOT_FOUND = "I cannot find information about %s, but you can insert it into your custom food list by saying, log custome meal %s";
+		public static final String FOOD_NOT_FOUND_REPEAT = "I'll repeat, I cannot find information about %s, but you can insert it into your custom food list by saying, log custome meal %s";
 		public static final String FOOD_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the food in different units, in grams for example";
 		public static final String FOOD_UNITS_PROBLEM_REPEAT = "I'll repeat, there was a problem with the units you provided, Please try to tell me the food in different units, in grams for example";
 		public static final String SITTING_TIP = " Remember to eat your meals while sitting down comfortably. ";

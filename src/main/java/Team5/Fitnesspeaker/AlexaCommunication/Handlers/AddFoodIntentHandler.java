@@ -15,6 +15,7 @@ import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Portion.Type;
 import Utils.PortionRequestGen;
+import Utils.PortionSearchEngine;
 import Utils.Strings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
@@ -68,12 +69,14 @@ public class AddFoodIntentHandler implements RequestHandler {
 
 		// insert the portion to the DB
 		try {
-			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
-					Double.valueOf(amount.intValue()).doubleValue(), units));
-		} catch (final DBException e) {
-			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
-					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
-					.withShouldEndSession(Boolean.FALSE).build();
+//			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
+//					Double.valueOf(amount.intValue()).doubleValue(), units));
+			PortionSearchEngine.PortionSearch
+					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(), i.getServiceClientFactory().getUpsService().getProfileEmail());
+//		} catch (final DBException e) {
+//			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+//					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
+//					.withShouldEndSession(Boolean.FALSE).build();
 			/**
 			 * right now, the only other specific option we take care of is the option that
 			 * we didn't find the portion units in the DB or in our modules.
