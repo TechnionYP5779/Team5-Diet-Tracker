@@ -44,7 +44,7 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 
 		// retrieving the information
 		try {
-			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).filter(p -> p.getType() == Type.FOOD)
+			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).filter(p -> (p.getType() == Type.FOOD || p.getType() == Type.MEAL))
 					.collect(Collectors.toList());
 		} catch (final DBException e) {
 			// no need to do anything
