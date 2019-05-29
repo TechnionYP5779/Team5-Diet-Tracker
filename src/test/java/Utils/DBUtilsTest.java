@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -184,6 +185,46 @@ public class DBUtilsTest {
 				Long.valueOf(portionList.stream().filter(f -> f.getValue().getName().contains("vodka")).count()));
 		assertEquals(Long.valueOf(1),
 				Long.valueOf(portionList.stream().filter(f -> f.getValue().getName().contains("wine")).count()));
+		db.DBUtilsRemoveUserDirectory();
+	}
+
+	@Test
+	public void testCustomMealHandling() throws DBException {
+		final String testUser = "test_user";
+		final DBUtils db = new DBUtils(testUser);
+		db.DBUtilsRemoveUserDirectory();
+		assert db.DBGetCustomMeals().isEmpty();
+		Portion banana = PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, 52, "grams");
+		Portion apple = PortionRequestGen.generatePortionWithAmount("apple", Type.FOOD, 52, "grams");
+		Portion orange = PortionRequestGen.generatePortionWithAmount("orange", Type.FOOD, 52, "grams");
+		Portion tomato = PortionRequestGen.generatePortionWithAmount("tomato", Type.FOOD, 52, "grams");
+		Portion cucumber = PortionRequestGen.generatePortionWithAmount("cucumber", Type.FOOD, 52, "grams");
+		CustomMeal fruitSalad = new CustomMeal("fruit_salad");
+		fruitSalad.addPortion(banana);
+		fruitSalad.addPortion(apple);
+		fruitSalad.addPortion(orange);
+		CustomMeal salad = new CustomMeal("salad");
+		salad.addPortion(tomato);
+		salad.addPortion(cucumber);
+		db.DBPushCustomMeal(fruitSalad);
+		db.DBPushCustomMeal(salad);
+		HashMap<String, CustomMeal> lf = db.DBGetCustomMeals();
+		assertNotNull(lf);
+		assert !lf.isEmpty();
+		CustomMeal f = lf.get("fruit_salad");
+		assertEquals("fruit_salad", f.getName());
+		assertEquals(fruitSalad, f);
+		CustomMeal ff = lf.get("salad");
+		assertEquals("salad", ff.getName());
+		assertEquals(salad, ff);
+		assert !db.DBRemoveCustomMeal("pasta");
+		assert db.DBRemoveCustomMeal("fruit_salad");
+		HashMap<String, CustomMeal> lf2 = db.DBGetCustomMeals();
+		assert !lf2.containsKey("fruit_salad");
+		assert !db.DBUpdateCustomMeal("my_salad", banana);
+		assert db.DBUpdateCustomMeal("salad", orange);
+		salad.addPortion(orange);
+		assertEquals(salad, db.DBGetCustomMeal("salad"));
 		db.DBUtilsRemoveUserDirectory();
 	}
 }

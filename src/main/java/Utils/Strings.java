@@ -34,6 +34,10 @@ public class Strings {
 		public static final String WHAT_I_ATE_INTENT = "WhatIAteIntent";
 		public static final String WHAT_IS_MY_NAME_INTENT = "WhatIsMyNameIntent";
 		public static final String PERIODIC_WEIGHT_PROGRESS = "PeriodicWeightProgress";
+		public static final String ADD_CUSTOM_MEAL_INTENT = "AddCustomMeal";
+		public static final String REMOVE_CUSTOM_MEAL_INTENT = "RemoveCustomMeal";
+		public static final String ADD_INGREDIENT_MEAL_INTENT = "AddCustomMealIngredient";
+		public static final String EAT_CUSTOM_MEAL_INTENT = "EatingCustomMeal";
 	}
 
 	public static class AgeStrings {
@@ -201,6 +205,8 @@ public class Strings {
 		public static final String AMOUNT_SLOT4 = "NumberFour";
 		public static final String FOOD_SLOT4 = "FoodFour";
 		public static final String UNIT_SLOT4 = "UnitFour";
+		public static final String CUSTOM_MEAL_SLOT = "meal";
+		public static final String INGREDIANT_SLOT = "ingredient";
 	}
 
 	public static class NutritionalString {
@@ -208,6 +214,21 @@ public class Strings {
 		public static final String CARBS = "carbs";
 		public static final String PROTEINS = "proteins";
 		public static final String FATS = "fats";
+	}
+
+	public static class CustomMealStrings {
+		public static final String TELL_CUSTOM_MEAL_AGAIN = "Tell your custom meal again.";
+		public static final String CUSTOM_MEAL_ADDING_ERROR = "There was a problem added your custom meal, please try again.";
+		public static final String CUSTOM_MEAL_EXISTS = "The custom meal you want to add exists, please use other name.";
+		public static final String CUSTOM_MEAL_LOGGED = "Your custom meal logged succesfully, add ingerdients to it by saying add ingredient to my custom meal";
+		public static final String CUSTOM_MEAL_REMOVE_ERROR = "There was a problem removing custom meal, please try again.";
+		public static final String CUSTOM_MEAL_DOESNT_EXISTS = "The custom meal doesnt exist.";
+		public static final String CUSTOM_MEAL_REMOVE_SUCCESS = "Your custom meal removed succesfully.";
+		public static final String TELL_INGREDIANT_AGAIN = "Tell your ingrediant again.";
+		public static final String CUSTOM_MEAL_UPDATE_ERROR = "There was a problem adding ingrediant to custom meal, please try again.";
+		public static final String ADDED_INGREDIANT = "You successfully added an ingrediant to your custom meal.";
+		public static final String TELL_INGREDIENT_UNITS_AGAIN = "Tell the units of the ingredient again";
+		public static final String TELL_INGREDIENT_AMOUNT_AGAIN = "Tell the amount of the ingredient again";
 	}
 
 	public static class GeneralString {
