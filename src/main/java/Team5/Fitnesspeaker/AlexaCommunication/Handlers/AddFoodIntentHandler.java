@@ -13,6 +13,7 @@ import com.amazon.ask.model.Slot;
 
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
+import Utils.Portion;
 import Utils.Portion.Type;
 import Utils.PortionRequestGen;
 import Utils.PortionSearchEngine;
@@ -69,10 +70,10 @@ public class AddFoodIntentHandler implements RequestHandler {
 
 		// insert the portion to the DB
 		try {
-//			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
-//					Double.valueOf(amount.intValue()).doubleValue(), units));
-			PortionSearchEngine.PortionSearch
-					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(), i.getServiceClientFactory().getUpsService().getProfileEmail());
+
+			Portion p=PortionSearchEngine.PortionSearch
+					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(), i.getServiceClientFactory().getUpsService().getProfileEmail()).getValue();
+			db.DBPushFood(p);
 //		} catch (final DBException e) {
 //			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
 //					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
@@ -81,7 +82,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 			 * right now, the only other specific option we take care of is the option that
 			 * we didn't find the portion units in the DB or in our modules.
 			 */
-		} catch (final Exception e) {
+		} catch (final Exception | DBException e) {
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
 					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();

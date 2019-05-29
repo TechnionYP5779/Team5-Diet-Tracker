@@ -236,7 +236,7 @@ public class PortionSearchEngine {
 			freeTextToReq = freeTextToReq.toLowerCase();
 			//check the cache
 			Optional<Portion> optCachePortion=GetPortionFromCache(userEmail,freeTextToReq, unit,t);
-			if(!(optCachePortion.isEmpty())) 
+			if(optCachePortion.isPresent()) 
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 						optCachePortion.get()); 
 			
@@ -425,7 +425,7 @@ public class PortionSearchEngine {
 		final DBUtils db = new DBUtils(userEmail);
 		try {
 			Optional<JSONObject> optJsonResponse=db.DBGetPortionFromCache(userText);
-			if(optJsonResponse.isEmpty()) return Optional.empty();
+			if(!optJsonResponse.isPresent()) return Optional.empty();
 			JSONObject jsonResponse=optJsonResponse.get();
 			
 			
