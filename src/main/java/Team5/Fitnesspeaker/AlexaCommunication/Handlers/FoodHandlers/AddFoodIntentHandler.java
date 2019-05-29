@@ -37,7 +37,13 @@ public class AddFoodIntentHandler implements RequestHandler {
 	}
 	
 	public static String addFoodToDB(Slot amountSlot, Slot unitSlot, Slot foodSlot,DBUtils db) throws Exception,DBException {
-		final Integer amount = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
+		Integer amountAux;
+		if (amountSlot.getValue() == null) {
+			amountAux = Integer.valueOf(1);
+		}else {
+			amountAux = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
+		}
+		final Integer amount = amountAux;
 		final String units = unitSlot.getValue(), added_food = foodSlot.getValue();
 		db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
 				Double.valueOf(amount.intValue()).doubleValue(), units));
@@ -81,17 +87,18 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withSpeech(FoodStrings.TELL_FOOD_AGAIN).withReprompt(FoodStrings.TELL_FOOD_AGAIN_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 
-		if (amountSlot.getValue() == null)
+
+		/*if (amountSlot.getValue() == null)
 			return i.getResponseBuilder()
 					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
 					.withReprompt(FoodStrings.TELL_FOOD_AMOUNT_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE)
-					.build();
-
-		if (unitSlot.getValue() == null)
+					.build();*/
+		
+		/*if (unitSlot.getValue() == null)
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_UNITS_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_UNITS_AGAIN)
-					.withReprompt(FoodStrings.TELL_FOOD_UNITS_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE).build();
+					.withReprompt(FoodStrings.TELL_FOOD_UNITS_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE).build();*/
 
 		// initialize database object with the user mail
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
