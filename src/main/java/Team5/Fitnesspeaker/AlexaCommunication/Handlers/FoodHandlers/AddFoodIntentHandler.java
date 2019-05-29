@@ -35,45 +35,76 @@ public class AddFoodIntentHandler implements RequestHandler {
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.ADD_FOOD_INTENT));
 	}
+	
+	public static String addFoodToDB(Slot amountSlot, Slot unitSlot, Slot foodSlot,DBUtils db) throws Exception,DBException {
+		Integer amountAux;
+		if (amountSlot.getValue() == null) {
+			amountAux = Integer.valueOf(1);
+		}else {
+			amountAux = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
+		}
+		final Integer amount = amountAux;
+		final String units = unitSlot.getValue(), added_food = foodSlot.getValue();
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
+				Double.valueOf(amount.intValue()).doubleValue(), units));
+		return String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food);
+		
+	}
 
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot foodSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(SlotString.FOOD_SLOT),
-				AmountSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				amountSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 						.get(SlotString.AMOUNT_SLOT),
-				UnitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-						.get(SlotString.UNIT_SLOT);
+				unitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+						.get(SlotString.UNIT_SLOT),
+				foodSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+						.get(SlotString.FOOD_SLOT2),
+				amountSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.AMOUNT_SLOT2),
+				unitSlot2 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.UNIT_SLOT2),
+				foodSlot3 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.FOOD_SLOT3),
+				amountSlot3 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.AMOUNT_SLOT3),
+				unitSlot3 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.UNIT_SLOT3),
+				foodSlot4 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.FOOD_SLOT4),
+				amountSlot4 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.AMOUNT_SLOT4),
+				unitSlot4 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+								.get(SlotString.UNIT_SLOT4);
+				
 
-		String speechText;
+		String speechText = String.format(FoodStrings.FOOD_LOGGED_START);
 		final String repromptText = "";
-
-		if (foodSlot == null)
+		
+		if (foodSlot.getValue() == null)
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_AGAIN).withReprompt(FoodStrings.TELL_FOOD_AGAIN_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 
-		if (AmountSlot == null)
+
+		/*if (amountSlot.getValue() == null)
 			return i.getResponseBuilder()
 					.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_AMOUNT_AGAIN)
 					.withReprompt(FoodStrings.TELL_FOOD_AMOUNT_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE)
-					.build();
-
-		if (UnitSlot == null)
+					.build();*/
+		
+		/*if (unitSlot.getValue() == null)
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.TELL_FOOD_UNITS_AGAIN)
 					.withSpeech(FoodStrings.TELL_FOOD_UNITS_AGAIN)
-					.withReprompt(FoodStrings.TELL_FOOD_UNITS_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE).build();
+					.withReprompt(FoodStrings.TELL_FOOD_UNITS_AGAIN_REPEAT).withShouldEndSession(Boolean.FALSE).build();*/
 
-		final Integer amount = Integer.valueOf(Integer.parseInt(AmountSlot.getValue()));
-		final String units = UnitSlot.getValue(), added_food = foodSlot.getValue();
 		// initialize database object with the user mail
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
-
-		// insert the portion to the DB
+		
 		try {
-			db.DBPushFood(PortionRequestGen.generatePortionWithAmount(added_food, Type.FOOD,
-					Double.valueOf(amount.intValue()).doubleValue(), units));
+			speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
 		} catch (final DBException e) {
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
 					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
@@ -87,8 +118,66 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
-
-		speechText = String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food);
+		
+		// now we will enter the second food if we got it
+		
+		if(foodSlot2.getValue()!= null) {
+			try {
+				speechText += addFoodToDB(amountSlot2,unitSlot2,foodSlot2,db);
+			} catch (final DBException e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+				/**
+				 * right now, the only other specific option we take care of is the option that
+				 * we didn't find the portion units in the DB or in our modules.
+				 */
+			} catch (final Exception e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+			}
+		}
+		
+		// now we will enter the third food if we got it
+		if(foodSlot3.getValue()!= null) {
+			try {
+				speechText += addFoodToDB(amountSlot3,unitSlot3,foodSlot3,db);
+			} catch (final DBException e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+				/**
+				 * right now, the only other specific option we take care of is the option that
+				 * we didn't find the portion units in the DB or in our modules.
+				 */
+			} catch (final Exception e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+			}
+		}
+		
+		// now we will enter the fourth food if we got it
+		if(foodSlot4.getValue()!= null) {
+			try {
+				speechText += addFoodToDB(amountSlot4,unitSlot4,foodSlot4,db);
+			} catch (final DBException e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+				/**
+				 * right now, the only other specific option we take care of is the option that
+				 * we didn't find the portion units in the DB or in our modules.
+				 */
+			} catch (final Exception e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+			}
+		}
+		
+		speechText += String.format(FoodStrings.FOOD_LOGGED_END);
 
 		final Random rand = new Random();
 		if (rand.nextInt(6) == 2)
