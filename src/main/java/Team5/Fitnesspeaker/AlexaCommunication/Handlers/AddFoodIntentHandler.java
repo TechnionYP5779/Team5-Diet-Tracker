@@ -10,15 +10,18 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
+import com.amazon.ask.model.services.Pair;
 
 import Utils.DBUtils;
 import Utils.DBUtils.DBException;
 import Utils.Portion;
 import Utils.Portion.Type;
+import Utils.PortionSearchEngine.SearchResults;
 import Utils.PortionRequestGen;
 import Utils.PortionSearchEngine;
 import Utils.Strings;
 import Utils.Strings.FoodStrings;
+import Utils.Strings.HeightStrings;
 import Utils.Strings.IntentsNames;
 
 /** this class handles food recording
@@ -44,6 +47,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 				UnitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().get(UNIT_SLOT);
 
 		String speechText;
+		String repeatSpeechText;
 		final String repromptText = "";
 
 		if (foodSlot == null)
@@ -71,9 +75,22 @@ public class AddFoodIntentHandler implements RequestHandler {
 		// insert the portion to the DB
 		try {
 
-			Portion p=PortionSearchEngine.PortionSearch
-					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(), i.getServiceClientFactory().getUpsService().getProfileEmail()).getValue();
-			db.DBPushFood(p);
+			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
+					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(), i.getServiceClientFactory().getUpsService().getProfileEmail());
+			/** if there was a search error, i.e. the food wasn't found, notify the user to about
+			 * the option of custom meal
+			 */
+			if(p.getName() == SearchResults.SEARCH_NO_RESULTS) {
+				speechText = String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
+				repeatSpeechText = String.format(FoodStrings.FOOD_NOT_FOUND_REPEAT,added_food,added_food);
+				
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText)
+						.withSpeech(speechText).withReprompt(repeatSpeechText)
+						.withShouldEndSession(Boolean.FALSE).build();
+			} else {
+				db.DBPushFood(p.getValue());
+
+			}
 //		} catch (final DBException e) {
 //			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
 //					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
