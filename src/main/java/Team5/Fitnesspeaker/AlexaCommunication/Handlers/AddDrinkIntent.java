@@ -27,6 +27,7 @@ import Utils.Strings.IntentsNames;
 public class AddDrinkIntent implements RequestHandler {
 	public static final String ADD_COUNT_SLOT = "Number";
 	public static final String DRINK_NAME_SLOT = "drink";
+	/**TODO: add slot for Units, as in AddFoodIntentHandler**/
 	public static final String[] tips = { DrinkStrings.SITTING_TIP };
 
 	@Override
@@ -78,12 +79,12 @@ public class AddDrinkIntent implements RequestHandler {
 					.withReprompt(DrinkStrings.DRINKS_LOGGING_PROBLEM_REPEAT).withShouldEndSession(Boolean.FALSE)
 					.build();
 		} catch (Exception e) {
-			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
-					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, DrinkStrings.DRINKS_UNITS_PROBLEM)
+					.withSpeech(DrinkStrings.DRINKS_UNITS_PROBLEM).withReprompt(DrinkStrings.DRINKS_UNITS_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
 
-		speechText = added_num_of_cups == 1 ? String.format(DrinkStrings.ONE_DRINKS_LOGGED, drink_name)
+		speechText = added_num_of_cups == 1 ? String.format(DrinkStrings.ONE_DRINK_LOGGED, drink_name)
 				: String.format(DrinkStrings.MANY_DRINKS_LOGGED, Integer.valueOf(added_num_of_cups), drink_name);
 
 		final Random rand = new Random();
