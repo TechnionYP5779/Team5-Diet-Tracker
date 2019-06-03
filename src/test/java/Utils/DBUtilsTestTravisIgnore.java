@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
 
-import Utils.DBUtils.DBException;
-import Utils.Portion.Type;
-import Utils.UserInfo.Gender;
+import Utils.Portion.Portion;
+import Utils.Portion.PortionRequestGen;
+import Utils.DB.DBUtils;
 
 /**
  * unit tests for DBUtils
@@ -26,7 +26,7 @@ import Utils.UserInfo.Gender;
 public class DBUtilsTestTravisIgnore {
 
 	@Test
-	public void testDrinkHandling() throws DBException {
+	public void testDrinkHandling() throws DBUtils.DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -41,7 +41,7 @@ public class DBUtilsTestTravisIgnore {
 	}
 
 	@Test
-	public void testCoffeeDrinkHandling() throws DBException {
+	public void testCoffeeDrinkHandling() throws DBUtils.DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -56,7 +56,7 @@ public class DBUtilsTestTravisIgnore {
 	}
 
 	@Test
-	public void testCigarettesHandling() throws DBException {
+	public void testCigarettesHandling() throws DBUtils.DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -71,19 +71,19 @@ public class DBUtilsTestTravisIgnore {
 	}
 
 	@Test
-	public void testFoodHandling() throws DBException {
+	public void testFoodHandling() throws DBUtils.DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
 		assertNull(db.DBGetFoodByKey("123"));
 		assert db.DBGetTodayFoodList().isEmpty();
-		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, 52, "grams"));
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, 52, "grams"));
 		Portion p = db.DBGetFoodByKey(db.DBGetTodayFoodList().get(0).getName());
 		assertNotNull(p);
 		assertEquals("banana", p.getName());
 		assertEquals(Integer.valueOf(52), Integer.valueOf((int) p.getAmount()));
 
-		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, 48, "grams"));
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("banana", Portion.Type.FOOD, 48, "grams"));
 		List<Pair<String, Portion>> portionList = db.DBGetTodayFoodList();
 		p = db.DBGetFoodByKey(portionList.get(0).getName());
 		assertNotNull(p);
@@ -93,7 +93,7 @@ public class DBUtilsTestTravisIgnore {
 		assertEquals("banana", p.getName());
 		p = db.DBGetFoodByKey("avocado");
 		assertNull(p);
-		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("avocado", Type.FOOD, 48, "grams"));
+		db.DBPushFood(PortionRequestGen.generatePortionWithAmount("avocado", Portion.Type.FOOD, 48, "grams"));
 		portionList = db.DBGetTodayFoodList();
 		assertEquals(1, portionList.stream().filter(s -> s.getValue().getName().contains("avocado")).count());
 		assertEquals(Integer.valueOf(48),
@@ -104,7 +104,7 @@ public class DBUtilsTestTravisIgnore {
 	}
 
 	@Test
-	public void testDailyInfo() throws DBException {
+	public void testDailyInfo() throws DBUtils.DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
@@ -130,52 +130,21 @@ public class DBUtilsTestTravisIgnore {
 		db.DBUtilsRemoveUserDirectory();
 	}
 
-	@Test
-	public void testUserInfo() throws DBException {
-		final String testUser = "test_user";
-		final DBUtils db = new DBUtils(testUser);
-		db.DBUtilsRemoveUserDirectory();
 
-		assertNull(db.DBGetUserInfo());
-		db.DBUpdateUserInfo(new UserInfo(Gender.MALE, 22, 180, 2000, 120, 60, 5, 0));
-		assertNotNull(db.DBGetUserInfo());
-		assertEquals(Gender.MALE, db.DBGetUserInfo().getGender());
-		assertEquals(Integer.valueOf(22), Integer.valueOf(db.DBGetUserInfo().getAge()));
-		assertEquals(Integer.valueOf(180), Integer.valueOf(db.DBGetUserInfo().getHeight()));
-		assertEquals(Double.valueOf(2000), Double.valueOf(db.DBGetUserInfo().getDailyCaloriesGoal()));
-		Double d1 = Double.valueOf(60);
-		assertEquals(d1, Double.valueOf(db.DBGetUserInfo().getDailyCarbsGoal()));
-		assertEquals(Double.valueOf(120), Double.valueOf(db.DBGetUserInfo().getDailyProteinGramsGoal()));
-		assertEquals(Double.valueOf(5), Double.valueOf(db.DBGetUserInfo().getDailyFatsGoal()));
-		assertEquals(Double.valueOf(0), Double.valueOf(db.DBGetUserInfo().getDailyLimitCigarettes()));
-
-		db.DBUpdateUserInfo(new UserInfo(Gender.MALE, 22, 180, 1500, 120, 60, 5, 0));
-		assertNotNull(db.DBGetUserInfo());
-		assertEquals(Gender.MALE, db.DBGetUserInfo().getGender());
-		assertEquals(Integer.valueOf(22), Integer.valueOf(db.DBGetUserInfo().getAge()));
-		assertEquals(Integer.valueOf(180), Integer.valueOf(db.DBGetUserInfo().getHeight()));
-		assertEquals(Double.valueOf(1500), Double.valueOf(db.DBGetUserInfo().getDailyCaloriesGoal()));
-		assertEquals(Double.valueOf(60), Double.valueOf(db.DBGetUserInfo().getDailyCarbsGoal()));
-		assertEquals(Double.valueOf(120), Double.valueOf(db.DBGetUserInfo().getDailyProteinGramsGoal()));
-		assertEquals(Double.valueOf(5), Double.valueOf(db.DBGetUserInfo().getDailyFatsGoal()));
-		assertEquals(Double.valueOf(0), Double.valueOf(db.DBGetUserInfo().getDailyLimitCigarettes()));
-
-		db.DBUtilsRemoveUserDirectory();
-	}
 
 	@Test
-	public void testAlcoholHandling() throws DBException {
+	public void testAlcoholHandling() throws DBUtils.DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
 		db.DBUtilsRemoveUserDirectory();
 		assert db.DBGetTodayAlcoholList().isEmpty();
-		db.DBPushAlcohol(new Portion(Type.DRINK, "vodka", 40.0, 50, 0, 0, 0, 40));
+		db.DBPushAlcohol(new Portion(Portion.Type.DRINK, "vodka", 40.0, 50, 0, 0, 0, 40));
 		List<Pair<String, Portion>> portionList = db.DBGetTodayAlcoholList();
 		assertEquals(Integer.valueOf(1), Integer.valueOf(portionList.size()));
 		assertEquals("vodka", portionList.get(0).getValue().getName());
 		assertEquals(Double.valueOf(40), Double.valueOf(portionList.get(0).getValue().getAlchohol_by_volume()));
 		assertEquals(Double.valueOf(0), Double.valueOf(portionList.get(0).getValue().getCarbs_per_100_grams()));
-		db.DBPushAlcohol(new Portion(Type.DRINK, "wine", 40.0, 50, 0, 0, 0, 40));
+		db.DBPushAlcohol(new Portion(Portion.Type.DRINK, "wine", 40.0, 50, 0, 0, 0, 40));
 		portionList = db.DBGetTodayAlcoholList();
 		assertEquals(Integer.valueOf(2), Integer.valueOf(portionList.size()));
 		assertEquals(Long.valueOf(1),
@@ -185,24 +154,5 @@ public class DBUtilsTestTravisIgnore {
 		db.DBUtilsRemoveUserDirectory();
 	}
 
-	@Test
-	public void testBloodPressureHandling() throws DBException {
-		final String testUser = "test_user";
-		final DBUtils db = new DBUtils(testUser);
-		assert db.DBGetTodayBloodPressureMeasuresList().isEmpty();
-		db.DBPushBloodPressureMeasure(new BloodPressure(Integer.valueOf(120), Integer.valueOf(80), new Date()));
-		List<Pair<String, BloodPressure>> bloodPressureList = db.DBGetTodayBloodPressureMeasuresList();
-		assertEquals(Integer.valueOf(1), Integer.valueOf(bloodPressureList.size()));
-		assertEquals(Integer.valueOf(120), bloodPressureList.get(0).getValue().getSystolic());
-		assertEquals(Integer.valueOf(80), bloodPressureList.get(0).getValue().getDiastolic());
-		db.DBPushBloodPressureMeasure(new BloodPressure(Integer.valueOf(150), Integer.valueOf(60), new Date()));
-		bloodPressureList = db.DBGetTodayBloodPressureMeasuresList();
-		assertEquals(Integer.valueOf(2), Integer.valueOf(bloodPressureList.size()));
-		assertEquals(Long.valueOf(1), Long.valueOf(bloodPressureList.stream()
-				.filter(f -> f.getValue().getSystolic().equals(Integer.valueOf(120))).count()));
-		assertEquals(Long.valueOf(1), Long.valueOf(bloodPressureList.stream()
-				.filter(f -> f.getValue().getSystolic().equals(Integer.valueOf(150))).count()));
-		db.DBUtilsRemoveUserDirectory();
-	}
 
 }

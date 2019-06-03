@@ -8,6 +8,8 @@ import org.junit.Test;
 import com.amazon.ask.model.services.Pair;
 
 import Utils.PortionSearchEngine.SearchResults;
+import Utils.Portion.Portion;
+import Utils.Portion.PortionRequestGen;
 
 @SuppressWarnings("static-method")
 public  class PortionSearchEngineTestTravisIgnore {
