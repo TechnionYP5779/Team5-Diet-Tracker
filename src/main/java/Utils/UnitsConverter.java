@@ -22,7 +22,7 @@ public interface UnitsConverter {
 	 * @param liters : amount of given item in liters
 	 * @return amount of same item in milliliters if ml >=0 , -1 otherwise
 	 */
-	static double literToMilliliter(final double liters) {
+	static double literToMilliliterTrivial(final double liters) {
 		return liters < 0 ? -1 : liters * liters_const;
 	}
 
@@ -30,7 +30,7 @@ public interface UnitsConverter {
 	 * @param ml : amount of given item in milliliters
 	 * @return amount of same item in liters if ml >=0 , -1 otherwise
 	 */
-	static double milliliterToLiter(final double ml) {
+	static double milliliterToLiterTrivial(final double ml) {
 		return ml < 0 ? -1 : ml / liters_const;
 	}
 
@@ -38,15 +38,15 @@ public interface UnitsConverter {
 	 * @param gr : amount of given item in grams
 	 * @return amount of same item in gr if gr >=0 , -1 otherwise
 	 */
-	static double gramsToGrams(final double gr) {
-		return gr < 0 ? -1 : gr;
+	static double gramsToGramsTrivial(final double gr) {
+		return gr < 0 ? -1 : gr ;
 	}
 
 	/**
 	 * @param gr : amount of given item in grams
 	 * @return amount of same item in milligrams if gr >=0 , -1 otherwise
 	 */
-	static double gramsToMilligrams(final double gr) {
+	static double gramsToMilligramsTrivial(final double gr) {
 		return gr < 0 ? -1 : gr * grams_const;
 	}
 
@@ -54,7 +54,7 @@ public interface UnitsConverter {
 	 * @param gr : amount of given item in grams
 	 * @return amount of same item in kilograms if gr >=0 , -1 otherwise
 	 */
-	static double gramsToKilograms(final double gr) {
+	static double gramsToKilogramsTrivial(final double gr) {
 		return gr < 0 ? -1 : gr / grams_const;
 	}
 
@@ -62,7 +62,7 @@ public interface UnitsConverter {
 	 * @param kg : amount of given item in kilograms
 	 * @return amount of same item in milligrams if kg >=0 , -1 otherwise
 	 */
-	static double kilogramsToMilligrams(final double kg) {
+	static double kilogramsToMilligramsTrivial(final double kg) {
 		return kg < 0 ? -1 : kg * Math.pow(grams_const, 2);
 	}
 
@@ -70,7 +70,7 @@ public interface UnitsConverter {
 	 * @param kg : amount of given item in kilograms
 	 * @return amount of same item in grams if kg >=0 , -1 otherwise
 	 */
-	static double kilogramsToGrams(final double kg) {
+	static double kilogramsToGramsTrivial(final double kg) {
 		return kg < 0 ? -1 : kg * grams_const;
 	}
 
@@ -78,7 +78,7 @@ public interface UnitsConverter {
 	 * @param mg : amount of given item in milligrams
 	 * @return amount of same item in grams if mg >=0 , -1 otherwise
 	 */
-	static double milligramsToGrams(final double mg) {
+	static double milligramsToGramsTrivial(final double mg) {
 		return mg < 0 ? -1 : mg / grams_const;
 	}
 
@@ -86,7 +86,7 @@ public interface UnitsConverter {
 	 * @param mg : amount of given item in milligrams
 	 * @return amount of same item in kilograms if mg >=0 , -1 otherwise
 	 */
-	static double milligramsToKilograms(final double mg) {
+	static double milligramsToKilogramsTrivial(final double mg) {
 		return mg < 0 ? -1 : mg / Math.pow(grams_const, 2);
 	}
 

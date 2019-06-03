@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -11,23 +11,23 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
-import Utils.Portion.PortionRequestGen;
-import Utils.Portion.Portion.Type;
+import Utils.DBUtils;
+import Utils.DBUtils.DBException;
+import Utils.Portion.Type;
+import Utils.PortionRequestGen;
 import Utils.Strings;
-import Utils.DB.DBUtils;
-import Utils.DB.DBUtils.DBException;
 import Utils.Strings.DrinkStrings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
-import Utils.Strings.SlotString;
 
-/**
- * this class handles drink recording
- * 
+/** this class handles drink recording
  * @author Shalev Kuba
  * @since 2018-12-07
- */
-public class AddDrinkIntentHandler implements RequestHandler {
+ * */
+public class AddDrinkIntent implements RequestHandler {
+	public static final String ADD_COUNT_SLOT = "Number";
+	public static final String DRINK_NAME_SLOT = "drink";
+	/**TODO: add slot for Units, as in AddFoodIntentHandler**/
 	public static final String[] tips = { DrinkStrings.SITTING_TIP };
 
 	@Override
@@ -38,9 +38,9 @@ public class AddDrinkIntentHandler implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(SlotString.ADD_COUNT_SLOT),
+				.get(ADD_COUNT_SLOT),
 				DrinkSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-						.get(SlotString.DRINK_NAME_SLOT);
+						.get(DRINK_NAME_SLOT);
 		String speechText, repromptText = "";
 
 		if (NumberSlot == null)
@@ -79,12 +79,12 @@ public class AddDrinkIntentHandler implements RequestHandler {
 					.withReprompt(DrinkStrings.DRINKS_LOGGING_PROBLEM_REPEAT).withShouldEndSession(Boolean.FALSE)
 					.build();
 		} catch (Exception e) {
-			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
-					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, DrinkStrings.DRINKS_UNITS_PROBLEM)
+					.withSpeech(DrinkStrings.DRINKS_UNITS_PROBLEM).withReprompt(DrinkStrings.DRINKS_UNITS_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
 
-		speechText = added_num_of_cups == 1 ? String.format(DrinkStrings.ONE_DRINKS_LOGGED, drink_name)
+		speechText = added_num_of_cups == 1 ? String.format(DrinkStrings.ONE_DRINK_LOGGED, drink_name)
 				: String.format(DrinkStrings.MANY_DRINKS_LOGGED, Integer.valueOf(added_num_of_cups), drink_name);
 
 		final Random rand = new Random();

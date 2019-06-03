@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONObject;
+
 import com.amazon.ask.model.services.Pair;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -67,6 +69,10 @@ public class DBUtils {
 		}
 		database = FirebaseDatabase.getInstance();
 		this.user_mail = String.valueOf(user_mail).replace(".", "_dot_");
+	}
+	
+	public String DBGetEmail() {
+		return this.user_mail;
 	}
 
 	/**
@@ -736,5 +742,67 @@ public class DBUtils {
 		DBRemoveCustomMeal(mealName);
 		DBPushCustomMeal(meal);
 		return true;
+	}
+	
+	/**
+	 * add portion to cache
+	 * 
+	 * @author Shalev Kuba
+	 * @param searchedText - the text the user said to the Alexa
+	 * when he invoked the searching
+	 * @param portionResponse - the json response that was chosen
+	 * @throws DBException on error
+	 */
+	public void DBAddPortionToCache(final String searchedText,final JSONObject portionResponse) throws DBException {
+		try {
+			database.getReference().child(user_mail).child("portionCache")
+			.child(searchedText).setValueAsync(portionResponse.toString()).get();
+		} catch (ExecutionException | InterruptedException e) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+	}
+	
+	/**
+	 * returns the json response that was cached for the given text
+	 * 
+	 * @author Shalev Kuba
+	 * @param searchedText - the text the user said to the Alexa
+	 * when he invoked the searching
+	 * @return optional with the json response that was cached for the given text
+	 * or empty optional if the cache is empty for the given text
+	 * @throws DBException on error
+	 */
+	public Optional<JSONObject> DBGetPortionFromCache(final String searchedText) throws DBException {
+		final DatabaseReference dbRef = database.getReference().child(user_mail).child("portionCache").child(searchedText);
+		final List<JSONObject> jsonObjectList = new LinkedList<>();
+		final CountDownLatch done = new CountDownLatch(1);
+		dbRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(final DataSnapshot s) {
+				String jsonStr=s.getValue(String.class);
+				JSONObject json = null;
+				if (jsonStr != null) {
+					json =new JSONObject(jsonStr);
+				}
+					
+				if (json != null)
+					jsonObjectList.add(json);
+				done.countDown();
+			}
+
+			@Override
+			public void onCancelled(final DatabaseError e) {
+				System.out.println("The read failed: " + e.getCode());
+			}
+
+		});
+		try {
+			done.await();
+		} catch (final InterruptedException e1) {
+			// should not get here, if it does, it is database error- nothing we can do
+			throw new DBException();
+		}
+		return jsonObjectList.isEmpty() ? Optional.empty() : Optional.ofNullable(jsonObjectList.get(0));
 	}
 }

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,13 +12,9 @@ import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
 
-import Utils.DB.DBUtils;
-import Utils.DB.DBUtils.DBException;
-import Utils.Portion.Portion;
-import Utils.Portion.PortionRequestGen;
-import Utils.Portion.Portion.Type;
-import Utils.User.UserInfo;
-import Utils.User.UserInfo.Gender;
+import Utils.DBUtils.DBException;
+import Utils.Portion.Type;
+import Utils.UserInfo.Gender;
 
 /**
  * unit tests for DBUtils
@@ -26,7 +22,8 @@ import Utils.User.UserInfo.Gender;
  * @author Shalev Kuba
  * @since 2018-12-23
  */
-public class DBUtilsTest {
+@SuppressWarnings("static-method")
+public class DBUtilsTestTravisIgnore {
 
 	@Test
 	public void testDrinkHandling() throws DBException {
@@ -189,42 +186,23 @@ public class DBUtilsTest {
 	}
 
 	@Test
-	public void testCustomMealHandling() throws DBException {
+	public void testBloodPressureHandling() throws DBException {
 		final String testUser = "test_user";
 		final DBUtils db = new DBUtils(testUser);
-		db.DBUtilsRemoveUserDirectory();
-		assert db.DBGetCustomMeals().isEmpty();
-		Portion banana = PortionRequestGen.generatePortionWithAmount("banana", Type.FOOD, 52, "grams");
-		Portion apple = PortionRequestGen.generatePortionWithAmount("apple", Type.FOOD, 52, "grams");
-		Portion orange = PortionRequestGen.generatePortionWithAmount("orange", Type.FOOD, 52, "grams");
-		Portion tomato = PortionRequestGen.generatePortionWithAmount("tomato", Type.FOOD, 52, "grams");
-		Portion cucumber = PortionRequestGen.generatePortionWithAmount("cucumber", Type.FOOD, 52, "grams");
-		CustomMeal fruitSalad = new CustomMeal("fruit_salad");
-		fruitSalad.addPortion(banana);
-		fruitSalad.addPortion(apple);
-		fruitSalad.addPortion(orange);
-		CustomMeal salad = new CustomMeal("salad");
-		salad.addPortion(tomato);
-		salad.addPortion(cucumber);
-		db.DBPushCustomMeal(fruitSalad);
-		db.DBPushCustomMeal(salad);
-		HashMap<String, CustomMeal> lf = db.DBGetCustomMeals();
-		assertNotNull(lf);
-		assert !lf.isEmpty();
-		CustomMeal f = lf.get("fruit_salad");
-		assertEquals("fruit_salad", f.getName());
-		assertEquals(fruitSalad, f);
-		CustomMeal ff = lf.get("salad");
-		assertEquals("salad", ff.getName());
-		assertEquals(salad, ff);
-		assert !db.DBRemoveCustomMeal("pasta");
-		assert db.DBRemoveCustomMeal("fruit_salad");
-		HashMap<String, CustomMeal> lf2 = db.DBGetCustomMeals();
-		assert !lf2.containsKey("fruit_salad");
-		assert !db.DBUpdateCustomMeal("my_salad", banana);
-		assert db.DBUpdateCustomMeal("salad", orange);
-		salad.addPortion(orange);
-		assertEquals(salad, db.DBGetCustomMeal("salad"));
+		assert db.DBGetTodayBloodPressureMeasuresList().isEmpty();
+		db.DBPushBloodPressureMeasure(new BloodPressure(Integer.valueOf(120), Integer.valueOf(80), new Date()));
+		List<Pair<String, BloodPressure>> bloodPressureList = db.DBGetTodayBloodPressureMeasuresList();
+		assertEquals(Integer.valueOf(1), Integer.valueOf(bloodPressureList.size()));
+		assertEquals(Integer.valueOf(120), bloodPressureList.get(0).getValue().getSystolic());
+		assertEquals(Integer.valueOf(80), bloodPressureList.get(0).getValue().getDiastolic());
+		db.DBPushBloodPressureMeasure(new BloodPressure(Integer.valueOf(150), Integer.valueOf(60), new Date()));
+		bloodPressureList = db.DBGetTodayBloodPressureMeasuresList();
+		assertEquals(Integer.valueOf(2), Integer.valueOf(bloodPressureList.size()));
+		assertEquals(Long.valueOf(1), Long.valueOf(bloodPressureList.stream()
+				.filter(f -> f.getValue().getSystolic().equals(Integer.valueOf(120))).count()));
+		assertEquals(Long.valueOf(1), Long.valueOf(bloodPressureList.stream()
+				.filter(f -> f.getValue().getSystolic().equals(Integer.valueOf(150))).count()));
 		db.DBUtilsRemoveUserDirectory();
 	}
+
 }
