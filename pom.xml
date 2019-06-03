@@ -10,7 +10,7 @@
 
 	<name>Team5-Fitnesspeaker</name>
 	<url>http://maven.apache.org</url>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -20,6 +20,7 @@
 				<configuration>
 					<excludes>
 						<exclude>${someModule.test.excludes}</exclude>
+						<exclude>${someModule.test.excludes2}</exclude>
 					</excludes>
 					<includes>
 						<include>${someModule.test.includes}</include>
@@ -31,21 +32,64 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <someModule.skip.tests>false</someModule.skip.tests>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<someModule.skip.tests>false</someModule.skip.tests>
 		<skipTests>${someModule.skip.tests}</skipTests>
 		<someModule.test.includes>**/*Test.java</someModule.test.includes>
 		<someModule.test.excludes>**/*DBUtilsTest.java</someModule.test.excludes>
+		<someModule.test.excludes2>**/*FoodsDBTest.java</someModule.test.excludes2>
 	</properties>
 
+
 	<dependencies>
-		<dependency>
-   			<groupId>javax.mail</groupId>
-    		<artifactId>mail</artifactId>
-    		<version>1.5.0-b01</version>
-		</dependency>
 	
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<dependency>
+    		<groupId>com.googlecode.json-simple</groupId>
+    		<artifactId>json-simple</artifactId>
+    		<version>1.1</version>
+		</dependency>
+
+	
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.27.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.9.12</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent -->
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy-agent</artifactId>
+			<version>1.9.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
+		<dependency>
+			<groupId>org.objenesis</groupId>
+			<artifactId>objenesis</artifactId>
+			<version>3.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.5.0-b01</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
@@ -60,9 +104,9 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jfree/jfreechart -->
 		<dependency>
-    	<groupId>jfree</groupId>
-    	<artifactId>jfreechart</artifactId>
-    	<version>1.0.1</version>
+			<groupId>jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.amazon.alexa</groupId>
@@ -96,9 +140,9 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
-		    <groupId>org.json</groupId>
-		    <artifactId>json</artifactId>
-		    <version>20160810</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
 		</dependency>
 	</dependencies>
 </project>

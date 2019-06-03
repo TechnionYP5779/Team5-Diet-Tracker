@@ -26,5 +26,20 @@ hs_err_pid*
 /credentials/
 db_credentials.json
 
-/FoodsDB_server/
+/Team5-Fitnesspeaker/FoodsDB_server/creds/
+tests_creds.json
+
+/Team5-Fitnesspeaker/FoodsDB_server/creds/
+production_creds.json
+
+/Team5-Fitnesspeaker/FoodsDB_server/scripts/
+foodNut.xlsx
+
+/Team5-Fitnesspeaker/FoodsDB_server/scripts/
+foodPortion.xlsx
+
+/Team5-Fitnesspeaker/FoodsDB_server/
+server_key.pem
+
+/
 foods_db_creds.json
