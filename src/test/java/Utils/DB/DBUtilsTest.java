@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.amazon.ask.model.services.Pair;
 
+import Utils.CustomMeal;
 import Utils.DailyInfo;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
