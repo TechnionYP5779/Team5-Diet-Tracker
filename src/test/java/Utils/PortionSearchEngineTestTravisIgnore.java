@@ -10,7 +10,7 @@ import com.amazon.ask.model.services.Pair;
 import Utils.PortionSearchEngine.SearchResults;
 
 @SuppressWarnings("static-method")
-public  class PortionSearchEngineTest {
+public  class PortionSearchEngineTestTravisIgnore {
 
 	@Test
 	public void NumOfWordsInSentenceTest() {

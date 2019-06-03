@@ -23,7 +23,7 @@ import Utils.UserInfo.Gender;
  * @since 2018-12-23
  */
 @SuppressWarnings("static-method")
-public class DBUtilsTest {
+public class DBUtilsTestTravisIgnore {
 
 	@Test
 	public void testDrinkHandling() throws DBException {
