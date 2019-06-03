@@ -80,7 +80,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 			/** if there was a search error, i.e. the food wasn't found, notify the user to about
 			 * the option of custom meal
 			 */
-			if(p.getName() == SearchResults.SEARCH_NO_RESULTS) {
+			if(p.getName() == SearchResults.SEARCH_NO_RESULTS || p.getName() == SearchResults.SEARCH_ERROR) {
 				speechText = String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
 				repeatSpeechText = String.format(FoodStrings.FOOD_NOT_FOUND_REPEAT,added_food,added_food);
 				
