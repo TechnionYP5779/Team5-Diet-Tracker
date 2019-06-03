@@ -20,8 +20,9 @@ import org.json.JSONObject;
 import com.amazon.ask.model.services.Pair;
 import com.google.gson.JsonObject;
 
-import Utils.DBUtils.DBException;
-import Utils.Portion.Type;
+import Utils.DB.DBUtils;
+import Utils.Portion.Portion;
+import Utils.Portion.PortionRequestGen;
 
 public class PortionSearchEngine {
 
@@ -404,7 +405,7 @@ public class PortionSearchEngine {
 		final DBUtils db = new DBUtils(userEmail);
 		try {
 			db.DBAddPortionToCache(userText, response);
-		} catch (DBException e) {
+		} catch (DBUtils.DBException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
@@ -421,7 +422,7 @@ public class PortionSearchEngine {
 	 * @param userEmail      - the user mail
 	 * @return optional of portion if the unit is consistent with the cache, otherwise returns empty optional
 	 */
-	static Optional<Portion> GetPortionFromCache(String userEmail,String userText, String unit,Type t) {
+	static Optional<Portion> GetPortionFromCache(String userEmail,String userText, String unit,Portion.Type t) {
 		final DBUtils db = new DBUtils(userEmail);
 		try {
 			Optional<JSONObject> optJsonResponse=db.DBGetPortionFromCache(userText);
@@ -444,7 +445,7 @@ public class PortionSearchEngine {
 										measures_arr.getJSONObject(i).getDouble("eqv")));
 				}
 			}
-		} catch (DBException e) {
+		} catch (DBUtils.DBException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
