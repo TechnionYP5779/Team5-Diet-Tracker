@@ -50,8 +50,8 @@ public  class PortionSearchEngineTest {
 	
 	@Test
 	public void PortionSearchTest() {
-		Pair<SearchResults, Portion> tempPair=PortionSearchEngine.PortionSearch("saadshgerh","small",Portion.Type.FOOD,1,"test_user");
-		assertEquals(SearchResults.SEARCH_NO_RESULTS, tempPair.getName());
+//		Pair<SearchResults, Portion> tempPair=PortionSearchEngine.PortionSearch("saadshgerh","small",Portion.Type.FOOD,1,"test_user");
+//		assertEquals(SearchResults.SEARCH_NO_RESULTS, tempPair.getName());
 		
 		tempPair=PortionSearchEngine.PortionSearch("apPle","small",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
