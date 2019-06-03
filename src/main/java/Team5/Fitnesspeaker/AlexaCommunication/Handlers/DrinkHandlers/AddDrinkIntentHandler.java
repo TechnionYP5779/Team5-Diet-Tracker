@@ -1,4 +1,4 @@
-package Team5.Fitnesspeaker.AlexaCommunication.Handlers;
+package Team5.Fitnesspeaker.AlexaCommunication.Handlers.DrinkHandlers;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
@@ -11,25 +11,23 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 
-import Utils.DBUtils;
-import Utils.DBUtils.DBException;
-import Utils.Portion.Type;
-import Utils.PortionRequestGen;
+import Utils.Portion.PortionRequestGen;
+import Utils.Portion.Portion.Type;
 import Utils.Strings;
+import Utils.DB.DBUtils;
+import Utils.DB.DBUtils.DBException;
 import Utils.Strings.DrinkStrings;
 import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
+import Utils.Strings.SlotString;
 
 /** this class handles drink recording
  * @author Shalev Kuba
  * @since 2018-12-07
  * */
-public class AddDrinkIntent implements RequestHandler {
-	public static final String ADD_COUNT_SLOT = "Number";
-	public static final String DRINK_NAME_SLOT = "drink";
-	/**TODO: add slot for Units, as in AddFoodIntentHandler**/
-	public static final String[] tips = { DrinkStrings.SITTING_TIP };
+public class AddDrinkIntentHandler implements RequestHandler {
 
+	public static final String[] tips = { DrinkStrings.SITTING_TIP };
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.ADD_DRINK_INTENT));
@@ -38,9 +36,9 @@ public class AddDrinkIntent implements RequestHandler {
 	@Override
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot NumberSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-				.get(ADD_COUNT_SLOT),
+				.get(SlotString.ADD_COUNT_SLOT),
 				DrinkSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
-						.get(DRINK_NAME_SLOT);
+						.get(SlotString.DRINK_NAME_SLOT);
 		String speechText, repromptText = "";
 
 		if (NumberSlot == null)
@@ -79,8 +77,8 @@ public class AddDrinkIntent implements RequestHandler {
 					.withReprompt(DrinkStrings.DRINKS_LOGGING_PROBLEM_REPEAT).withShouldEndSession(Boolean.FALSE)
 					.build();
 		} catch (Exception e) {
-			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, DrinkStrings.DRINKS_UNITS_PROBLEM)
-					.withSpeech(DrinkStrings.DRINKS_UNITS_PROBLEM).withReprompt(DrinkStrings.DRINKS_UNITS_PROBLEM_REPEAT)
+			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
+					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
 
