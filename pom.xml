@@ -20,7 +20,6 @@
 				<configuration>
 					<excludes>
 						<exclude>${someModule.test.excludes}</exclude>
-						<exclude>${someModule.test.excludes2}</exclude>
 					</excludes>
 					<includes>
 						<include>${someModule.test.includes}</include>
