@@ -7,6 +7,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import Utils.UnitsConverter;
+
 public class UnitsConverterTest {
 
 	public static final double DELTA = 0.01;

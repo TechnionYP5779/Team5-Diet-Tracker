@@ -211,6 +211,7 @@ public class Strings {
 		public static final String UNIT_SLOT4 = "UnitFour";
 		public static final String CUSTOM_MEAL_SLOT = "meal";
 		public static final String INGREDIANT_SLOT = "ingredient";
+		public static final String PORTION_SLOT = "portion";
 	}
 
 	public static class NutritionalString {
