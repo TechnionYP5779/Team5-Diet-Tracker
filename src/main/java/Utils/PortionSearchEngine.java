@@ -381,11 +381,12 @@ public class PortionSearchEngine {
 			double unit_to_g) {
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		double unit_to_g_tmp=unit_to_g;
-		if(unit_to_g<0&&nut_arr.length()>0) {
-			for (int i = 0; i < nut_arr.getJSONObject(0).length(); ++i) {
-				if (nut_arr.getJSONObject(0).getString("label").contains("serving")) {
+		JSONArray measures_json=nut_arr.getJSONObject(0).getJSONArray("measures");
+		if(unit_to_g<0&&measures_json.length()>0) {
+			for (int i = 0; i < measures_json.length(); ++i) {
+				if (measures_json.getJSONObject(0).getString("label").contains("serving")) {
 					
-					unit_to_g_tmp=nut_arr.getJSONObject(0).getDouble("value");
+					unit_to_g_tmp=measures_json.getJSONObject(0).getDouble("value");
 					break;
 				}
 		}
