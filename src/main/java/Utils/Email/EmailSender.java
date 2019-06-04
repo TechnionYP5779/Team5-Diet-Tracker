@@ -164,7 +164,7 @@ public class EmailSender {
 			messegeText += String.format(weeklyEmailTableLine, dates[dayIndex++], Double.valueOf(ds.dailyCalories),
 					Double.valueOf(ds.dailyProteins), Double.valueOf(ds.dailyCarbs), Double.valueOf(ds.dailyFats));
 		messegeText += String.format(weeklyEmailBottom, Double.valueOf(s.weeklyCalories),
-				Double.valueOf(s.weeklyProteins), Double.valueOf(s.weeklyCarbs), Double.valueOf(s.weeklyCarbs),
+				Double.valueOf(s.weeklyProteins), Double.valueOf(s.weeklyCarbs),
 				Double.valueOf(s.weeklyFats), s.weeklyWaterCups, s.weeklyCiggaretsSmoked);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override

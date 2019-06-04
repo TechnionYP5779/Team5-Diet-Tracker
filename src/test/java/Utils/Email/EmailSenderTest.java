@@ -45,6 +45,7 @@ public class EmailSenderTest {
 	public void designedWeeklyEmailTest() {
 		WeeklyStatistics w = new WeeklyStatistics();
 		DailyStatistics ds = new DailyStatistics();
+		ds.ciggaretesSmoked="1";
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
