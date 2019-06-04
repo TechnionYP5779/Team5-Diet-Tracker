@@ -12,7 +12,6 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.services.Pair;
 
-import Utils.Portion.PortionRequestGen;
 import Utils.Portion.Portion;
 import Utils.Portion.Portion.Type;
 import Utils.PortionSearchEngine;
@@ -102,39 +101,6 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withShouldEndSession(Boolean.FALSE).build();
 		// initialize database object with the user mail
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
-
-		/*// insert the portion to the DB
-		try {
-
-			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
-					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(), i.getServiceClientFactory().getUpsService().getProfileEmail());
-//			 if there was a search error, i.e. the food wasn't found, notify the user to about
-//			 * the option of custom meal
-//			 *
-			if(p.getName() == SearchResults.SEARCH_NO_RESULTS || p.getName() == SearchResults.SEARCH_ERROR) {
-				speechText = String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
-				repeatSpeechText = String.format(FoodStrings.FOOD_NOT_FOUND_REPEAT,added_food,added_food);
-				
-				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText)
-						.withSpeech(speechText).withReprompt(repeatSpeechText)
-						.withShouldEndSession(Boolean.FALSE).build();
-			} else {
-				db.DBPushFood(p.getValue());
-
-			}
-//		} catch (final DBException e) {
-//			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
-//					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
-//					.withShouldEndSession(Boolean.FALSE).build();
-			
-//			 * right now, the only other specific option we take care of is the option that
-//			 * we didn't find the portion units in the DB or in our modules.
-//			 
-		} catch (final Exception | DBException e) {
-			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
-					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
-					.withShouldEndSession(Boolean.FALSE).build();
-		}*/
 		
 		try {
 			speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
