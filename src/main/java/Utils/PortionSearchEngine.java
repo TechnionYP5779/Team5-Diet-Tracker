@@ -382,14 +382,17 @@ public class PortionSearchEngine {
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		double unit_to_g_tmp=unit_to_g;
 		JSONArray measures_json=nut_arr.getJSONObject(0).getJSONArray("measures");
-		if(unit_to_g<0&&measures_json.length()>0) {
-			for (int i = 0; i < measures_json.length(); ++i) {
-				if (measures_json.getJSONObject(0).getString("label").contains("serving")) {
-					
-					unit_to_g_tmp=measures_json.getJSONObject(0).getDouble("value");
-					break;
+		if(unit_to_g<0) {
+			if(measures_json.length()>0) {
+				for (int i = 0; i < measures_json.length(); ++i) {
+					if (measures_json.getJSONObject(0).getString("label").contains("serving")) {
+						
+						unit_to_g_tmp=measures_json.getJSONObject(0).getDouble("value");
+						break;
+					}
 				}
-		}
+			unit_to_g_tmp=1;
+			}
 		}
 		
 		for (final String nut : Nutritional_values)
