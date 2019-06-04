@@ -56,7 +56,9 @@ public class AddFoodIntentHandler implements RequestHandler {
 			if(p.getName() == SearchResults.SEARCH_NO_RESULTS || p.getName() == SearchResults.SEARCH_ERROR) {
 				return String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
 			} else {
-				db.DBPushFood(p.getValue());
+				Portion portionToPush=p.getValue();
+				portionToPush.amount*=amount.intValue();
+				db.DBPushFood(portionToPush);
 
 			}
 		}catch (final Exception | DBException e) {

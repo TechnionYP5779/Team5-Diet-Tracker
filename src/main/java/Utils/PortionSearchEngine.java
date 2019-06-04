@@ -350,9 +350,9 @@ public class PortionSearchEngine {
 			final JSONArray nut_arr = nutrientsResponse.getJSONObject("report").getJSONObject("food")
 					.getJSONArray("nutrients");
 
-			// TODO: change the '1' to either the proper conversion, if exists, or :
+			// TODO: change the '-1' to either the proper conversion, if exists, or :
 			// TODO: the default USDA's gram units for some label that we need to choose
-			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), 1);
+			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), -1);
 
 			/** set the boolean flag to "true" if the conversion exists **/
 			final boolean convertionExists = CheckConvertions(unit, amount) > -1;
@@ -380,14 +380,24 @@ public class PortionSearchEngine {
 	static Portion GetPortionFromNutrientsResponse(JSONArray nut_arr, final Portion.Type t, String name,
 			double unit_to_g) {
 		final ArrayList<Double> nutritions = new ArrayList<>();
-
+		double unit_to_g_tmp=unit_to_g;
+		if(unit_to_g<0&&nut_arr.length()>0) {
+			for (int i = 0; i < nut_arr.getJSONObject(0).length(); ++i) {
+				if (nut_arr.getJSONObject(0).getString("label").contains("serving")) {
+					
+					unit_to_g_tmp=nut_arr.getJSONObject(0).getDouble("value");
+					break;
+				}
+		}
+		}
+		
 		for (final String nut : Nutritional_values)
 			for (int i = 0; i < nut_arr.length(); ++i)
 				if (nut_arr.getJSONObject(i).getString("name").equals(nut)) {
 					nutritions.add(Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value"))));
 					break;
 				}
-		return new Portion(t, name, unit_to_g, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
+		return new Portion(t, name, unit_to_g_tmp, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
 				nutritions.get(2).doubleValue(), nutritions.get(3).doubleValue());
 	}
 	

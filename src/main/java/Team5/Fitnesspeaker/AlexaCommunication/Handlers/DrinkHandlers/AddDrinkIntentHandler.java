@@ -10,9 +10,13 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
+import com.amazon.ask.model.services.Pair;
 
+import Utils.Portion.Portion;
 import Utils.Portion.PortionRequestGen;
 import Utils.Portion.Portion.Type;
+import Utils.PortionSearchEngine.SearchResults;
+import Utils.PortionSearchEngine;
 import Utils.Strings;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
@@ -31,6 +35,35 @@ public class AddDrinkIntentHandler implements RequestHandler {
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.ADD_DRINK_INTENT));
+	}
+	
+	public static String addDrinkToDB(Slot amountSlot, Slot unitSlot, Slot foodSlot,DBUtils db) throws Exception,DBException {
+		Integer amountAux;
+		if (amountSlot.getValue() == null) {
+			amountAux = Integer.valueOf(1);
+		}else {
+			amountAux = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
+		}
+		final Integer amount = amountAux;
+		final String units = unitSlot.getValue(), added_food = foodSlot.getValue();
+		
+		//add food
+		try {
+			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
+					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(),db.DBGetEmail());
+			 /*if there was a search error, i.e. the food wasn't found, notify the user to about
+			 * the option of custom meal
+			 **/
+			if(p.getName() == SearchResults.SEARCH_NO_RESULTS || p.getName() == SearchResults.SEARCH_ERROR) {
+				return String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
+			} else {
+				db.DBPushFood(p.getValue());
+
+			}
+		}catch (final Exception | DBException e) {
+			return String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
+		}
+		return String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food);
 	}
 
 	@Override
