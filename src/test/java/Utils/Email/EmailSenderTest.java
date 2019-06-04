@@ -19,7 +19,7 @@ public class EmailSenderTest {
 	@Test
 	public void testMailSend() {
 		(new EmailSender()).sendMail(String.format("You ate %s.", "pasta and potatoes"), "test subject",
-				"donotreplay.team5.fitnessspeaker@gmail.com");
+				"team5.yearlyproject@gmail.com");
 	}
 
 	@Test
