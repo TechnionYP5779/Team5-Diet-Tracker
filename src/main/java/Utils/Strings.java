@@ -63,8 +63,8 @@ public class Strings {
 		public static final String DRINKS_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with logging your drink,  Please tell me again";
 		public static final String DRINKS_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the drink in different units, in liters for example";
 		public static final String DRINKS_UNITS_PROBLEM_REPEAT = "I'll repeat, there was a problem with the units you provided, Please try to tell me the drink in different units, in liters for example";
-		public static final String MANY_DRINKS_LOGGED = "You logged %d %s of %s, to your health!";
-		public static final String ONE_DRINK_LOGGED = "You logged one %s of %s, to your health!";
+		public static final String MANY_DRINKS_LOGGED = "You logged %d cups of %s, to your health!";
+		public static final String ONE_DRINK_LOGGED = "You logged one cup of %s, to your health!";
 		public static final String SITTING_TIP = " Remember to drink while sitting down. ";
 		public static final String TELL_DRINKS_AGAIN = "I'm not sure what did you drink. Please tell me again";
 		public static final String TELL_DRINKS_AGAIN_REPEAT = "I will repeat, I'm not sure what did you  drink. Please tell me again";
