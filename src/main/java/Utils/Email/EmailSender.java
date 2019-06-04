@@ -79,8 +79,8 @@ public class EmailSender {
 	}
 
 	public EmailSender() {
-		this.username = "donotreplay.nutracker@gmail.com";
-		this.password = "Team5.FitnessSpeaker";
+		this.username = "donotreplay.diettracker@gmail.com";
+		this.password = "RwfBaNzbbCT69Ax";
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");

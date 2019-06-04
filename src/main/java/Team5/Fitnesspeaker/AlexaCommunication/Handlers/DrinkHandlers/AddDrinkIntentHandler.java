@@ -21,15 +21,13 @@ import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
 
-/**
- * this class handles drink recording
- * 
+/** this class handles drink recording
  * @author Shalev Kuba
  * @since 2018-12-07
- */
+ * */
 public class AddDrinkIntentHandler implements RequestHandler {
-	public static final String[] tips = { DrinkStrings.SITTING_TIP };
 
+	public static final String[] tips = { DrinkStrings.SITTING_TIP };
 	@Override
 	public boolean canHandle(final HandlerInput i) {
 		return i.matches(intentName(IntentsNames.ADD_DRINK_INTENT));
@@ -84,7 +82,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
 
-		speechText = added_num_of_cups == 1 ? String.format(DrinkStrings.ONE_DRINKS_LOGGED, drink_name)
+		speechText = added_num_of_cups == 1 ? String.format(DrinkStrings.ONE_DRINK_LOGGED, drink_name)
 				: String.format(DrinkStrings.MANY_DRINKS_LOGGED, Integer.valueOf(added_num_of_cups), drink_name);
 
 		final Random rand = new Random();

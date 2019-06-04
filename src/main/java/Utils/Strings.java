@@ -59,10 +59,12 @@ public class Strings {
 		public static final String DIDNT_DRINKED_TODAY = "You haven't drink %s today yet";
 		public static final String DRINKED_SO_FAR_MANY = "so far, you have drank %d cups of %s";
 		public static final String DRINKED_SO_FAR_ONE = "so far, you have drank a single cup of %s";
-		public static final String DRINKS_LOGGING_PROBLEM = "There was a problem with the water logging, Please tell me again";
-		public static final String DRINKS_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with the water logging,  Please tell me again";
+		public static final String DRINKS_LOGGING_PROBLEM = "There was a problem with logging your drink, Please tell me again";
+		public static final String DRINKS_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with logging your drink,  Please tell me again";
+		public static final String DRINKS_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the drink in different units, in liters for example";
+		public static final String DRINKS_UNITS_PROBLEM_REPEAT = "I'll repeat, there was a problem with the units you provided, Please try to tell me the drink in different units, in liters for example";
 		public static final String MANY_DRINKS_LOGGED = "You logged %d cups of %s, to your health!";
-		public static final String ONE_DRINKS_LOGGED = "You logged one cup of %s, to your health!";
+		public static final String ONE_DRINK_LOGGED = "You logged one cup of %s, to your health!";
 		public static final String SITTING_TIP = " Remember to drink while sitting down. ";
 		public static final String TELL_DRINKS_AGAIN = "I'm not sure what did you drink. Please tell me again";
 		public static final String TELL_DRINKS_AGAIN_REPEAT = "I will repeat, I'm not sure what did you  drink. Please tell me again";
@@ -78,6 +80,8 @@ public class Strings {
 		public static final String FOOD_LOGGED_END = " bon appetit!";
 		public static final String FOOD_LOGGING_PROBLEM = "There was a problem with the portion logging, Please tell me again";
 		public static final String FOOD_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with the portion logging,  Please tell me again";
+		public static final String FOOD_NOT_FOUND = "I cannot find information about %s, but you can insert it into your custom food list by saying, log custome meal %s";
+		public static final String FOOD_NOT_FOUND_REPEAT = "I'll repeat, I cannot find information about %s, but you can insert it into your custom food list by saying, log custome meal %s";
 		public static final String FOOD_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the food in different units, in grams for example";
 		public static final String FOOD_UNITS_PROBLEM_REPEAT = "I'll repeat, there was a problem with the units you provided, Please try to tell me the food in different units, in grams for example";
 		public static final String SITTING_TIP = " Remember to eat your meals while sitting down comfortably. ";
