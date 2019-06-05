@@ -19,7 +19,7 @@ public class EmailSenderTest {
 	@Test
 	public void testMailSend() {
 		(new EmailSender()).sendMail(String.format("You ate %s.", "pasta and potatoes"), "test subject",
-				"donotreplay.team5.fitnessspeaker@gmail.com");
+				"team5.yearlyproject@gmail.com");
 	}
 
 	@Test
@@ -45,6 +45,7 @@ public class EmailSenderTest {
 	public void designedWeeklyEmailTest() {
 		WeeklyStatistics w = new WeeklyStatistics();
 		DailyStatistics ds = new DailyStatistics();
+		ds.ciggaretesSmoked="1";
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);
 		w.dailyStatistics.add(ds);

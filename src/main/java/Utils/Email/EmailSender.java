@@ -79,8 +79,8 @@ public class EmailSender {
 	}
 
 	public EmailSender() {
-		this.username = "donotreplay.nutracker@gmail.com";
-		this.password = "Team5.FitnessSpeaker";
+		this.username = "donotreplay.diettracker@gmail.com";
+		this.password = "RwfBaNzbbCT69Ax";
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -164,7 +164,7 @@ public class EmailSender {
 			messegeText += String.format(weeklyEmailTableLine, dates[dayIndex++], Double.valueOf(ds.dailyCalories),
 					Double.valueOf(ds.dailyProteins), Double.valueOf(ds.dailyCarbs), Double.valueOf(ds.dailyFats));
 		messegeText += String.format(weeklyEmailBottom, Double.valueOf(s.weeklyCalories),
-				Double.valueOf(s.weeklyProteins), Double.valueOf(s.weeklyCarbs), Double.valueOf(s.weeklyCarbs),
+				Double.valueOf(s.weeklyProteins), Double.valueOf(s.weeklyCarbs),
 				Double.valueOf(s.weeklyFats), s.weeklyWaterCups, s.weeklyCiggaretsSmoked);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override
