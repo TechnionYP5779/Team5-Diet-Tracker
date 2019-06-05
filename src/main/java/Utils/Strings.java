@@ -38,6 +38,7 @@ public class Strings {
 		public static final String REMOVE_CUSTOM_MEAL_INTENT = "RemoveCustomMeal";
 		public static final String ADD_INGREDIENT_MEAL_INTENT = "AddCustomMealIngredient";
 		public static final String EAT_CUSTOM_MEAL_INTENT = "EatingCustomMeal";
+		public static final String FEELINGS_REPORT_INTENT = "FeelingReport";
 	}
 
 	public static class AgeStrings {
