@@ -225,5 +225,42 @@ public class EmailSender {
 			throw e;
 		}
 	}
+	
+	/**
+	 * from now will be the implementation of feeling reports
+	 */
+	
+	public void designedDailyFeelingsEmail(final String subject, final String toMail, final String name,
+			final DailyStatistics s) {
+		String messegeText = String.format(dailyEmailTop, "%", getDate(), name);
+		for (final Portion p : s.foodPortions)
+			messegeText += String.format(dailyEmailTableLine, p.getName(), p.getAmount(),
+					p.getCalories_per_100_grams() * (p.getAmount() / 100),
+					p.getProteins_per_100_grams() * (p.getAmount() / 100),
+					p.getCarbs_per_100_grams() * (p.getAmount() / 100),
+					p.getFats_per_100_grams() * (p.getAmount() / 100));
+		messegeText += String.format(dailyEmailBottom, Double.valueOf(s.dailyCalories), Double.valueOf(s.dailyProteins),
+				Double.valueOf(s.dailyCarbs), Double.valueOf(s.dailyFats), s.cupsOfWater, s.ciggaretesSmoked);
+		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+
+		try {
+
+			final Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(username));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toMail));
+			message.setSubject(subject);
+			message.setContent(messegeText, "text/html");
+
+			Transport.send(message);
+
+		} catch (final MessagingException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

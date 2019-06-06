@@ -21,7 +21,8 @@ public class FeelingReportHandler implements RequestHandler {
 	
 	String UserMail;
 	String UserName;
-	DailyStatistics dailyStatistics = new DailyStatistics();
+	//DailyStatistics dailyStatistics = new DailyStatistics();
+	List<Portion> foodPortions = new ArrayList<>();
 	DBUtils db;
 
 	private void getUserInfo(HandlerInput i) {
@@ -33,17 +34,6 @@ public class FeelingReportHandler implements RequestHandler {
 		db = new DBUtils(this.UserMail);
 	}
 
-	private void getDrinkInfo() {
-		Optional<Integer> drinks = Optional.empty();
-		try {
-			drinks = this.db.DBGetTodayWaterCups();
-		} catch (DBException e1) {
-			// e1.printStackTrace();
-		}
-
-		this.dailyStatistics.cupsOfWater = !drinks.isPresent() ? "0" : drinks.get().toString();
-	}
-
 	private void getFoodInfo() {
 		List<Pair<String, Portion>> foods = new ArrayList<Pair<String, Portion>>();
 		try {
@@ -51,18 +41,8 @@ public class FeelingReportHandler implements RequestHandler {
 		} catch (DBException e1) {
 			// e1.printStackTrace();
 		}
-		this.dailyStatistics.foodPortions = foods.stream().map(p -> p.getValue()).collect(Collectors.toList());
-	}
-
-	private void getCiggaretsInfo() {
-		Optional<Integer> cigs = Optional.empty();
-		try {
-			cigs = this.db.DBGetTodayCigarettesCount();
-		} catch (DBException e1) {
-			// e1.printStackTrace();
-		}
-
-		this.dailyStatistics.ciggaretesSmoked = !cigs.isPresent() ? "0" : cigs.get().toString();
+		//this.dailyStatistics.foodPortions = foods.stream().map(p -> p.getValue()).collect(Collectors.toList());
+		foodPortions = foods.stream().map(p -> p.getValue()).collect(Collectors.toList());
 	}
 
 	@Override
