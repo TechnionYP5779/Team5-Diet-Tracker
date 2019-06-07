@@ -5,6 +5,7 @@ package Utils.Email;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -231,16 +232,16 @@ public class EmailSender {
 	 */
 	
 	public void designedDailyFeelingsEmail(final String subject, final String toMail, final String name,
-			final DailyStatistics s) {
+			final List<Portion> f) {
 		String messegeText = String.format(dailyEmailTop, "%", getDate(), name);
-		for (final Portion p : s.foodPortions)
+		for (final Portion p : f)
 			messegeText += String.format(dailyEmailTableLine, p.getName(), p.getAmount(),
 					p.getCalories_per_100_grams() * (p.getAmount() / 100),
 					p.getProteins_per_100_grams() * (p.getAmount() / 100),
 					p.getCarbs_per_100_grams() * (p.getAmount() / 100),
 					p.getFats_per_100_grams() * (p.getAmount() / 100));
-		messegeText += String.format(dailyEmailBottom, Double.valueOf(s.dailyCalories), Double.valueOf(s.dailyProteins),
-				Double.valueOf(s.dailyCarbs), Double.valueOf(s.dailyFats), s.cupsOfWater, s.ciggaretesSmoked);
+		messegeText += String.format(dailyEmailBottom, 0.0, 0.0,
+				0.0, 0.0, 0, 0);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {

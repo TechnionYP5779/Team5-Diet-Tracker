@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
-import Utils.Email.DailyStatistics;
 import Utils.Email.EmailSender;
 import Utils.Portion.Portion;
 
@@ -54,14 +53,11 @@ public class FeelingReportHandler implements RequestHandler {
 	public Optional<Response> handle(HandlerInput i) {
 		getUserInfo(i);
 		openDatabase();
-		getDrinkInfo();
 		getFoodInfo();
-		getCiggaretsInfo();
-		dailyStatistics.calculateDailyNutritions();
 
 		try {
-			(new EmailSender()).designedDailyStatisticsEmail("Daily Statistics", this.UserMail.replace("_dot_", "."),
-					UserName, dailyStatistics);
+			(new EmailSender()).designedDailyFeelingsEmail("Daily Feelings Report", this.UserMail.replace("_dot_", "."),
+					UserName, foodPortions);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
