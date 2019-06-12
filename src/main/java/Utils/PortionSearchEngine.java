@@ -230,10 +230,13 @@ public class PortionSearchEngine {
 	 * @return pair of searching result and the desired portion if the searching was
 	 *         successful.
 	 */
-	public static Pair<SearchResults, Portion> PortionSearch(String freeText, String unit, final Portion.Type t,
+	public static Pair<SearchResults, Portion> PortionSearch(String freeText, String units, final Portion.Type t,
 			double amount,String userEmail) {
 		try {
-		
+			String munit=null;
+			if(units!=null)
+				munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
+			final String unit = munit;
 			String freeTextToReq = freeText.replaceAll(" ", "%20");
 			freeTextToReq = freeTextToReq.toLowerCase();
 			//check the cache
