@@ -38,13 +38,15 @@ public class AddFoodIntentHandler implements RequestHandler {
 	
 	public static String addFoodToDB(Slot amountSlot, Slot unitSlot, Slot foodSlot,DBUtils db) throws Exception,DBException {
 		Integer amountAux;
-		if (amountSlot.getValue() == null) {
+		if (amountSlot.getValue() == null || amountSlot.getValue().equals("0")) {
 			amountAux = Integer.valueOf(1);
 		}else {
 			amountAux = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
 		}
 		final Integer amount = amountAux;
-		final String units = unitSlot.getValue(), added_food = foodSlot.getValue();
+		final String added_food = foodSlot.getValue();
+		final String units=unitSlot.getValue();
+		
 		
 		//add food
 		try {
@@ -64,7 +66,10 @@ public class AddFoodIntentHandler implements RequestHandler {
 		}catch (final Exception | DBException e) {
 			return String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
 		}
+		if(unitSlot.getValue() == null)
+			return String.format(FoodStrings.FOOD_LOGGED, amount, " ", added_food);
 		return String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food);
+
 	}
 
 	@Override

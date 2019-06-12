@@ -233,6 +233,7 @@ public class PortionSearchEngine {
 	public static Pair<SearchResults, Portion> PortionSearch(String freeText, String unit, final Portion.Type t,
 			double amount,String userEmail) {
 		try {
+		
 			String freeTextToReq = freeText.replaceAll(" ", "%20");
 			freeTextToReq = freeTextToReq.toLowerCase();
 			//check the cache
@@ -258,9 +259,7 @@ public class PortionSearchEngine {
 
 				int sizeNoRaw = responseWithoutRaw.getJSONObject("list").getInt("end");
 				for (int i = 0; i < sizeNoRaw; i++)
-					portion_list.add(new Pair<String, String>(
-							responseWithoutRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
-									.getString("name"),
+					portion_list.add(new Pair<String, String>(freeTextToReq,
 							responseWithoutRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
 									.getString("ndbno")));
 
@@ -271,9 +270,7 @@ public class PortionSearchEngine {
 
 				int sizeRaw = responseWithRaw.getJSONObject("list").getInt("end");
 				for (int i = 0; i < sizeRaw; i++)
-					portion_list.add(new Pair<String, String>(
-							responseWithRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
-									.getString("name"),
+					portion_list.add(new Pair<String, String>(freeTextToReq,
 							responseWithRaw.getJSONObject("list").getJSONArray("item").getJSONObject(i)
 									.getString("ndbno")));
 
@@ -283,9 +280,7 @@ public class PortionSearchEngine {
 			if (responseWithBranded.has("list")) {
 				int sizeBranded = responseWithBranded.getJSONObject("list").getInt("end");
 				for (int ¢ = 0; ¢ < sizeBranded; ++¢)
-					portion_list.add(new Pair<String, String>(
-							responseWithBranded.getJSONObject("list").getJSONArray("item").getJSONObject(¢)
-									.getString("name"),
+					portion_list.add(new Pair<String, String>(freeTextToReq,
 							responseWithBranded.getJSONObject("list").getJSONArray("item").getJSONObject(¢)
 									.getString("ndbno")));
 
@@ -327,7 +322,19 @@ public class PortionSearchEngine {
 				int measures_arr_len = measures_arr.length();
 				if (measures_arr_len > 0 && !(measures_arr.get(0).equals(null))) {
 					for (int i = 0; i < measures_arr_len; ++i) {
-						if (measures_arr.getJSONObject(i).getString("label").contains(unit)) {
+						if((unit==null && (measures_arr.getJSONObject(i).getString("label").contains("small") || 
+											    measures_arr.getJSONObject(i).getString("label").contains("medium") ||
+											    measures_arr.getJSONObject(i).getString("label").contains("large") ||
+											    measures_arr.getJSONObject(i).getString("label").contains("serving"))))
+						{
+							//cache since it was full success
+							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
+							
+							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
+									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
+											measures_arr.getJSONObject(i).getDouble("eqv")));
+						}
+						else if (measures_arr.getJSONObject(i).getString("label").contains(unit)) {
 							
 							//cache since it was full success
 							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
@@ -453,8 +460,15 @@ public class PortionSearchEngine {
 			int measures_arr_len = measures_arr.length();
 			if (measures_arr_len > 0 && !(measures_arr.get(0).equals(null))) {
 				for (int i = 0; i < measures_arr_len; ++i) {
-					if (measures_arr.getJSONObject(i).getString("label").contains(unit))
-						
+					if((unit==null && (measures_arr.getJSONObject(i).getString("label").contains("small") || 
+						    measures_arr.getJSONObject(i).getString("label").contains("medium") ||
+						    measures_arr.getJSONObject(i).getString("label").contains("large") ||
+						    measures_arr.getJSONObject(i).getString("label").contains("serving"))))
+					{
+						return Optional.ofNullable(GetPortionFromNutrientsResponse(nut_arr, t, userText,
+								measures_arr.getJSONObject(i).getDouble("eqv")));
+					}
+					else if (unit!= null && measures_arr.getJSONObject(i).getString("label").contains(unit))
 						return Optional.ofNullable(GetPortionFromNutrientsResponse(nut_arr, t, userText,
 										measures_arr.getJSONObject(i).getDouble("eqv")));
 				}
