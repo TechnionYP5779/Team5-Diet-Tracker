@@ -87,20 +87,17 @@ public class EmailSender {
 			+ "  border: 1px solid #dddddd;\r\n  text-align: left;\r\n  padding: 8px;\r\n}\r\n"
 			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
 			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
-			+ "<center><h1><u>Daily Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s ,</br>\r\n"
-			+ "This is your current feeling statistics of today:\r\n</br>\r\n</br>\r\n</br>\r\n"
+			+ "<center><h1><u>Daily Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
+			+ "here is a brief review of how you felt today:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
-			+ "    <th>Amount (in grams)</th>\r\n    <th>calories</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";
 
-	private final String dailyFeelingEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td>%.2f </td>\r\n"
+	private final String dailyFeelingEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td> %s </td>\r\n"
 			+ "  </tr>\r\n";
 
-	private final String dailyFeelingEmailBottom = "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
-			+ "  <td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
-			+ "%.2f </td>\r\n  </tr>\r\n</table>\r\n</br>\r\nYou drank "
-			+ "%s cups of water and smoked %s cigarettes\r\n"
-			+ "</br>\r\n</br>\r\n<Div>Have a nice day.</Div>\r\n\r\n</body>";
+	private final String dailyFeelingEmailBottom = " </table>\r\n</br>\r\n"
+			+ "</br>\r\n</br>\r\n<br><\br><Div>Have a nice day.</Div>\r\n\r\n</body>";
 
 	private String getDate() {
 		final String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
@@ -264,7 +261,7 @@ public class EmailSender {
 		String messegeText = String.format(dailyFeelingEmailTop, "%", getDate(), name);
 		for (final Portion p : f)
 			messegeText += String.format(dailyFeelingEmailTableLine, p.getName(), p.getAmount(),
-					p.getCalories_per_100_grams() * (p.getAmount() / 100));
+					p.getFeeling());
 		messegeText += String.format(dailyFeelingEmailBottom, 0.0, 0.0,
 				0.0, 0.0, 0, 0);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
