@@ -65,7 +65,7 @@ public class EmailSender {
 			+ "<center><h1><u>Weekly statistics</u></h1></center>\r\n</br>\r\nHi %s ,</br>\r\n"
 			+ "This is your current statistics of the past seven days:\r\n</br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Date</th>\r\n"
-			+ "<th>calories</th>\r\n    <th>proteins</th>\r\n"
+			+ "<th>Calories</th>\r\n    <th>Proteins</th>\r\n"
 			+ "    <th>Carbs</th>\r\n    <th>Fats</th>\r\n  </tr>\r\n ";
 
 	private final String weeklyEmailTableLine = "<tr><td> %s </td>\r\n   <td>%.2f </td>\r\n    <td>"
