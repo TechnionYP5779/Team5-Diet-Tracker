@@ -212,6 +212,14 @@ public class Portion {
 	public void setTime(Date time) {
 		this.time = time;
 	}
+	
+	public String getUnits() {
+		return this.units;
+	}
+	
+	public void setUnits(String unit) {
+		this.units = unit;
+	}
 
 	@Override
 	public String toString() {

@@ -65,8 +65,14 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 					speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
 							+ " you ate " + Integer.valueOf((int) p.getAmount()) / 100 + " meals of " + p.getName();
 				} else {
-					speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
-							+ " you ate " + Integer.valueOf((int) p.getAmount()) + " grams of " + p.getName();
+					if (p.getUnits()!=null) {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " "+p.getUnits()+" of " + p.getName();
+					} else {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " " + p.getName();
+					}
+				
 				}
 			}
 		}

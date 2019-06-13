@@ -240,7 +240,7 @@ public class PortionSearchEngine {
 			String freeTextToReq = freeText.replaceAll(" ", "%20");
 			freeTextToReq = freeTextToReq.toLowerCase();
 			//check the cache
-			Optional<Portion> optCachePortion=GetPortionFromCache(userEmail,freeTextToReq, unit,t);
+			Optional<Portion> optCachePortion=GetPortionFromCache(userEmail,freeTextToReq, unit,t,amount);
 			if(optCachePortion.isPresent()) 
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 						optCachePortion.get()); 
@@ -335,16 +335,16 @@ public class PortionSearchEngine {
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t,freeTextToReq,
-											measures_arr.getJSONObject(i).getDouble("eqv")));
+											amount,unit));
 						}
-						else if (measures_arr.getJSONObject(i).getString("label").contains(unit)) {
+						else if (unit != null && measures_arr.getJSONObject(i).getString("label").contains(unit)) {
 							
 							//cache since it was full success
 							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t, freeTextToReq,
-											measures_arr.getJSONObject(i).getDouble("eqv")));
+											amount, unit));
 						}
 
 					}
@@ -362,7 +362,7 @@ public class PortionSearchEngine {
 
 			// TODO: change the '-1' to either the proper conversion, if exists, or :
 			// TODO: the default USDA's gram units for some label that we need to choose
-			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), -1);
+			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), amount,unit);
 
 			/** set the boolean flag to "true" if the conversion exists **/
 			final boolean convertionExists = CheckConvertions(unit, amount) > -1;
@@ -388,7 +388,7 @@ public class PortionSearchEngine {
 	 *         problem
 	 */
 	static Portion GetPortionFromNutrientsResponse(JSONArray nut_arr, final Portion.Type t, String name,
-			double unit_to_g) {
+			double unit_to_g, String units) {
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		double unit_to_g_tmp=unit_to_g;
 		JSONArray measures_json=nut_arr.getJSONObject(0).getJSONArray("measures");
@@ -412,7 +412,7 @@ public class PortionSearchEngine {
 					break;
 				}
 		return new Portion(t, name, unit_to_g_tmp, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
-				nutritions.get(2).doubleValue(), nutritions.get(3).doubleValue());
+				nutritions.get(2).doubleValue(), nutritions.get(3).doubleValue(),units);
 	}
 	
 	
@@ -446,7 +446,7 @@ public class PortionSearchEngine {
 	 * @param userEmail      - the user mail
 	 * @return optional of portion if the unit is consistent with the cache, otherwise returns empty optional
 	 */
-	static Optional<Portion> GetPortionFromCache(String userEmail,String userText, String unit,Portion.Type t) {
+	static Optional<Portion> GetPortionFromCache(String userEmail,String userText, String unit,Portion.Type t,double amount) {
 		final DBUtils db = new DBUtils(userEmail);
 		try {
 			Optional<JSONObject> optJsonResponse=db.DBGetPortionFromCache(userText);
@@ -469,11 +469,11 @@ public class PortionSearchEngine {
 						    measures_arr.getJSONObject(i).getString("label").contains("serving"))))
 					{
 						return Optional.ofNullable(GetPortionFromNutrientsResponse(nut_arr, t, userText,
-								measures_arr.getJSONObject(i).getDouble("eqv")));
+								amount, unit));
 					}
 					else if (unit!= null && measures_arr.getJSONObject(i).getString("label").contains(unit))
 						return Optional.ofNullable(GetPortionFromNutrientsResponse(nut_arr, t, userText,
-										measures_arr.getJSONObject(i).getDouble("eqv")));
+										amount,unit));
 				}
 			}
 		} catch (DBUtils.DBException e) {
