@@ -39,6 +39,8 @@ public class Strings {
 		public static final String ADD_INGREDIENT_MEAL_INTENT = "AddCustomMealIngredient";
 		public static final String EAT_CUSTOM_MEAL_INTENT = "EatingCustomMeal";
 		public static final String FEELINGS_REPORT_INTENT = "FeelingReport";
+		public static final String FEELING_INTENT = "HowDoYouFeel";
+
 	}
 
 	public static class AgeStrings {
@@ -214,6 +216,7 @@ public class Strings {
 		public static final String CUSTOM_MEAL_SLOT = "meal";
 		public static final String INGREDIANT_SLOT = "ingredient";
 		public static final String PORTION_SLOT = "portion";
+		public static final String FEELING_SLOT = "feeling";
 	}
 
 	public static class NutritionalString {
