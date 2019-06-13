@@ -20,6 +20,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import java.text.SimpleDateFormat;  
 
 import Utils.Portion.Portion;
 
@@ -41,7 +42,7 @@ public class EmailSender {
 			+ "<center><h1><u>Daily statistics</u></h1></center>\r\n</br>\r\nHi %s ,</br>\r\n"
 			+ "This is your current statistics of today:\r\n</br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
-			+ "    <th>Amount (in grams)</th>\r\n    <th>calories</th>\r\n    <th>proteins</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>Calories</th>\r\n    <th>Proteins</th>\r\n"
 			+ "    <th>Carbs</th>\r\n    <th>Fats</th>\r\n  </tr>\r\n  <tr>\r\n";
 
 	private final String dailyEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td>%.2f </td>\r\n"
@@ -90,11 +91,11 @@ public class EmailSender {
 			+ "<center><h1><u>Daily Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
 			+ "here is a brief review of how you felt today:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
-			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n    <th>Time</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";
 
 	private final String FeelingEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td> %s </td>\r\n"
-			+ "  </tr>\r\n";
+			+ " <td> %s </td>\r\n  </tr>\r\n";
 
 	private final String FeelingEmailBottom = " </table>\r\n</br>\r\n"
 			+ "</br>\r\n</br>\r\n<br><\br><Div>Have a nice day.</Div>\r\n\r\n</body>";
@@ -107,7 +108,7 @@ public class EmailSender {
 			+ "<center><h1><u>Weekly Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
 			+ "here is a brief review of how you felt during the last week:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
-			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n    <th>Time</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";
 	
 	private final String monthlyFeelingEmailTop = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
@@ -118,7 +119,7 @@ public class EmailSender {
 			+ "<center><h1><u>Monthly Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
 			+ "here is a brief review of how you felt during the last month:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
-			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n    <th>Time</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";
 
 	private String getDate() {
@@ -158,7 +159,7 @@ public class EmailSender {
 	}
 
 	public void designedDailyStatisticsEmail(final String subject, final String toMail, final String name,
-			final DailyStatistics s) {
+			final DailyStatistics s) {  
 		String messegeText = String.format(dailyEmailTop, "%", getDate(), name);
 		for (final Portion p : s.foodPortions)
 			messegeText += String.format(dailyEmailTableLine, p.getName(), p.getAmount(),
@@ -280,6 +281,7 @@ public class EmailSender {
 	
 	public void designedFeelingsEmail(final String subject, final String toMail, final String name,
 			final List<Portion> f, final String period) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		String messegeText = String.format(dailyFeelingEmailTop, "%", getDate(), name);
 		if (period.equals("weekly"))
 			messegeText = String.format(weeklyFeelingEmailTop, "%", getDate(), name);
@@ -287,7 +289,7 @@ public class EmailSender {
 			messegeText = String.format(monthlyFeelingEmailTop, "%", getDate(), name);
 		for (final Portion p : f)
 			messegeText += String.format(FeelingEmailTableLine, p.getName(), p.getAmount(),
-					p.getFeeling());
+					p.getFeeling(),formatter.format(p.getTime()));
 		messegeText += String.format(FeelingEmailBottom);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override
