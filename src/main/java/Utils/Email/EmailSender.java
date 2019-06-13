@@ -105,7 +105,7 @@ public class EmailSender {
 			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
 			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
 			+ "<center><h1><u>Weekly Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
-			+ "here is a brief review of how you felt this week:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
+			+ "here is a brief review of how you felt during the last week:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
 			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";
@@ -116,7 +116,7 @@ public class EmailSender {
 			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
 			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
 			+ "<center><h1><u>Monthly Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
-			+ "here is a brief review of how you felt this month:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
+			+ "here is a brief review of how you felt during the last month:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
 			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";

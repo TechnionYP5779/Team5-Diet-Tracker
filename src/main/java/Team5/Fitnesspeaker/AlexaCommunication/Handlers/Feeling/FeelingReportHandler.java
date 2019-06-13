@@ -9,6 +9,7 @@ import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.services.Pair;
 import static com.amazon.ask.request.Predicates.intentName;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,13 +35,33 @@ public class FeelingReportHandler implements RequestHandler {
 	private void openDatabase() {
 		db = new DBUtils(this.UserMail);
 	}
+	
+	private static String[] getDates(int period) {
+		String[] dates = new String[period];
+		Calendar day = Calendar.getInstance();
+		day.add(Calendar.DATE, -period);
+		for (int j = 0; j < period; ++j) {
+			day.add(Calendar.DATE, 1);
+			String[] date = day.getTime().toString().split("\\s+");
+			dates[j] = date[2] + "-" + date[1] + "-" + date[5];
+		}
+		return dates;
+	}
 
-	private void getFoodInfo() {
+	private void getFoodInfo(final String period) {
+		int periodNum = 1;
+		if (period.equals("weekly"))
+			periodNum = 7;
+		if (period.equals("monthly"))
+			periodNum = 30;
 		List<Pair<String, Portion>> foods = new ArrayList<Pair<String, Portion>>();
-		try {
-			foods = this.db.DBGetTodayFoodList();
-		} catch (DBException e1) {
-			// e1.printStackTrace();
+		for(String date : getDates(periodNum)) {
+			try {
+				//foods = this.db.DBGetTodayFoodList();
+				foods.addAll(this.db.DBGetDateFoodList(date));
+			} catch (DBException e1) {
+				// e1.printStackTrace();
+			}
 		}
 		foodPortions = foods.stream().map(p -> p.getValue()).collect(Collectors.toList());
 	}
@@ -57,7 +78,7 @@ public class FeelingReportHandler implements RequestHandler {
 		final String period = timeSlot.getValue();
 		getUserInfo(i);
 		openDatabase();
-		getFoodInfo();
+		getFoodInfo(period);
 
 		try {
 			(new EmailSender()).designedFeelingsEmail("Daily Feelings Report", this.UserMail.replace("_dot_", "."),
