@@ -334,7 +334,7 @@ public class PortionSearchEngine {
 							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
-									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
+									GetPortionFromNutrientsResponse(nut_arr, t,freeTextToReq,
 											measures_arr.getJSONObject(i).getDouble("eqv")));
 						}
 						else if (measures_arr.getJSONObject(i).getString("label").contains(unit)) {
@@ -343,7 +343,7 @@ public class PortionSearchEngine {
 							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
-									GetPortionFromNutrientsResponse(nut_arr, t, p.getName(),
+									GetPortionFromNutrientsResponse(nut_arr, t, freeTextToReq,
 											measures_arr.getJSONObject(i).getDouble("eqv")));
 						}
 
