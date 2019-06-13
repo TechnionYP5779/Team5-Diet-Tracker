@@ -28,6 +28,10 @@ public class EmailSender {
 	final String username;
 	final String password;
 	Properties props = new Properties();
+	
+	/*
+	 * statistics emails bodies:
+	 */
 
 	private final String dailyEmailTop = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
 			+ "  border-collapse: collapse;\r\n  width: 100%s;\r\n}\r\n\r\ntd, th {\r\n"
@@ -70,6 +74,30 @@ public class EmailSender {
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
+			+ "%.2f </td>\r\n  </tr>\r\n</table>\r\n</br>\r\nYou drank "
+			+ "%s cups of water and smoked %s cigarettes\r\n"
+			+ "</br>\r\n</br>\r\n<Div>Have a nice day.</Div>\r\n\r\n</body>";
+	
+	/*
+	 * feelings emails bodies:
+	 */
+	
+	private final String dailyFeelingEmailTop = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
+			+ "  border-collapse: collapse;\r\n  width: 100%s;\r\n}\r\n\r\ntd, th {\r\n"
+			+ "  border: 1px solid #dddddd;\r\n  text-align: left;\r\n  padding: 8px;\r\n}\r\n"
+			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
+			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
+			+ "<center><h1><u>Daily Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s ,</br>\r\n"
+			+ "This is your current feeling statistics of today:\r\n</br>\r\n</br>\r\n</br>\r\n"
+			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>calories</th>\r\n"
+			+ "  </tr>\r\n  <tr>\r\n";
+
+	private final String dailyFeelingEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td>%.2f </td>\r\n"
+			+ "  </tr>\r\n";
+
+	private final String dailyFeelingEmailBottom = "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
+			+ "  <td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  </tr>\r\n</table>\r\n</br>\r\nYou drank "
 			+ "%s cups of water and smoked %s cigarettes\r\n"
 			+ "</br>\r\n</br>\r\n<Div>Have a nice day.</Div>\r\n\r\n</body>";
@@ -233,14 +261,11 @@ public class EmailSender {
 	
 	public void designedDailyFeelingsEmail(final String subject, final String toMail, final String name,
 			final List<Portion> f) {
-		String messegeText = String.format(dailyEmailTop, "%", getDate(), name);
+		String messegeText = String.format(dailyFeelingEmailTop, "%", getDate(), name);
 		for (final Portion p : f)
-			messegeText += String.format(dailyEmailTableLine, p.getName(), p.getAmount(),
-					p.getCalories_per_100_grams() * (p.getAmount() / 100),
-					p.getProteins_per_100_grams() * (p.getAmount() / 100),
-					p.getCarbs_per_100_grams() * (p.getAmount() / 100),
-					p.getFats_per_100_grams() * (p.getAmount() / 100));
-		messegeText += String.format(dailyEmailBottom, 0.0, 0.0,
+			messegeText += String.format(dailyFeelingEmailTableLine, p.getName(), p.getAmount(),
+					p.getCalories_per_100_grams() * (p.getAmount() / 100));
+		messegeText += String.format(dailyFeelingEmailBottom, 0.0, 0.0,
 				0.0, 0.0, 0, 0);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override
