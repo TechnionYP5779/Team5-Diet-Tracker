@@ -240,7 +240,7 @@ public class PortionSearchEngine {
 			String freeTextToReq = freeText.replaceAll(" ", "%20");
 			freeTextToReq = freeTextToReq.toLowerCase();
 			//check the cache
-			Optional<Portion> optCachePortion=GetPortionFromCache(userEmail,freeTextToReq, unit,t,amount);
+			Optional<Portion> optCachePortion=GetPortionFromCache(userEmail,freeTextToReq, units,t,amount);
 			if(optCachePortion.isPresent()) 
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 						optCachePortion.get()); 
@@ -335,7 +335,7 @@ public class PortionSearchEngine {
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t,freeTextToReq,
-											amount,unit));
+											amount,units));
 						}
 						else if (unit != null && measures_arr.getJSONObject(i).getString("label").contains(unit)) {
 							
@@ -344,7 +344,7 @@ public class PortionSearchEngine {
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t, freeTextToReq,
-											amount, unit));
+											amount, units));
 						}
 
 					}
@@ -362,7 +362,7 @@ public class PortionSearchEngine {
 
 			// TODO: change the '-1' to either the proper conversion, if exists, or :
 			// TODO: the default USDA's gram units for some label that we need to choose
-			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), amount,unit);
+			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), amount,units);
 
 			/** set the boolean flag to "true" if the conversion exists **/
 			final boolean convertionExists = CheckConvertions(unit, amount) > -1;
