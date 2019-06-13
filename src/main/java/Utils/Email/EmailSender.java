@@ -93,11 +93,33 @@ public class EmailSender {
 			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";
 
-	private final String dailyFeelingEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td> %s </td>\r\n"
+	private final String FeelingEmailTableLine = "<td> %s </td>\r\n    <td> %.2f </td>\r\n    <td> %s </td>\r\n"
 			+ "  </tr>\r\n";
 
-	private final String dailyFeelingEmailBottom = " </table>\r\n</br>\r\n"
+	private final String FeelingEmailBottom = " </table>\r\n</br>\r\n"
 			+ "</br>\r\n</br>\r\n<br><\br><Div>Have a nice day.</Div>\r\n\r\n</body>";
+	
+	private final String weeklyFeelingEmailTop = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
+			+ "  border-collapse: collapse;\r\n  width: 100%s;\r\n}\r\n\r\ntd, th {\r\n"
+			+ "  border: 1px solid #dddddd;\r\n  text-align: left;\r\n  padding: 8px;\r\n}\r\n"
+			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
+			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
+			+ "<center><h1><u>Weekly Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
+			+ "here is a brief review of how you felt this week:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
+			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
+			+ "  </tr>\r\n  <tr>\r\n";
+	
+	private final String monthlyFeelingEmailTop = "<head>\r\n<style>\r\ntable {\r\n  font-family: arial, sans-serif;\r\n"
+			+ "  border-collapse: collapse;\r\n  width: 100%s;\r\n}\r\n\r\ntd, th {\r\n"
+			+ "  border: 1px solid #dddddd;\r\n  text-align: left;\r\n  padding: 8px;\r\n}\r\n"
+			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
+			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
+			+ "<center><h1><u>Monthly Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
+			+ "here is a brief review of how you felt this month:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
+			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n"
+			+ "    <th>Amount (in grams)</th>\r\n    <th>Feelings Recorded</th>\r\n"
+			+ "  </tr>\r\n  <tr>\r\n";
 
 	private String getDate() {
 		final String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
@@ -256,14 +278,17 @@ public class EmailSender {
 	 * from now will be the implementation of feeling reports
 	 */
 	
-	public void designedDailyFeelingsEmail(final String subject, final String toMail, final String name,
-			final List<Portion> f) {
+	public void designedFeelingsEmail(final String subject, final String toMail, final String name,
+			final List<Portion> f, final String period) {
 		String messegeText = String.format(dailyFeelingEmailTop, "%", getDate(), name);
+		if (period.equals("weekly"))
+			messegeText = String.format(weeklyFeelingEmailTop, "%", getDate(), name);
+		if (period.equals("monthly"))
+			messegeText = String.format(monthlyFeelingEmailTop, "%", getDate(), name);
 		for (final Portion p : f)
-			messegeText += String.format(dailyFeelingEmailTableLine, p.getName(), p.getAmount(),
+			messegeText += String.format(FeelingEmailTableLine, p.getName(), p.getAmount(),
 					p.getFeeling());
-		messegeText += String.format(dailyFeelingEmailBottom, 0.0, 0.0,
-				0.0, 0.0, 0, 0);
+		messegeText += String.format(FeelingEmailBottom);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {

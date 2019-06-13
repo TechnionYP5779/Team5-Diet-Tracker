@@ -200,6 +200,7 @@ public class Strings {
 		public static final String AMOUNT_SLOT = "Number";
 		public static final String FOOD_SLOT = "Food";
 		public static final String UNIT_SLOT = "Unit";
+		public static final String TIME_UNIT_SLOT = "TimeUnit";
 		public static final String MEASURE_SLOT = "Measure";
 		public static final String AMOUNT_SLOT2 = "NumberTwo";
 		public static final String FOOD_SLOT2 = "FoodTwo";

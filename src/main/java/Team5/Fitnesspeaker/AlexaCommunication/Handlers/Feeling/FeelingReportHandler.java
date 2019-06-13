@@ -3,7 +3,9 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers.Feeling;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
+import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.services.Pair;
 import static com.amazon.ask.request.Predicates.intentName;
 import java.util.ArrayList;
@@ -15,12 +17,12 @@ import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
 import Utils.Email.EmailSender;
 import Utils.Portion.Portion;
+import Utils.Strings.SlotString;
 
 public class FeelingReportHandler implements RequestHandler {
 	
 	String UserMail;
 	String UserName;
-	//DailyStatistics dailyStatistics = new DailyStatistics();
 	List<Portion> foodPortions = new ArrayList<>();
 	DBUtils db;
 
@@ -40,7 +42,6 @@ public class FeelingReportHandler implements RequestHandler {
 		} catch (DBException e1) {
 			// e1.printStackTrace();
 		}
-		//this.dailyStatistics.foodPortions = foods.stream().map(p -> p.getValue()).collect(Collectors.toList());
 		foodPortions = foods.stream().map(p -> p.getValue()).collect(Collectors.toList());
 	}
 
@@ -51,13 +52,16 @@ public class FeelingReportHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput i) {
+		final Slot timeSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
+				.get(SlotString.TIME_UNIT_SLOT);
+		final String period = timeSlot.getValue();
 		getUserInfo(i);
 		openDatabase();
 		getFoodInfo();
 
 		try {
-			(new EmailSender()).designedDailyFeelingsEmail("Daily Feelings Report", this.UserMail.replace("_dot_", "."),
-					UserName, foodPortions);
+			(new EmailSender()).designedFeelingsEmail("Daily Feelings Report", this.UserMail.replace("_dot_", "."),
+					UserName, foodPortions,period);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
