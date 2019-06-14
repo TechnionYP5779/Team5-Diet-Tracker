@@ -44,8 +44,8 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 
 		// retrieving the information
 		try {
-			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).filter(p -> (p.getType() == Type.FOOD || p.getType() == Type.MEAL))
-					.collect(Collectors.toList());
+			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue())/*.filter(p -> (p.getType() == Type.FOOD || p.getType() == Type.MEAL))
+					*/.collect(Collectors.toList());
 		} catch (final DBException e) {
 			// no need to do anything
 		}
@@ -64,7 +64,7 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 				if (p.type == Type.MEAL) {
 					speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
 							+ " you ate " + Integer.valueOf((int) p.getAmount()) / 100 + " meals of " + p.getName();
-				} else {
+				} else if (p.type == Type.FOOD) {
 					if (p.getUnits()!=null) {
 						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
 						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " "+p.getUnits()+" of " + p.getName();
@@ -73,6 +73,14 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " " + p.getName();
 					}
 				
+				}else {
+					if (p.getUnits()!=null) {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you drank " + Integer.valueOf((int) p.getAmount()) + " "+p.getUnits()+" of " + p.getName();
+					} else {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you drank " + Integer.valueOf((int) p.getAmount()) + " " + p.getName();
+					}
 				}
 			}
 		}
