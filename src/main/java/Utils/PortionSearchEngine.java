@@ -231,7 +231,7 @@ public class PortionSearchEngine {
 	 *         successful.
 	 */
 	public static Pair<SearchResults, Portion> PortionSearch(String freeText, String units, final Portion.Type t,
-			double amount,String userEmail) {
+			int amount,String userEmail) {
 		try {
 			String munit=null;
 			if(units!=null)
@@ -328,14 +328,16 @@ public class PortionSearchEngine {
 						if((unit==null && (measures_arr.getJSONObject(i).getString("label").contains("small") || 
 											    measures_arr.getJSONObject(i).getString("label").contains("medium") ||
 											    measures_arr.getJSONObject(i).getString("label").contains("large") ||
-											    measures_arr.getJSONObject(i).getString("label").contains("serving"))))
+											    measures_arr.getJSONObject(i).getString("label").contains("serving") ||
+											    (t==Portion.Type.DRINK && measures_arr.getJSONObject(i).getString("label").contains("cup")) ||
+											    (t==Portion.Type.DRINK && measures_arr.getJSONObject(i).getString("label").contains("can")))))
 						{
 							//cache since it was full success
 							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t,freeTextToReq,
-											amount,units));
+											amount,-1.0,units));
 						}
 						else if (unit != null && measures_arr.getJSONObject(i).getString("label").contains(unit)) {
 							
@@ -344,7 +346,7 @@ public class PortionSearchEngine {
 							
 							return new Pair<SearchResults, Portion>(SearchResults.SEARCH_FULL_SUCCESS,
 									GetPortionFromNutrientsResponse(nut_arr, t, freeTextToReq,
-											amount, units));
+											amount,measures_arr.getJSONObject(i).getDouble("eqv"), units));
 						}
 
 					}
@@ -362,7 +364,7 @@ public class PortionSearchEngine {
 
 			// TODO: change the '-1' to either the proper conversion, if exists, or :
 			// TODO: the default USDA's gram units for some label that we need to choose
-			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), amount,units);
+			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), amount,-1,units);
 
 			/** set the boolean flag to "true" if the conversion exists **/
 			final boolean convertionExists = CheckConvertions(unit, amount) > -1;
@@ -387,7 +389,7 @@ public class PortionSearchEngine {
 	 * @return portion object according to the given Json, null if there is a
 	 *         problem
 	 */
-	static Portion GetPortionFromNutrientsResponse(JSONArray nut_arr, final Portion.Type t, String name,
+	static Portion GetPortionFromNutrientsResponse(JSONArray nut_arr, final Portion.Type t, String name, int amount,
 			double unit_to_g, String units) {
 		final ArrayList<Double> nutritions = new ArrayList<>();
 		double unit_to_g_tmp=unit_to_g;
@@ -395,23 +397,28 @@ public class PortionSearchEngine {
 		if(unit_to_g<0) {
 			if(measures_json.length()>0) {
 				for (int i = 0; i < measures_json.length(); ++i) {
-					if (measures_json.getJSONObject(0).getString("label").contains("serving")) {
+					if (measures_json.getJSONObject(i).getString("label").contains("serving")
+							|| measures_json.getJSONObject(i).getString("label").contains("small")
+							|| measures_json.getJSONObject(i).getString("label").contains("medium")
+							|| measures_json.getJSONObject(i).getString("label").contains("big")
+							|| (t==Portion.Type.DRINK && measures_json.getJSONObject(i).getString("label").contains("cup"))
+							||(t==Portion.Type.DRINK && measures_json.getJSONObject(i).getString("label").contains("can"))) {
 						
-						unit_to_g_tmp=measures_json.getJSONObject(0).getDouble("value");
+						unit_to_g_tmp=measures_json.getJSONObject(i).getDouble("eqv");
 						break;
 					}
 				}
-			unit_to_g_tmp=1;
+			if (unit_to_g_tmp<0) unit_to_g_tmp=t==Portion.Type.DRINK? 238 /*grams of cup*/ : 100 /*default serving size*/;
 			}
 		}
 		
 		for (final String nut : Nutritional_values)
 			for (int i = 0; i < nut_arr.length(); ++i)
 				if (nut_arr.getJSONObject(i).getString("name").equals(nut)) {
-					nutritions.add(Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value"))));
+					nutritions.add(Double.valueOf(Double.parseDouble(nut_arr.getJSONObject(i).getString("value"))*(((double)unit_to_g_tmp)/((double)100))));
 					break;
 				}
-		return new Portion(t, name, unit_to_g_tmp, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
+		return new Portion(t, name, amount, nutritions.get(0).doubleValue(), nutritions.get(1).doubleValue(),
 				nutritions.get(2).doubleValue(), nutritions.get(3).doubleValue(),units);
 	}
 	
@@ -446,7 +453,7 @@ public class PortionSearchEngine {
 	 * @param userEmail      - the user mail
 	 * @return optional of portion if the unit is consistent with the cache, otherwise returns empty optional
 	 */
-	static Optional<Portion> GetPortionFromCache(String userEmail,String userText, String unit,Portion.Type t,double amount) {
+	static Optional<Portion> GetPortionFromCache(String userEmail,String userText, String unit,Portion.Type t,int amount) {
 		final DBUtils db = new DBUtils(userEmail);
 		try {
 			Optional<JSONObject> optJsonResponse=db.DBGetPortionFromCache(userText);
@@ -466,14 +473,16 @@ public class PortionSearchEngine {
 					if((unit==null && (measures_arr.getJSONObject(i).getString("label").contains("small") || 
 						    measures_arr.getJSONObject(i).getString("label").contains("medium") ||
 						    measures_arr.getJSONObject(i).getString("label").contains("large") ||
-						    measures_arr.getJSONObject(i).getString("label").contains("serving"))))
+						    measures_arr.getJSONObject(i).getString("label").contains("serving")))||
+						    (t==Portion.Type.DRINK && measures_arr.getJSONObject(i).getString("label").contains("cup")) ||
+						    (t==Portion.Type.DRINK && measures_arr.getJSONObject(i).getString("label").contains("can")))
 					{
 						return Optional.ofNullable(GetPortionFromNutrientsResponse(nut_arr, t, userText,
-								amount, unit));
+								amount,-1, unit));
 					}
 					else if (unit!= null && measures_arr.getJSONObject(i).getString("label").contains(unit))
 						return Optional.ofNullable(GetPortionFromNutrientsResponse(nut_arr, t, userText,
-										amount,unit));
+										amount,measures_arr.getJSONObject(i).getDouble("eqv"),unit));
 				}
 			}
 		} catch (DBUtils.DBException e) {

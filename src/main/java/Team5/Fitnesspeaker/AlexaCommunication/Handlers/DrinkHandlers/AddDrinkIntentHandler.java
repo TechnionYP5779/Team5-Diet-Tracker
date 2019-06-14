@@ -50,7 +50,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 		//add food
 		try {
 			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
-					(added_drink, units, Type.DRINK, Double.valueOf(amount.intValue()).doubleValue(),db.DBGetEmail());
+					(added_drink, units, Type.DRINK, amount.intValue(),db.DBGetEmail());
 			 /*if there was a search error, i.e. the food wasn't found, notify the user to about
 			 * the option of custom meal
 			 **/

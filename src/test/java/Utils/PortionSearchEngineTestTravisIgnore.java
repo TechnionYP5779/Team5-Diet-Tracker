@@ -58,7 +58,7 @@ public  class PortionSearchEngineTestTravisIgnore {
 		tempPair=PortionSearchEngine.PortionSearch("apPle","small",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
 //		System.out.println(tempPair.getValue().toString());
-		assertEquals(149.0, tempPair.getValue().getAmount(),0.1);
+		assertEquals(77.0, tempPair.getValue().getCalories_per_100_grams(),1);
 		
 		/**  ---NEXT 2 tests:---
 		 * check that units can be given in singular or plural, and give
@@ -72,22 +72,22 @@ public  class PortionSearchEngineTestTravisIgnore {
 		
 		tempPair=PortionSearchEngine.PortionSearch("pizZA","slice",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
-		assertEquals(280.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
+		assertEquals(280.0, tempPair.getValue().getCalories_per_100_grams(),1);
 		
 		tempPair=PortionSearchEngine.PortionSearch("nature VALLey","bar",Portion.Type.FOOD,1,"test_user");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
 		
-		tempPair=PortionSearchEngine.PortionSearch("sprITe","can",Portion.Type.FOOD,1,"test_user");
-		assertEquals(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, tempPair.getName());
-		assertEquals(40.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
+		tempPair=PortionSearchEngine.PortionSearch("sprITe","cup",Portion.Type.FOOD,1,"test_user");
+		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
+		assertEquals(103.0, tempPair.getValue().getCalories_per_100_grams(),1);
 		
 		tempPair=PortionSearchEngine.PortionSearch("nature VALLey","bar",Portion.Type.FOOD,1,"test_user1");
 		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
 		
 
-		tempPair=PortionSearchEngine.PortionSearch("sprITe","can",Portion.Type.FOOD,1,"test_user2");
-		assertEquals(SearchResults.SEARCH_GOOD_ESTIMATED_SUCCESS, tempPair.getName());
-		assertEquals(40.0, tempPair.getValue().getCalories_per_100_grams(),0.1);
+		tempPair=PortionSearchEngine.PortionSearch("sprITe","cup",Portion.Type.FOOD,1,"test_user2");
+		assertEquals(SearchResults.SEARCH_FULL_SUCCESS, tempPair.getName());
+		assertEquals(103.0, tempPair.getValue().getCalories_per_100_grams(),1);
 
 	}
 	
