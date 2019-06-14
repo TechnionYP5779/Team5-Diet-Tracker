@@ -28,6 +28,12 @@ public class HowDoYouFeelHandler implements RequestHandler {
 		final String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
+	public static String getPreviousDate() {
+		Calendar cal = Calendar.getInstance();
+	    cal.add(Calendar.DATE, -1);
+		final String[] splited = cal.getTime().toString().split("\\s+");
+		return splited[2] + "-" + splited[1] + "-" + splited[5];
+	}
 
 
 	@Override
@@ -52,7 +58,11 @@ public class HowDoYouFeelHandler implements RequestHandler {
 			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).filter(p -> (p.getType() == Type.FOOD || p.getType() == Type.MEAL))
 					.collect(Collectors.toList());
 			KeyList = db.DBGetTodayFoodList().stream().map(p -> p.getName()).collect(Collectors.toList());
-			
+			if (FoodList.size() == 0) {
+				FoodList = db.DBGetDateFoodList(getPreviousDate()).stream().map(p -> p.getValue()).filter(p -> (p.getType() == Type.FOOD || p.getType() == Type.MEAL))
+						.collect(Collectors.toList());
+				KeyList = db.DBGetDateFoodList(getPreviousDate()).stream().map(p -> p.getName()).collect(Collectors.toList());
+			}
 		} catch (final DBException e) {
 			// no need to do anything
 		}
