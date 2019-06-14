@@ -78,7 +78,7 @@ public class HowDoYouFeelHandler implements RequestHandler {
 			try {
 				
 				db.DBPushFood(p);
-			    databaseReferenceC.removeValue(null);
+		//	    databaseReferenceC.removeValue(null);
 
 				// TODO: Delete the previous data from the database!
 				
