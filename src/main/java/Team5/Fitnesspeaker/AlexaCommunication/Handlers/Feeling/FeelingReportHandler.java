@@ -86,10 +86,19 @@ public class FeelingReportHandler implements RequestHandler {
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
+		
+		if (period.equals("weekly"))
+			return i.getResponseBuilder()
+					.withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.WEEKLY_FEELING_MAIL_SENT)
+					.withSpeech(Utils.Strings.EmailStrings.WEEKLY_FEELING_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
+		if (period.equals("monthly"))
+			return i.getResponseBuilder()
+					.withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.MONTHLY_FEELING_MAIL_SENT)
+					.withSpeech(Utils.Strings.EmailStrings.MONTHLY_FEELING_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
 
 		return i.getResponseBuilder()
-				.withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.DAILY_MAIL_SENT)
-				.withSpeech(Utils.Strings.EmailStrings.DAILY_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
+				.withSimpleCard("FitnessSpeakerSession", Utils.Strings.EmailStrings.DAILY_FEELING_MAIL_SENT)
+				.withSpeech(Utils.Strings.EmailStrings.DAILY_FEELING_MAIL_SENT).withShouldEndSession(Boolean.FALSE).build();
 	}
 
 }

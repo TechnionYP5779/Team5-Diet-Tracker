@@ -175,6 +175,9 @@ public class Strings {
 		public static final String WEEKLY_MAIL_SENT = "I sent you a mail with a weekly report";
 		public static final String WEIGHT_MAIL_SENT = "I sent you a mail describing your weight progress";
 		public static final String WEIGHT_MAIL_NOT_SENT = "I don't have enough measurements";
+		public static final String DAILY_FEELING_MAIL_SENT = "I sent you a mail with a daily feelings report";
+		public static final String WEEKLY_FEELING_MAIL_SENT = "I sent you a mail with a weekly feelings report";
+		public static final String MONTHLY_FEELING_MAIL_SENT = "I sent you a mail with a monthly feelings report";
 	}
 
 	public static class GoalsAndMeasuresStrings {
