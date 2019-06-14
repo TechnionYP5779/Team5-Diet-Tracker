@@ -87,7 +87,7 @@ public class HowDoYouFeelHandler implements RequestHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-			speechText = String.format("You logged that you feel " + feelingSlot.getValue() + ", keep updating!");
+			speechText = String.format("logged successfully, keep updating!");
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
