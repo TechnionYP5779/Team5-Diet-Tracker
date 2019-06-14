@@ -2,7 +2,6 @@ package Team5.Fitnesspeaker.AlexaCommunication.Handlers.Feeling;
 import static com.amazon.ask.request.Predicates.intentName;
 
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -13,17 +12,13 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import Utils.Portion.Portion;
 import Utils.Portion.Portion.Type;
-import Utils.Strings;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
-import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
 
@@ -44,7 +39,7 @@ public class HowDoYouFeelHandler implements RequestHandler {
 	public Optional<Response> handle(final HandlerInput i) {
 		final Slot feelingSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 				.get(SlotString.FEELING_SLOT);
-		String speechText = "You didn't tell me how you feel";
+		String speechText = "Please eat first, and then tell me how do you feel";
 
 		// initialize database object with the user mail
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
@@ -63,22 +58,18 @@ public class HowDoYouFeelHandler implements RequestHandler {
 		}
 
 		if (!FoodList.isEmpty()) {
-		//	Iterator<Portion> it = FoodList.iterator();
-		//	Portion p = FoodList.get(0);
-		//	while (it.hasNext()) {
-		//		p = it.next();
-		//	}
 			
 			Portion p = FoodList.get(FoodList.size() - 1);
 			String name = KeyList.get(KeyList.size() - 1);
-		    DatabaseReference databaseReferenceC = FirebaseDatabase.getInstance().getReference().child(i.getServiceClientFactory().getUpsService().getProfileEmail()).child("Dates").child(getDate())
+			String user_mail = i.getServiceClientFactory().getUpsService().getProfileEmail();
+			user_mail = String.valueOf(user_mail).replace(".", "_dot_");
+		    DatabaseReference databaseReferenceC = FirebaseDatabase.getInstance().getReference().child(user_mail).child("Dates").child(getDate())
 					.child("Food").child(name);
-		   // databaseReferenceC.removeValueAsync();
+		    databaseReferenceC.removeValueAsync();
 			p.setFeeling(feelingSlot.getValue());
 			try {
 				
 				db.DBPushFood(p);
-		//	    databaseReferenceC.removeValue(null);
 
 				// TODO: Delete the previous data from the database!
 				
@@ -86,7 +77,7 @@ public class HowDoYouFeelHandler implements RequestHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-			speechText = String.format("You logged that you feel " + feelingSlot.getValue());
+			speechText = String.format("You logged that you feel " + feelingSlot.getValue() + ", keep updating!");
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
