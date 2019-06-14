@@ -34,6 +34,7 @@ public class Portion {
 	public double alchohol_by_volume;
 	/** the date and time the portion has taken **/
 	public Date time;
+	public String feeling;
 
 	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
 			final double proteins, final double carbs, final double fats) {
@@ -52,6 +53,7 @@ public class Portion {
 		this.meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST
 				: (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH
 						: (hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
+		this.feeling = "";
 	}
 
 	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
@@ -71,6 +73,7 @@ public class Portion {
 		this.meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST
 				: (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH
 						: (hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
+		this.feeling = "";
 
 	}
 
@@ -91,6 +94,7 @@ public class Portion {
 		this.meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST
 				: (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH
 						: (hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
+		this.feeling = "";
 
 	}
 
@@ -105,6 +109,8 @@ public class Portion {
 		this.alchohol_by_volume = 0;
 		this.time = null;
 		this.meal = Meal.BREAKFAST;
+		this.feeling = "";
+
 	}
 
 	@Override
@@ -121,7 +127,8 @@ public class Portion {
 				&& Double.compare(portion.fats_per_100_grams, fats_per_100_grams) == 0 && type == portion.type
 				&& Double.compare(portion.alchohol_by_volume, alchohol_by_volume) == 0
 				&& (portion.time == null ? time == null : portion.time.equals(time))
-				&& Objects.equals(name, portion.name) && meal == portion.meal;
+				&& Objects.equals(name, portion.name) && meal == portion.meal 
+				&& Objects.equals(feeling, this.feeling);
 	}
 
 	public double getAmount() {
@@ -142,6 +149,10 @@ public class Portion {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getFeeling() {
+		return feeling;
 	}
 
 	public double getProteins_per_100_grams() {
@@ -191,6 +202,10 @@ public class Portion {
 	public void setTime(Date time) {
 		this.time = time;
 	}
+	
+	public void setFeeling(String feeling) {
+		this.feeling = feeling;
+	}
 
 	@Override
 	public String toString() {
@@ -201,6 +216,7 @@ public class Portion {
 				+ this.calories_per_100_grams + "\nProteins: " + this.proteins_per_100_grams + "\nCarbohydrates: "
 				+ this.carbs_per_100_grams + "\nFats: " + this.fats_per_100_grams + "\nAlchohol by volume: "
 				+ this.alchohol_by_volume + "\nTime taken: "
-				+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time);
+				+ (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(time)
+				+ "\nIt felt: " + this.feeling;
 	}
 }
