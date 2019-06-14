@@ -39,18 +39,22 @@ public class AddDrinkIntentHandler implements RequestHandler {
 	
 	public static String addDrinkToDB(Slot amountSlot, Slot unitSlot, Slot drinkSlot,DBUtils db) throws Exception,DBException {
 		Integer amountAux;
-		if (amountSlot.getValue() == null) {
+		if (amountSlot.getValue() == null || amountSlot.getValue().equals("0")) {
 			amountAux = Integer.valueOf(1);
 		}else {
 			amountAux = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
 		}
-		final Integer amount = amountAux;
 		final String units = unitSlot.getValue(), added_drink = drinkSlot.getValue();
+		final Integer amount = amountAux;
+		String munit=units;
+		if(units!=null&&amount>1&&(!units.contains("grams")))
+			munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
+		final String unit = munit;
 		
 		//add food
 		try {
 			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
-					(added_drink, units, Type.DRINK, amount.intValue(),db.DBGetEmail());
+					(added_drink, unit, Type.DRINK, amount.intValue(),db.DBGetEmail());
 			 /*if there was a search error, i.e. the food wasn't found, notify the user to about
 			 * the option of custom meal
 			 **/
@@ -58,7 +62,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 				return String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink);
 			} else {
 				Portion portionToPush=p.getValue();
-				portionToPush.amount*=amount.intValue();
+				portionToPush.units=units;
 				db.DBPushFood(portionToPush);
 
 			}
