@@ -233,10 +233,10 @@ public class PortionSearchEngine {
 	public static Pair<SearchResults, Portion> PortionSearch(String freeText, String units, final Portion.Type t,
 			int amount,String userEmail) {
 		try {
-			String munit=null;
+			/*String munit=null;
 			if(units!=null)
 				munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
-			final String unit = munit;
+			final String unit = munit;*/
 			String freeTextToReq = freeText.replaceAll(" ", "%20");
 			freeTextToReq = freeTextToReq.toLowerCase();
 			//check the cache
@@ -295,8 +295,8 @@ public class PortionSearchEngine {
 			portion_list.sort(new Comparator<Pair<String, String>>() {
 				@Override
 				public int compare(Pair<String, String> p1, Pair<String, String> p2) {
-					double res = ComputeRate(freeText, unit, p1.getName(), false)
-							- ComputeRate(freeText, unit, p2.getName(), false);
+					double res = ComputeRate(freeText, units, p1.getName(), false)
+							- ComputeRate(freeText, units, p2.getName(), false);
 					if (res > 0)
 						return -1;
 					if (res < 0)
@@ -325,7 +325,7 @@ public class PortionSearchEngine {
 				int measures_arr_len = measures_arr.length();
 				if (measures_arr_len > 0 && !(measures_arr.get(0).equals(null))) {
 					for (int i = 0; i < measures_arr_len; ++i) {
-						if((unit==null && (measures_arr.getJSONObject(i).getString("label").contains("small") || 
+						if((units==null && (measures_arr.getJSONObject(i).getString("label").contains("small") || 
 											    measures_arr.getJSONObject(i).getString("label").contains("medium") ||
 											    measures_arr.getJSONObject(i).getString("label").contains("large") ||
 											    measures_arr.getJSONObject(i).getString("label").contains("serving") ||
@@ -339,7 +339,7 @@ public class PortionSearchEngine {
 									GetPortionFromNutrientsResponse(nut_arr, t,freeTextToReq,
 											amount,-1.0,units));
 						}
-						else if (unit != null && measures_arr.getJSONObject(i).getString("label").contains(unit)) {
+						else if (units != null && measures_arr.getJSONObject(i).getString("label").contains(units)) {
 							
 							//cache since it was full success
 							AddResponseToCache(userEmail, freeTextToReq, nutrientsResponse);
@@ -367,8 +367,8 @@ public class PortionSearchEngine {
 			Portion portion = GetPortionFromNutrientsResponse(nut_arr, t, portion_list.get(0).getName(), amount,-1,units);
 
 			/** set the boolean flag to "true" if the conversion exists **/
-			final boolean convertionExists = CheckConvertions(unit, amount) > -1;
-			double rateFirst = ComputeRate(freeText, unit, portion_list.get(0).getName(), convertionExists);
+			final boolean convertionExists = CheckConvertions(units, amount) > -1;
+			double rateFirst = ComputeRate(freeText, units, portion_list.get(0).getName(), convertionExists);
 			if (rateFirst < 1 / 3)
 				return new Pair<SearchResults, Portion>(SearchResults.SEARCH_BAD_ESTIMATED_SUCCESS, portion);
 			else

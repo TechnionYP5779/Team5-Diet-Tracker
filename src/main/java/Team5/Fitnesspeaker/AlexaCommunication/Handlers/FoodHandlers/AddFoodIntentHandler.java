@@ -50,8 +50,12 @@ public class AddFoodIntentHandler implements RequestHandler {
 		
 		//add food
 		try {
+			String munit=units;
+			if(units!=null&&amount>1&&(!units.contains("grams")))
+				munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
+			final String unit = munit;
 			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
-					(added_food, units, Type.FOOD, amount.intValue(),db.DBGetEmail());
+					(added_food, unit, Type.FOOD, amount.intValue(),db.DBGetEmail());
 			 /*if there was a search error, i.e. the food wasn't found, notify the user to about
 			 * the option of custom meal
 			 **/
@@ -59,6 +63,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 				return new Pair<String,SearchResults>(String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food), SearchResults.SEARCH_NO_RESULTS);
 			} else {
 				Portion portionToPush=p.getValue();
+				portionToPush.units=unit;
 				db.DBPushFood(portionToPush);
 
 			}
