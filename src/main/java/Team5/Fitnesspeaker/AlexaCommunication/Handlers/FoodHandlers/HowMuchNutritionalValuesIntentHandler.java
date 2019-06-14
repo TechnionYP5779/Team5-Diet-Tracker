@@ -76,7 +76,7 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 				measure = p.getProteins_per_100_grams();
 			else if (NutritionalString.CALORIES.contains(measure_str))
 				measure = p.getCalories_per_100_grams();
-			total_measure += measure * ((double) amount / 100);
+			total_measure += measure * ((double) amount);
 		}
 		total_measure += (total_measure % 50 > 0 ? 50 : 0) - (total_measure % 50);
 
