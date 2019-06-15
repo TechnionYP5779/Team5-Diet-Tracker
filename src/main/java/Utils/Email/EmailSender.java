@@ -50,7 +50,6 @@ public class EmailSender {
 
 	private final String dailyEmailBottom = "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
 			+ "  <td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
-			+ "<td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f</td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
