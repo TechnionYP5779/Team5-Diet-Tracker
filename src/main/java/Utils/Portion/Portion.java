@@ -231,6 +231,7 @@ public class Portion {
 	
 	public void setUnits(String unit) {
 		this.units = unit;
+	}
 
 	public void setFeeling(String feeling) {
 		this.feeling = feeling;
