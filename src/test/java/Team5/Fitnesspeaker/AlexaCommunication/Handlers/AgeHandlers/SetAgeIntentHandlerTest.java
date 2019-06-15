@@ -1,21 +1,6 @@
 package Team5.Fitnesspeaker.AlexaCommunication.Handlers.AgeHandlers;
 
-import static org.junit.Assert.*;
-
-import java.util.Map;
-
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import com.amazon.ask.dispatcher.request.handler.HandlerInput;
-import com.amazon.ask.model.Intent;
-import com.amazon.ask.model.IntentRequest;
-import com.amazon.ask.model.Request;
-import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.Slot;
-
-import Utils.Strings.AgeStrings;
-import Utils.Strings.SlotString;
 
 public class SetAgeIntentHandlerTest {
 

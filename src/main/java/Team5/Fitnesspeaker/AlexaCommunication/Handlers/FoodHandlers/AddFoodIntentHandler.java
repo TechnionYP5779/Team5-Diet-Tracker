@@ -51,7 +51,7 @@ public class AddFoodIntentHandler implements RequestHandler {
 		//add food
 		try {
 			String munit=units;
-			if(units!=null&&amount>1&&(!units.contains("grams")))
+			if(units!=null&&amount.intValue()>1&&(!units.contains("grams")))
 				munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
 			final String unit = munit;
 			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch

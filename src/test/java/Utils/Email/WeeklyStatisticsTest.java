@@ -9,6 +9,7 @@ import Utils.Email.WeeklyStatistics;
 
 public class WeeklyStatisticsTest {
 
+	@SuppressWarnings("static-method")
 	@Test
 	public void testCalculateWeeklyData() {
 		DailyStatistics ds1 = new DailyStatistics();

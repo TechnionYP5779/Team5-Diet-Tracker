@@ -13,7 +13,6 @@ import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.services.Pair;
 
 import Utils.Portion.Portion;
-import Utils.Portion.PortionRequestGen;
 import Utils.Portion.Portion.Type;
 import Utils.PortionSearchEngine.SearchResults;
 import Utils.PortionSearchEngine;
@@ -21,7 +20,6 @@ import Utils.Strings;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
 import Utils.Strings.DrinkStrings;
-import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
 
@@ -47,7 +45,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 		final String units = unitSlot.getValue(), added_drink = drinkSlot.getValue();
 		final Integer amount = amountAux;
 		String munit=units;
-		if(units!=null&&amount>1&&(!units.contains("grams")))
+		if(units!=null&&amount.intValue()>1&&(!units.contains("grams")))
 			munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
 		final String unit = munit;
 		

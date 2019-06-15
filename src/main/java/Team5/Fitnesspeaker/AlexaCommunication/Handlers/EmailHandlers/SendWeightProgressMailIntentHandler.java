@@ -37,6 +37,7 @@ public class SendWeightProgressMailIntentHandler implements RequestHandler {
 		this.UserName = i.getServiceClientFactory().getUpsService().getProfileGivenName();
 	}
 
+	@SuppressWarnings("static-method")
 	private int getWeightByDate(String date, DBUtils u) {
 
 		try {

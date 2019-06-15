@@ -2,7 +2,7 @@ package Utils.Email;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressWarnings("boxing")
 public class WeeklyStatistics {
 	public List<DailyStatistics> dailyStatistics = new ArrayList<>();
 	public String weeklyCalories = "0.0";
@@ -12,6 +12,7 @@ public class WeeklyStatistics {
 	public String weeklyWaterCups = "0";
 	public String weeklyCiggaretsSmoked = "0";
 
+	
 	public void calculateWeeklyData() {
 
 		Double calories = 0.0;

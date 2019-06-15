@@ -147,6 +147,7 @@ public  class PortionSearchEngineTestTravisIgnore {
 	
 	@Test
 	public void compareOldVsNewAlgorithm() {
+		@SuppressWarnings("unused")
 		Pair<SearchResults,Portion> tempPair=PortionSearchEngine.PortionSearch("date","gram",Portion.Type.FOOD,1,"test_user");
 		
 //		System.out.println(tempPair.getName());

@@ -99,6 +99,7 @@ public class PortionRequestGen {
 		}
 	}
 
+	@SuppressWarnings("boxing")
 	public static Portion queryItem(final String id, final String food_name, final Portion.Type t, final double amount,
 			final String units) throws Exception {
 		final JSONObject myResponse = readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=" + id
@@ -274,6 +275,7 @@ public class PortionRequestGen {
 	public static JSONObject readJsonFromUrl(final String url) throws IOException, JSONException {
 		final InputStream is = new URL(url).openStream();
 		try {
+			@SuppressWarnings("resource")
 			final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			final String jsonText = readAll(rd);
 			final JSONObject json = new JSONObject(jsonText);

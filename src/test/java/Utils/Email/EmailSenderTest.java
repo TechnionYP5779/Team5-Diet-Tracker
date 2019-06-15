@@ -12,8 +12,9 @@ import Utils.Email.DailyStatistics;
 import Utils.Email.EmailSender;
 import Utils.Email.WeeklyStatistics;
 import Utils.Portion.Portion;
+@SuppressWarnings("static-method")
 
-public class EmailSenderTest {
+public  class EmailSenderTest {
 
 	// checking there are no exceptions and that the mail is sent
 	@Test

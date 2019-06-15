@@ -18,8 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.amazon.ask.model.services.Pair;
-import com.google.gson.JsonObject;
-
 import Utils.DB.DBUtils;
 import Utils.Portion.Portion;
 import Utils.Portion.PortionRequestGen;
@@ -137,6 +135,7 @@ public class PortionSearchEngine {
 	 *                               units
 	 */
 
+	@SuppressWarnings("boxing")
 	static double CheckConvertions(final String units, final double amount) throws Exception {
 		String post_processed_units = "s".equals(units.substring(units.length() - 1)) ? units : units + "s";
 		double unit_to_g = 0.0, unit_to_l = 0.0;

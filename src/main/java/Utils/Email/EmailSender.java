@@ -73,7 +73,7 @@ public class EmailSender {
 			+ "%s cups of water and smoked %s cigarettes\r\n"
 			+ "</br>\r\n</br>\r\n<Div>Have a nice day.</Div>\r\n\r\n</body>";
 
-	private String getDate() {
+	private static String getDate() {
 		final String[] splited = Calendar.getInstance().getTime().toString().split("\\s+");
 		return splited[2] + "-" + splited[1] + "-" + splited[5];
 	}
@@ -113,11 +113,11 @@ public class EmailSender {
 			final DailyStatistics s) {
 		String messegeText = String.format(dailyEmailTop, "%", getDate(), name);
 		for (final Portion p : s.foodPortions)
-			messegeText += String.format(dailyEmailTableLine, p.getName(), p.getAmount(),
-					p.getCalories_per_100_grams() * (p.getAmount() / 100),
-					p.getProteins_per_100_grams() * (p.getAmount() / 100),
-					p.getCarbs_per_100_grams() * (p.getAmount() / 100),
-					p.getFats_per_100_grams() * (p.getAmount() / 100));
+			messegeText += String.format(dailyEmailTableLine, p.getName(), Double.valueOf(p.getAmount()) ,
+					Double.valueOf(p.getCalories_per_100_grams() * (p.getAmount() / 100)),
+					Double.valueOf(p.getProteins_per_100_grams() * (p.getAmount() / 100)),
+					Double.valueOf(p.getCarbs_per_100_grams() * (p.getAmount() / 100)),
+					Double.valueOf(p.getFats_per_100_grams() * (p.getAmount() / 100)));
 		messegeText += String.format(dailyEmailBottom, Double.valueOf(s.dailyCalories), Double.valueOf(s.dailyProteins),
 				Double.valueOf(s.dailyCarbs), Double.valueOf(s.dailyFats), s.cupsOfWater, s.ciggaretesSmoked);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
@@ -142,7 +142,7 @@ public class EmailSender {
 		}
 	}
 
-	private String[] getDates() {
+	private static String[] getDates() {
 		final String[] dates = new String[7];
 		final Calendar weekDay = Calendar.getInstance();
 		weekDay.add(Calendar.DATE, -7);
