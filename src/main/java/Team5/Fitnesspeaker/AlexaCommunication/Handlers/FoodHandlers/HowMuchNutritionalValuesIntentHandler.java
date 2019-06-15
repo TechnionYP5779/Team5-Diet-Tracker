@@ -78,7 +78,7 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 				measure = p.getCalories_per_100_grams();
 			total_measure += measure * ((double) amount);
 		}
-		total_measure += (total_measure % 50 > 0 ? 50 : 0) - (total_measure % 50);
+		total_measure += (total_measure % 10 > 0 ? 10 : 0) - (total_measure % 10);
 
 		// after we got the total measure we look for the goal
 
