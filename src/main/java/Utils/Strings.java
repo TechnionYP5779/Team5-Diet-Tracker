@@ -38,6 +38,9 @@ public class Strings {
 		public static final String REMOVE_CUSTOM_MEAL_INTENT = "RemoveCustomMeal";
 		public static final String ADD_INGREDIENT_MEAL_INTENT = "AddCustomMealIngredient";
 		public static final String EAT_CUSTOM_MEAL_INTENT = "EatingCustomMeal";
+		public static final String FEELINGS_REPORT_INTENT = "FeelingReport";
+		public static final String FEELING_INTENT = "HowDoYouFeel";
+
 	}
 
 	public static class AgeStrings {
@@ -173,6 +176,9 @@ public class Strings {
 		public static final String WEEKLY_MAIL_SENT = "I sent you a mail with a weekly report";
 		public static final String WEIGHT_MAIL_SENT = "I sent you a mail describing your weight progress";
 		public static final String WEIGHT_MAIL_NOT_SENT = "I don't have enough measurements";
+		public static final String DAILY_FEELING_MAIL_SENT = "I sent you a mail with a daily feelings report";
+		public static final String WEEKLY_FEELING_MAIL_SENT = "I sent you a mail with a weekly feelings report";
+		public static final String MONTHLY_FEELING_MAIL_SENT = "I sent you a mail with a monthly feelings report";
 	}
 
 	public static class GoalsAndMeasuresStrings {
@@ -208,6 +214,7 @@ public class Strings {
 		public static final String AMOUNT_SLOT = "Number";
 		public static final String FOOD_SLOT = "Food";
 		public static final String UNIT_SLOT = "Unit";
+		public static final String TIME_UNIT_SLOT = "TimeUnit";
 		public static final String MEASURE_SLOT = "Measure";
 		public static final String AMOUNT_SLOT2 = "NumberTwo";
 		public static final String FOOD_SLOT2 = "FoodTwo";
@@ -221,6 +228,7 @@ public class Strings {
 		public static final String CUSTOM_MEAL_SLOT = "meal";
 		public static final String INGREDIANT_SLOT = "ingredient";
 		public static final String PORTION_SLOT = "portion";
+		public static final String FEELING_SLOT = "feeling";
 	}
 
 	public static class NutritionalString {
