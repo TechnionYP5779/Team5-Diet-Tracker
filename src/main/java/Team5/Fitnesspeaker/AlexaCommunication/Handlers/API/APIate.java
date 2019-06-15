@@ -23,7 +23,7 @@ public class APIate  implements RequestHandler{
 		return input.matches(intentName("APIate"));
 	}
 
-	private String fit2USDA(String p) {
+	private static String fit2USDA(String p) {
 		String res=p;
 	     switch(p) {
 		  case "ounces":

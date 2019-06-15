@@ -80,7 +80,7 @@ public class EatCustomMealIntentHandler implements RequestHandler {
 							.withReprompt(CustomMealStrings.CUSTOM_MEAL_DOESNT_EXISTS)
 							.withShouldEndSession(Boolean.FALSE).build();
 				}
-				db.DBPushFood(customaMeal.toPortion(amount));
+				db.DBPushFood(customaMeal.toPortion(amount.intValue()));
 			} catch (DBException e) {
 				return input.getResponseBuilder()
 						.withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)

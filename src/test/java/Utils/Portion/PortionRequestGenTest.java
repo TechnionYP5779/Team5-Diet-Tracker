@@ -5,13 +5,11 @@ package Utils.Portion;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -23,6 +21,7 @@ import Utils.Portion.PortionRequestGen;
 public class PortionRequestGenTest {
 
 	/** this test is currently not relevant due to changes in converter**/
+	@SuppressWarnings("static-method")
 	@Test
 	/** a simple test to check a simple conversion between units **/
 	public void test_grams() {
@@ -35,6 +34,7 @@ public class PortionRequestGenTest {
 		
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
 	/** a test to check we can get portion in units other than grams **/
 	public void test_cup() {
@@ -44,6 +44,7 @@ public class PortionRequestGenTest {
 
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
 	public void test_cup2() {
 		/** this should return the value for cup of rice, as appears in the usda JSON */
@@ -55,6 +56,7 @@ public class PortionRequestGenTest {
 
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
 	/**
 	 * a test to check that we can search for food in "raw" version. such as eggs,
@@ -67,6 +69,7 @@ public class PortionRequestGenTest {
 
 	}
 	
+	@SuppressWarnings("static-method")
 	@Test
 	/** a test to check that we can search for food in "raw" version. such as eggs, fruits..**/
 	public void new_algorithm() {
@@ -128,6 +131,7 @@ public class PortionRequestGenTest {
 				final JSONObject myResponse = PortionRequestGen.readJsonFromUrl("https://api.nal.usda.gov/ndb/reports/?ndbno=" + portion_list.get(0).getValue()
 				+ "&type=b&format=json&api_key=Unjc2Z4luZu0sKFBGflwS7cnxEiU83YygiIU37Ul");
 		/** get (from json) the array that stores the nutritional values we want **/
+		@SuppressWarnings("unused")
 		final JSONArray measures_arr = myResponse.getJSONObject("report").getJSONObject("food").getJSONArray("nutrients").getJSONObject(0).getJSONArray("measures");
 		
 //				System.out.println("The ndbno:");

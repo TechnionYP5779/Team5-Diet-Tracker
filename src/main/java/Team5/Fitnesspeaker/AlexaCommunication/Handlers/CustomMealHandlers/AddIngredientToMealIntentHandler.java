@@ -17,7 +17,6 @@ import Utils.Portion.PortionRequestGen;
 import Utils.Portion.Portion;
 import Utils.Portion.Portion.Type;
 import Utils.Strings.CustomMealStrings;
-import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
 

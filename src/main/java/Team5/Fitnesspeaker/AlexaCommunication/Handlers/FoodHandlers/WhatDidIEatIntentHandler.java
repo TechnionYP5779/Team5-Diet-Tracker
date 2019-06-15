@@ -44,8 +44,8 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 
 		// retrieving the information
 		try {
-			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue()).filter(p -> (p.getType() == Type.FOOD || p.getType() == Type.MEAL))
-					.collect(Collectors.toList());
+			FoodList = db.DBGetTodayFoodList().stream().map(p -> p.getValue())/*.filter(p -> (p.getType() == Type.FOOD || p.getType() == Type.MEAL))
+					*/.collect(Collectors.toList());
 		} catch (final DBException e) {
 			// no need to do anything
 		}
@@ -57,16 +57,33 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 			speechText += "For " + m.name();
 			for (final Portion p : FoodList) {
 				if (!(p.getMeal().name().equals(m.name()))) {
-					speechText += "For " + p.getMeal().name();
+					speechText += ", For " + p.getMeal().name();
 					m = p.getMeal();
 				}
+				boolean addOf = true;
+				if(p.getUnits()!=null&&p.getUnits().contains("small")||p.getUnits().contains("medium")||
+						p.getUnits().contains("large")||p.getUnits().contains("big")) addOf=false;
 				String[] splited2 = p.getTime().toString().split(" ")[3].split(":");
 				if (p.type == Type.MEAL) {
 					speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
-							+ " you ate " + Integer.valueOf((int) p.getAmount()) / 100 + " meals of " + p.getName();
-				} else {
-					speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
-							+ " you ate " + Integer.valueOf((int) p.getAmount()) + " grams of " + p.getName();
+							+ " you ate " + Integer.valueOf((int) p.getAmount() / 100) + " meals of " + p.getName();
+				} else if (p.type == Type.FOOD) {
+					if (p.getUnits()!=null) {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " "+p.getUnits()+(addOf?" of ":" ") + p.getName();
+					} else {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " " + p.getName();
+					}
+				
+				}else {
+					if (p.getUnits()!=null) {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you drank " + Integer.valueOf((int) p.getAmount()) + " "+p.getUnits()+" of " + p.getName();
+					} else {
+						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
+						+ " you drank " + Integer.valueOf((int) p.getAmount()) + " " + p.getName();
+					}
 				}
 			}
 		}

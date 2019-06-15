@@ -5,6 +5,7 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import Utils.Email.simpleGraph;
+@SuppressWarnings("static-method")
 
 public class simpleGraphTest {
 

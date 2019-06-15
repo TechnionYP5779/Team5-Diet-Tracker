@@ -10,6 +10,7 @@ import Utils.Portion.Portion.Type;
 
 public class DailyStatisticsTest {
 
+	@SuppressWarnings("static-method")
 	@Test
 	public void testCalculateDailyNutritions() {
 		DailyStatistics ds = new DailyStatistics();

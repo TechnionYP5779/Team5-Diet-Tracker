@@ -300,7 +300,7 @@ public class Inflector {
      * @param delimiterChars optional characters that are used to delimit word boundaries (beyond capitalization)
      * @return a lower-cased version of the input, with separate words delimited by the underscore character.
      */
-    public String underscore( String camelCaseWord,
+    public static String underscore( String camelCaseWord,
                               char... delimiterChars ) {
         if (camelCaseWord == null) return null;
         String result = camelCaseWord.trim();
@@ -322,7 +322,7 @@ public class Inflector {
      * @param words the word to be capitalized
      * @return the string with the first character capitalized and the remaining characters lowercased
      */
-    public String capitalize( String words ) {
+    public static String capitalize( String words ) {
         if (words == null) return null;
         String result = words.trim();
         if (result.length() == 0) return "";
@@ -348,7 +348,7 @@ public class Inflector {
      * @return the humanized string
      * @see #titleCase(String, String[])
      */
-    public String humanize( String lowerCaseAndUnderscoredWords,
+    public static String humanize( String lowerCaseAndUnderscoredWords,
                             String... removableTokens ) {
         if (lowerCaseAndUnderscoredWords == null) return null;
         String result = lowerCaseAndUnderscoredWords.trim();
@@ -383,7 +383,7 @@ public class Inflector {
      * @param removableTokens optional array of tokens that are to be removed
      * @return the title-case version of the supplied words
      */
-    public String titleCase( String words,
+    public static String titleCase( String words,
                              String... removableTokens ) {
         String result = humanize(words, removableTokens);
         result = replaceAllWithUppercase(result, "\\b([a-z])", 1); // change first char of each word to uppercase
@@ -397,7 +397,7 @@ public class Inflector {
      * @param number the non-negative number
      * @return the string with the number and ordinal suffix
      */
-    public String ordinalize( int number ) {
+    public static String ordinalize( int number ) {
         int remainder = number % 100;
         String numberStr = Integer.toString(number);
         if (11 <= number && number <= 13) return numberStr + "th";

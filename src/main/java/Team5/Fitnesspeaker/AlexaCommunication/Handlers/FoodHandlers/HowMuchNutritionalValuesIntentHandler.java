@@ -76,9 +76,9 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 				measure = p.getProteins_per_100_grams();
 			else if (NutritionalString.CALORIES.contains(measure_str))
 				measure = p.getCalories_per_100_grams();
-			total_measure += measure * ((double) amount / 100);
+			total_measure += measure * ((double) amount);
 		}
-		total_measure += (total_measure % 50 > 0 ? 50 : 0) - (total_measure % 50);
+		//total_measure += (total_measure % 10 > 0 ? 10 : 0) - (total_measure % 10);
 
 		// after we got the total measure we look for the goal
 
@@ -145,7 +145,7 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 					Integer.valueOf((int) total_measure), measure_str) + speechText2;
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withShouldEndSession(Boolean.FALSE).build();
+				.withShouldEndSession(Boolean.TRUE).build();
 
 	}
 }

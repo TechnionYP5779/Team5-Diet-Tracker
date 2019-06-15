@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "diet tracker",
+            "invocationName": "rebecca",
             "intents": [
                 {
                     "name": "AMAZON.FallbackIntent",
@@ -33,15 +33,56 @@
                             "type": "AMAZON.Food"
                         },
                         {
+                            "name": "Unit",
+                            "type": "Unit"
+                        },
+                        {
                             "name": "Number",
                             "type": "AMAZON.NUMBER"
                         },
                         {
-                            "name": "Unit",
+                            "name": "FoodTwo",
+                            "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "UnitTwo",
                             "type": "Unit"
+                        },
+                        {
+                            "name": "NumberTwo",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "FoodThree",
+                            "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "UnitThree",
+                            "type": "Unit"
+                        },
+                        {
+                            "name": "NumberThree",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "FoodFour",
+                            "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "UnitFour",
+                            "type": "Unit"
+                        },
+                        {
+                            "name": "NumberFour",
+                            "type": "AMAZON.NUMBER"
                         }
                     ],
                     "samples": [
+                        "I ate {Number} {Food}",
+                        "I ate a {Unit} {Food}",
+                        "i ate {Number} {Unit} of {Food}  {NumberTwo} {UnitTwo} of {FoodTwo} {NumberThree} {UnitThree} of {FoodThree}  and {NumberFour} {UnitFour} of {FoodFour} ",
+                        "i ate {Number} {Unit} of {Food}  {NumberTwo} {UnitTwo} of {FoodTwo} and  {NumberThree} {UnitThree} of {FoodThree} ",
+                        "i ate {Number} {Unit} of {Food} and {NumberTwo} {UnitTwo} of {FoodTwo}",
                         "I ate {Number} {Unit} {Food}",
                         "I just ate {Number} {Unit} of {Food} ",
                         "i ate {Number} {Unit} of {Food}"
@@ -68,18 +109,23 @@
                         },
                         {
                             "name": "drink",
-                            "type": "AMAZON.Drink"
+                            "type": "AMAZON.Drink",
+                            "samples": [
+                                "I drank {drink}",
+                                "{drink}"
+                            ]
+                        },
+                        {
+                            "name": "Unit",
+                            "type": "Unit"
                         }
                     ],
                     "samples": [
-                        "i drank {Number} cups of {drink}",
-                        "i drank {Number} glasses of {drink}",
-                        "i drank {Number} glass of {drink}",
-                        "i drank {Number} cup of {drink}",
+                        "i drank {Number} {Unit} of {drink}",
+                        "i just drank {Number} {Unit} of {drink}",
                         "i just drank {Number} cups of {drink}",
                         "i just drank {Number} glasses of {drink}",
-                        "i just drank {Number} glass of {drink}",
-                        "i just drank {Number} cup of {drink}"
+                        "i just drank {Number} glass of {drink}"
                     ]
                 },
                 {
@@ -87,10 +133,18 @@
                     "slots": [
                         {
                             "name": "drink",
-                            "type": "AMAZON.Drink"
+                            "type": "AMAZON.Drink",
+                            "samples": [
+                                "cups of {drink}",
+                                "{drink}",
+                                "of {drink}"
+                            ]
                         }
                     ],
                     "samples": [
+                        "how much cups did i drink",
+                        "how much did i drink",
+                        "how many cups did i drink",
                         "how many cups of {drink} i drank",
                         "how many cups of {drink} i drank so far",
                         "how many glasses of {drink} i drank",
@@ -173,28 +227,6 @@
                     ]
                 },
                 {
-                    "name": "CanIDriveIntent",
-                    "slots": [],
-                    "samples": [
-                        "Am I allowed to drive",
-                        "Am I able to drive",
-                        "Can I drive"
-                    ]
-                },
-                {
-                    "name": "DrinkAlchohol",
-                    "slots": [
-                        {
-                            "name": "alchohol",
-                            "type": "AMAZON.Drink"
-                        }
-                    ],
-                    "samples": [
-                        "cheers with {alchohol}",
-                        "cheers {alchohol}"
-                    ]
-                },
-                {
                     "name": "AddSmokeIntent",
                     "slots": [
                         {
@@ -247,36 +279,6 @@
                     ]
                 },
                 {
-                    "name": "AddBloodPressureIntent",
-                    "slots": [
-                        {
-                            "name": "Number",
-                            "type": "AMAZON.NUMBER"
-                        },
-                        {
-                            "name": "NumberTwo",
-                            "type": "AMAZON.NUMBER"
-                        }
-                    ],
-                    "samples": [
-                        "to log measure of {Number} by {NumberTwo}",
-                        "to log blood pressure measure of {Number} by {NumberTwo}",
-                        "to log blood pressure of {Number} by {NumberTwo}",
-                        "log blood pressure of {Number} by {NumberTwo}"
-                    ]
-                },
-                {
-                    "name": "GetBloodPressureIntent",
-                    "slots": [],
-                    "samples": [
-                        "to report my blood pressure measurements",
-                        "to tell my blood pressure reports",
-                        "please tell my blood pressure reports",
-                        "please tell me  my blood pressure reports",
-                        "please report my blood pressure"
-                    ]
-                },
-                {
                     "name": "BMIIntent",
                     "slots": [],
                     "samples": [
@@ -290,14 +292,25 @@
                     "slots": [
                         {
                             "name": "Measure",
-                            "type": "Measure"
+                            "type": "Measure",
+                            "samples": [
+                                "of {Measure}",
+                                "{Measure}"
+                            ]
                         },
                         {
                             "name": "Number",
-                            "type": "AMAZON.NUMBER"
+                            "type": "AMAZON.NUMBER",
+                            "samples": [
+                                "to {Number} grams",
+                                "{Number} grams"
+                            ]
                         }
                     ],
                     "samples": [
+                        "set my goal to {Number}",
+                        "set my goal to {Number} grams",
+                        "set my {Measure} goal",
                         "set my {Measure} goal to {Number} grams",
                         "set my {Measure} goal to {Number} "
                     ]
@@ -307,10 +320,18 @@
                     "slots": [
                         {
                             "name": "Measure",
-                            "type": "Measure"
+                            "type": "Measure",
+                            "samples": [
+                                "goal of {Measure}",
+                                "my {Measure}",
+                                "{Measure}",
+                                "{Measure} goal"
+                            ]
                         }
                     ],
                     "samples": [
+                        "tell me my goal",
+                        "what is my goal",
                         "what is my {Measure} goal"
                     ]
                 },
@@ -319,10 +340,15 @@
                     "slots": [
                         {
                             "name": "Number",
-                            "type": "AMAZON.NUMBER"
+                            "type": "AMAZON.NUMBER",
+                            "samples": [
+                                "{Number} cigarettes",
+                                "{Number}"
+                            ]
                         }
                     ],
                     "samples": [
+                        "set my cigarette limit",
                         "set my cigarette limit to {Number} every day",
                         "set my cigarette limit to {Number} "
                     ]
@@ -347,10 +373,17 @@
                     "slots": [
                         {
                             "name": "Number",
-                            "type": "AMAZON.NUMBER"
+                            "type": "AMAZON.NUMBER",
+                            "samples": [
+                                "{Number} kilograms",
+                                "{Number}"
+                            ]
                         }
                     ],
                     "samples": [
+                        "set me a weight goal",
+                        "set my weight goal",
+                        "please set my weight goal",
                         "my weight goal is {Number}"
                     ]
                 },
@@ -359,6 +392,152 @@
                     "slots": [],
                     "samples": [
                         "how am I doing regarding my weight"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
+                },
+                {
+                    "name": "APIate",
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "Food",
+                            "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "portion",
+                            "type": "portion"
+                        },
+                        {
+                            "name": "drink",
+                            "type": "AMAZON.Drink"
+                        }
+                    ],
+                    "samples": [
+                        "report a {portion} of {drink}",
+                        "report {Number}  {portion}  {drink}",
+                        "report {Number}  {portion} of {drink}",
+                        "report {Number}  {portion} of {Food}",
+                        "report {Number}  {portion}  {Food}",
+                        "report a {portion} of {Food}",
+                        "report {Number} grams of {Food}"
+                    ]
+                },
+                {
+                    "name": "APIgetValues",
+                    "slots": [],
+                    "samples": [
+                        "report values"
+                    ]
+                },
+                {
+                    "name": "AddCustomMeal",
+                    "slots": [
+                        {
+                            "name": "meal",
+                            "type": "AMAZON.Food"
+                        }
+                    ],
+                    "samples": [
+                        "log custom meal {meal}"
+                    ]
+                },
+                {
+                    "name": "RemoveCustomMeal",
+                    "slots": [
+                        {
+                            "name": "meal",
+                            "type": "AMAZON.Food"
+                        }
+                    ],
+                    "samples": [
+                        "remove custom meal {meal}"
+                    ]
+                },
+                {
+                    "name": "AddCustomMealIngredient",
+                    "slots": [
+                        {
+                            "name": "meal",
+                            "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "ingredient",
+                            "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "Unit",
+                            "type": "Unit"
+                        }
+                    ],
+                    "samples": [
+                        "add to meal {meal} {Number} {Unit} of {ingredient}",
+                        "add to meal {meal} {Number} {Unit} {ingredient}"
+                    ]
+                },
+                {
+                    "name": "EatingCustomMeal",
+                    "slots": [
+                        {
+                            "name": "meal",
+                            "type": "AMAZON.Food"
+                        },
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "i ate {Number} meals of {meal}"
+                    ]
+                },
+                {
+                    "name": "HowDoYouFeel",
+                    "slots": [
+                        {
+                            "name": "feeling",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "I felt {feeling}",
+                        "i feel {feeling}"
+                    ]
+                },
+                {
+                    "name": "FeelingReport",
+                    "slots": [
+                        {
+                            "name": "TimeUnit",
+                            "type": "TimeUnit",
+                            "samples": [
+                                "last {TimeUnit}",
+                                "this {TimeUnit}",
+                                "{TimeUnit}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "give me {TimeUnit} report on my feelings",
+                        "send me {TimeUnit} report on my feelings",
+                        "report my feelings",
+                        "report my feelings {TimeUnit}",
+                        "report my feelings this {TimeUnit}",
+                        "send me {TimeUnit} report about my feelings",
+                        "give me {TimeUnit} report about my feelings"
                     ]
                 }
             ],
@@ -378,22 +557,34 @@
                     "values": [
                         {
                             "name": {
-                                "value": "fats"
+                                "value": "fats",
+                                "synonyms": [
+                                    "fat"
+                                ]
                             }
                         },
                         {
                             "name": {
-                                "value": "carbs"
+                                "value": "carbs",
+                                "synonyms": [
+                                    "carb"
+                                ]
                             }
                         },
                         {
                             "name": {
-                                "value": "proteins"
+                                "value": "proteins",
+                                "synonyms": [
+                                    "protein"
+                                ]
                             }
                         },
                         {
                             "name": {
-                                "value": "calories"
+                                "value": "calories",
+                                "synonyms": [
+                                    "calorie"
+                                ]
                             }
                         }
                     ]
@@ -401,6 +592,71 @@
                 {
                     "name": "Unit",
                     "values": [
+                        {
+                            "name": {
+                                "value": "cone"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "slice"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "glass"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "can"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bowl"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "plate"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "serving"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "serving unit"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "little"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "large"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "big"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "medium"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "small"
+                            }
+                        },
                         {
                             "name": {
                                 "value": "tablespoons"
@@ -532,8 +788,680 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "portion",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "sticks"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "stick"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "containers"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "container"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "dash"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "teaspoons"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "teaspoon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "jars"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "jar"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bottles"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bottle"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "serving"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "cans"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "can"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pounds"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pound"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "tablespoons"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "tablespoon"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ounces"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ounce"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pieces"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "piece"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "strip"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "cups"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "cup"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "packages"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "packs"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bars"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "slices"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "slice"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bar"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "package"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pack"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "jumbo"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "large"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "medium"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "small"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "TimeUnit",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "monthly",
+                                "synonyms": [
+                                    "month"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "weekly",
+                                "synonyms": [
+                                    "week"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "daily",
+                                "synonyms": [
+                                    "today",
+                                    "day"
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
-        }
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "AddFoodIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Food",
+                            "type": "AMAZON.Food",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "Unit",
+                            "type": "Unit",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "FoodTwo",
+                            "type": "AMAZON.Food",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "UnitTwo",
+                            "type": "Unit",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "NumberTwo",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "FoodThree",
+                            "type": "AMAZON.Food",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "UnitThree",
+                            "type": "Unit",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "NumberThree",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "FoodFour",
+                            "type": "AMAZON.Food",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "UnitFour",
+                            "type": "Unit",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "NumberFour",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "addDrinkIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "drink",
+                            "type": "AMAZON.Drink",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1226290191365.514182980193"
+                            }
+                        },
+                        {
+                            "name": "Unit",
+                            "type": "Unit",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "HowMuchIDrankIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "drink",
+                            "type": "AMAZON.Drink",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.501558282321.1250999361625"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SetCigarLimitIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1122973976701.115551282836"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "addWeightGoalIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.543942882917.541512835141"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "GetGoalIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Measure",
+                            "type": "Measure",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.562492013363.1040806692683"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SetGoalIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Measure",
+                            "type": "Measure",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1109105800959.1150426351403"
+                            }
+                        },
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1109105800959.1360198440146"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "APIate",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Number",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "Food",
+                            "type": "AMAZON.Food",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "portion",
+                            "type": "portion",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "drink",
+                            "type": "AMAZON.Drink",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "FeelingReport",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "TimeUnit",
+                            "type": "TimeUnit",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.969967445050.901621639069"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.246737501104.329310336490",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "How many did you eat?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.246737501104.329310336490",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.246737501104.362128691123",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "what did you eat"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.283348329937.1286927831123",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "In what units?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1226290191365.771645043401",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "How many cups of {drink} did you drink?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1226290191365.514182980193",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What did you drink?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.501558282321.1250999361625",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Of what drink?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Cups of what?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1122973976701.115551282836",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "what is the limit?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "what limit?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "to what?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.543942882917.541512835141",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "what is your weight goal?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "what goal?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "what is the goal?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.562492013363.1040806692683",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "which type of goal"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "which goal?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "what goal?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1109105800959.1360198440146",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "how much?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "how many?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "To how many grams?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1109105800959.1150426351403",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "which measure?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "what measure?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1104637597972.1471930531734",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "In what units?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1111599581843.351575979628",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "in which unit?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.975948305143.623395202604",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "what did you eat?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.969967445050.901621639069",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "on which period?"
+                    }
+                ]
+            }
+        ]
     }
 }

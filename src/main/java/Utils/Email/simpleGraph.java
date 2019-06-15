@@ -73,7 +73,7 @@ public class simpleGraph { // extends JFrame
 		return dataset;
 	}
 
-	private JFreeChart createChart(XYDataset d) {
+	private static JFreeChart createChart(XYDataset d) {
 
 		JFreeChart chart = ChartFactory.createTimeSeriesChart("Weight per day", "Date", "Weight", d, true, true, false);
 
@@ -109,6 +109,7 @@ public class simpleGraph { // extends JFrame
 		chart.draw(g2, new Rectangle2D.Double(0, 0, width, height));
 		g2.dispose();
 		// outputfile = new File(imageName+".jpg");
+		@SuppressWarnings("resource")
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(img, "jpg", baos);

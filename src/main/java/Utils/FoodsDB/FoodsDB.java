@@ -41,7 +41,8 @@ public class FoodsDB {
 	 }
 	
 	private void userAte_inn(String email, String food, int amount ,String measure) throws FoodsDBException {
-		 String res= new HttpSender()
+		 @SuppressWarnings("boxing")
+		String res= new HttpSender()
 					.setMethod2POST()
 					.setUrl(url+"/ate")
 					.setJsonBody(String.format(ateAsJson, food,email,amount,measure))

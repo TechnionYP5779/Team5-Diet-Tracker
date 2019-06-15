@@ -36,35 +36,49 @@ public class AddFoodIntentHandler implements RequestHandler {
 		return i.matches(intentName(IntentsNames.ADD_FOOD_INTENT));
 	}
 	
-	public static String addFoodToDB(Slot amountSlot, Slot unitSlot, Slot foodSlot,DBUtils db) throws Exception,DBException {
+	public static Pair<String,SearchResults> addFoodToDB(Slot amountSlot, Slot unitSlot, Slot foodSlot,DBUtils db) throws Exception,DBException {
 		Integer amountAux;
-		if (amountSlot.getValue() == null) {
+		if (amountSlot.getValue() == null || amountSlot.getValue().equals("0")) {
 			amountAux = Integer.valueOf(1);
 		}else {
 			amountAux = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
 		}
 		final Integer amount = amountAux;
-		final String units = unitSlot.getValue(), added_food = foodSlot.getValue();
+		final String added_food = foodSlot.getValue();
+		final String units=unitSlot.getValue();
+		
 		
 		//add food
 		try {
+			String munit=units;
+			if(units!=null&&amount.intValue()>1&&(!units.contains("grams")))
+				munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
+			final String unit = munit;
 			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
-					(added_food, units, Type.FOOD, Double.valueOf(amount.intValue()).doubleValue(),db.DBGetEmail());
+					(added_food, unit, Type.FOOD, amount.intValue(),db.DBGetEmail());
 			 /*if there was a search error, i.e. the food wasn't found, notify the user to about
 			 * the option of custom meal
 			 **/
 			if(p.getName() == SearchResults.SEARCH_NO_RESULTS || p.getName() == SearchResults.SEARCH_ERROR) {
-				return String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
+				return new Pair<String,SearchResults>(String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food), SearchResults.SEARCH_NO_RESULTS);
 			} else {
 				Portion portionToPush=p.getValue();
-				portionToPush.amount*=amount.intValue();
+				portionToPush.name=portionToPush.name.replace("%20", " ");
+				portionToPush.units=units;
 				db.DBPushFood(portionToPush);
 
 			}
 		}catch (final Exception | DBException e) {
-			return String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food);
+			return new Pair<String,SearchResults>(String.format(FoodStrings.FOOD_NOT_FOUND,added_food,added_food),SearchResults.SEARCH_ERROR);
 		}
-		return String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food);
+		if(unitSlot.getValue() == null)
+			return new Pair<String, SearchResults>(String.format(FoodStrings.FOOD_LOGGED, amount, " ", added_food),SearchResults.SEARCH_FOUND);
+		if(units!=null&&units.contains("small")||units.contains("medium")||
+				units.contains("large")||units.contains("big"))
+			return new Pair<String, SearchResults>(String.format(FoodStrings.FOOD_LOGGED_WITHOU_LOG, amount, units, added_food),SearchResults.SEARCH_FOUND);
+		else
+			return new Pair<String, SearchResults>(String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food),SearchResults.SEARCH_FOUND);
+
 	}
 
 	@Override
@@ -94,7 +108,8 @@ public class AddFoodIntentHandler implements RequestHandler {
 				unitSlot4 = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 								.get(SlotString.UNIT_SLOT4);
 		
-		String speechText = String.format(FoodStrings.FOOD_LOGGED_START);
+//		String speechText = String.format(FoodStrings.FOOD_LOGGED_START);
+		String speechText = "";
 		final String repromptText = "";
 		
 		if (foodSlot.getValue() == null)
@@ -105,7 +120,14 @@ public class AddFoodIntentHandler implements RequestHandler {
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
 		
 		try {
-			speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
+			Pair<String,SearchResults> p = addFoodToDB(amountSlot,unitSlot,foodSlot,db);
+//			speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
+			if(p.getValue()==SearchResults.SEARCH_FOUND) {
+				speechText += p.getName();
+			} else {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot.getValue(),foodSlot.getValue()))
+						.withSpeech(String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot.getValue(),foodSlot.getValue())).withReprompt(String.format(FoodStrings.FOOD_NOT_FOUND_REPEAT,foodSlot.getValue(),foodSlot.getValue()))
+						.withShouldEndSession(Boolean.FALSE).build();			}
 		} catch (final DBException e) {
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
 					.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
@@ -119,16 +141,23 @@ public class AddFoodIntentHandler implements RequestHandler {
 					.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
-		
+		/** if there wasn't any problem with the first portion, only now can we add the "you logged", 
+		 * otherwise there is an option that we accidentally log an error message with the food
+		 */
+		String speechTextPrefix = String.format(FoodStrings.FOOD_LOGGED_START);
+		speechText = speechTextPrefix + " "+speechText;
 		// now we will enter the second food if we got it
 		
 		if(foodSlot2.getValue()!= null) {
 			try {
-				speechText += addFoodToDB(amountSlot2,unitSlot2,foodSlot2,db);
-			} catch (final DBException e) {
-				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
-						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
-						.withShouldEndSession(Boolean.FALSE).build();
+				Pair<String,SearchResults> p = addFoodToDB(amountSlot2,unitSlot2,foodSlot2,db);
+//				speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
+				if(p.getValue()==SearchResults.SEARCH_FOUND) {
+					speechText += p.getName();
+				} else {
+					return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot2.getValue(),foodSlot2.getValue()))
+							.withSpeech(String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot2.getValue(),foodSlot2.getValue())).withReprompt(String.format(FoodStrings.FOOD_NOT_FOUND_REPEAT,foodSlot2.getValue(),foodSlot2.getValue()))
+							.withShouldEndSession(Boolean.FALSE).build();			}
 				/**
 				 * right now, the only other specific option we take care of is the option that
 				 * we didn't find the portion units in the DB or in our modules.
@@ -136,6 +165,10 @@ public class AddFoodIntentHandler implements RequestHandler {
 			} catch (final Exception e) {
 				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
 						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+			} catch (final DBException e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
 						.withShouldEndSession(Boolean.FALSE).build();
 			}
 		}
@@ -143,11 +176,14 @@ public class AddFoodIntentHandler implements RequestHandler {
 		// now we will enter the third food if we got it
 		if(foodSlot3.getValue()!= null) {
 			try {
-				speechText += addFoodToDB(amountSlot3,unitSlot3,foodSlot3,db);
-			} catch (final DBException e) {
-				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
-						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
-						.withShouldEndSession(Boolean.FALSE).build();
+				Pair<String,SearchResults> p = addFoodToDB(amountSlot3,unitSlot3,foodSlot3,db);
+//				speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
+				if(p.getValue()==SearchResults.SEARCH_FOUND) {
+					speechText += p.getName();
+				} else {
+					return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot3.getValue(),foodSlot3.getValue()))
+							.withSpeech(String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot3.getValue(),foodSlot3.getValue())).withReprompt(String.format(FoodStrings.FOOD_NOT_FOUND_REPEAT,foodSlot3.getValue(),foodSlot3.getValue()))
+							.withShouldEndSession(Boolean.FALSE).build();			}
 				/**
 				 * right now, the only other specific option we take care of is the option that
 				 * we didn't find the portion units in the DB or in our modules.
@@ -155,6 +191,10 @@ public class AddFoodIntentHandler implements RequestHandler {
 			} catch (final Exception e) {
 				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
 						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+			} catch (final DBException e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
 						.withShouldEndSession(Boolean.FALSE).build();
 			}
 		}
@@ -162,11 +202,14 @@ public class AddFoodIntentHandler implements RequestHandler {
 		// now we will enter the fourth food if we got it
 		if(foodSlot4.getValue()!= null) {
 			try {
-				speechText += addFoodToDB(amountSlot4,unitSlot4,foodSlot4,db);
-			} catch (final DBException e) {
-				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
-						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
-						.withShouldEndSession(Boolean.FALSE).build();
+				Pair<String,SearchResults> p = addFoodToDB(amountSlot4,unitSlot4,foodSlot4,db);
+//				speechText += addFoodToDB(amountSlot,unitSlot,foodSlot,db);
+				if(p.getValue()==SearchResults.SEARCH_FOUND) {
+					speechText += p.getName();
+				} else {
+					return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot4.getValue(),foodSlot4.getValue()))
+							.withSpeech(String.format(FoodStrings.FOOD_NOT_FOUND,foodSlot4.getValue(),foodSlot4.getValue())).withReprompt(String.format(FoodStrings.FOOD_NOT_FOUND_REPEAT,foodSlot4.getValue(),foodSlot4.getValue()))
+							.withShouldEndSession(Boolean.FALSE).build();			}
 				/**
 				 * right now, the only other specific option we take care of is the option that
 				 * we didn't find the portion units in the DB or in our modules.
@@ -174,6 +217,10 @@ public class AddFoodIntentHandler implements RequestHandler {
 			} catch (final Exception e) {
 				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_UNITS_PROBLEM)
 						.withSpeech(FoodStrings.FOOD_UNITS_PROBLEM).withReprompt(FoodStrings.FOOD_UNITS_PROBLEM_REPEAT)
+						.withShouldEndSession(Boolean.FALSE).build();
+			} catch (final DBException e) {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, FoodStrings.FOOD_LOGGING_PROBLEM)
+						.withSpeech(FoodStrings.FOOD_LOGGING_PROBLEM).withReprompt(FoodStrings.FOOD_LOGGING_PROBLEM_REPEAT)
 						.withShouldEndSession(Boolean.FALSE).build();
 			}
 		}

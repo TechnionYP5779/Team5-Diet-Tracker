@@ -18,7 +18,8 @@ import Utils.Portion.Portion.Type;
  * @author Shaked Sapir
  *
  */
-@SuppressWarnings("unlikely-arg-type")
+
+@SuppressWarnings({"unlikely-arg-type","static-method"})
 public class PortionTest {
 
 	double DELTA = 0.01;

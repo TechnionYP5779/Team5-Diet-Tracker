@@ -8,13 +8,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import Utils.UnitsConverter;
-
+@SuppressWarnings("static-method")
 public class UnitsConverterTest {
 
 	public static final double DELTA = 0.01;
 	public static final double liters_const = 1000;
 	public static final double grams_const = 1000;
 	public static final double kilogram_pound_const = 2.2046244202;
+
 
 	@Test
 	public void literToMl() {

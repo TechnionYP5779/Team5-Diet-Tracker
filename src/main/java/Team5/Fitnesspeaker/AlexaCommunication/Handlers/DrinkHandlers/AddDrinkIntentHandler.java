@@ -13,7 +13,6 @@ import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.services.Pair;
 
 import Utils.Portion.Portion;
-import Utils.Portion.PortionRequestGen;
 import Utils.Portion.Portion.Type;
 import Utils.PortionSearchEngine.SearchResults;
 import Utils.PortionSearchEngine;
@@ -21,7 +20,6 @@ import Utils.Strings;
 import Utils.DB.DBUtils;
 import Utils.DB.DBUtils.DBException;
 import Utils.Strings.DrinkStrings;
-import Utils.Strings.FoodStrings;
 import Utils.Strings.IntentsNames;
 import Utils.Strings.SlotString;
 
@@ -37,35 +35,42 @@ public class AddDrinkIntentHandler implements RequestHandler {
 		return i.matches(intentName(IntentsNames.ADD_DRINK_INTENT));
 	}
 	
-	public static String addDrinkToDB(Slot amountSlot, Slot unitSlot, Slot drinkSlot,DBUtils db) throws Exception,DBException {
+	public static Pair<String, SearchResults> addDrinkToDB(Slot amountSlot, Slot unitSlot, Slot drinkSlot,DBUtils db) throws Exception,DBException {
 		Integer amountAux;
-		if (amountSlot.getValue() == null) {
+		if (amountSlot.getValue() == null || amountSlot.getValue().equals("0")) {
 			amountAux = Integer.valueOf(1);
 		}else {
 			amountAux = Integer.valueOf(Integer.parseInt(amountSlot.getValue()));
 		}
-		final Integer amount = amountAux;
 		final String units = unitSlot.getValue(), added_drink = drinkSlot.getValue();
+		final Integer amount = amountAux;
+		String munit=units;
+		if(units!=null&&amount.intValue()>1&&(!units.contains("grams")))
+			munit = "s".equals(units.substring(units.length() - 1)) ? (String) units.subSequence(0, units.length()-1) : units;
+		final String unit = munit;
 		
 		//add food
 		try {
 			Pair<SearchResults, Portion> p=PortionSearchEngine.PortionSearch
-					(added_drink, units, Type.DRINK, Double.valueOf(amount.intValue()).doubleValue(),db.DBGetEmail());
+					(added_drink, unit, Type.DRINK, amount.intValue(),db.DBGetEmail());
 			 /*if there was a search error, i.e. the food wasn't found, notify the user to about
 			 * the option of custom meal
 			 **/
 			if(p.getName() == SearchResults.SEARCH_NO_RESULTS || p.getName() == SearchResults.SEARCH_ERROR) {
-				return String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink);
+				return new Pair<String,SearchResults>(String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink,added_drink), SearchResults.SEARCH_NO_RESULTS);
 			} else {
 				Portion portionToPush=p.getValue();
-				portionToPush.amount*=amount.intValue();
+				portionToPush.name=portionToPush.name.replace("%20", " ");
+				portionToPush.units=units;
 				db.DBPushFood(portionToPush);
 
 			}
 		}catch (final Exception | DBException e) {
-			return String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink);
+			return new Pair<String,SearchResults>(String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink,added_drink),SearchResults.SEARCH_ERROR);
 		}
-		return String.format(DrinkStrings.DRINK_LOGGED, amount, units, added_drink);
+		if(unitSlot.getValue() == null)
+			return new Pair<String, SearchResults>(String.format(DrinkStrings.DRINK_LOGGED, amount, " ", added_drink),SearchResults.SEARCH_FOUND);
+		return new Pair<String, SearchResults>(String.format(DrinkStrings.DRINK_LOGGED, amount, units, added_drink),SearchResults.SEARCH_FOUND);
 	}
 
 	@Override
@@ -77,7 +82,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 				unitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 						.get(SlotString.UNIT_SLOT);
 		
-		String speechText = String.format(DrinkStrings.DRINKS_LOGGED_START);
+		String speechText="";
 		final String repromptText = "";
 		
 		if (drinkSlot.getValue() == null)
@@ -89,7 +94,14 @@ public class AddDrinkIntentHandler implements RequestHandler {
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
 		
 		try {
-			speechText += addDrinkToDB(amountSlot,unitSlot,drinkSlot,db);
+			Pair<String,SearchResults> p =addDrinkToDB(amountSlot,unitSlot,drinkSlot,db);
+			if(p.getValue()==SearchResults.SEARCH_FOUND) {
+				speechText += p.getName();
+			}else {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, String.format(DrinkStrings.DRINK_NOT_FOUND,drinkSlot.getValue()))
+						.withSpeech(String.format(DrinkStrings.DRINK_NOT_FOUND,drinkSlot.getValue())).withReprompt(String.format(DrinkStrings.DRINK_NOT_FOUND,drinkSlot.getValue()))
+						.withShouldEndSession(Boolean.FALSE).build();
+			}
 		} catch (final DBException e) {
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, DrinkStrings.DRINK_LOGGING_PROBLEM)
 					.withSpeech(DrinkStrings.DRINK_LOGGING_PROBLEM).withReprompt(DrinkStrings.DRINK_LOGGING_PROBLEM)
@@ -103,7 +115,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 					.withSpeech(DrinkStrings.DRINK_UNITS_PROBLEM).withReprompt(DrinkStrings.DRINK_UNITS_PROBLEM)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
-		speechText += String.format(DrinkStrings.DRINK_LOGGED_END);
+		speechText = String.format(DrinkStrings.DRINKS_LOGGED_START)+speechText+ String.format(DrinkStrings.DRINK_LOGGED_END);
 
 		final Random rand = new Random();
 		if (rand.nextInt(6) != 2)

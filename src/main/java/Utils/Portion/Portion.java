@@ -21,10 +21,11 @@ public class Portion {
 
 	public final Meal meal;
 	public final Type type;
-	public final String name;
+	public String name;
 
 	/** if food - in grams, if liquid - in milliliters **/
 	public double amount;
+	public String units;
 
 	/** nutritional values **/
 	public double calories_per_100_grams;
@@ -54,6 +55,26 @@ public class Portion {
 				: (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH
 						: (hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
 		this.feeling = "";
+	}
+	
+	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
+			final double proteins, final double carbs, final double fats, final String units) {
+		this.type = type;
+		this.name = name;
+		this.amount = amount;
+		this.calories_per_100_grams = calories;
+		this.proteins_per_100_grams = proteins;
+		this.carbs_per_100_grams = carbs;
+		this.fats_per_100_grams = fats;
+		this.alchohol_by_volume = 0;
+		this.units = units;
+		this.time = new Date();
+		Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+		calendar.setTime(this.time); // assigns calendar to given date
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+		this.meal = (hour > 7 && hour < 11 ? Portion.Meal.BREAKFAST
+				: (hour >= 11 && hour <= 17 ? Portion.Meal.LUNCH
+						: (hour >= 17 && hour <= 22 ? Portion.Meal.DINNER : Portion.Meal.MIDNIGHT)));
 	}
 
 	public Portion(final Portion.Type type, final String name, final double amount, final double calories,
@@ -203,6 +224,15 @@ public class Portion {
 		this.time = time;
 	}
 	
+
+	public String getUnits() {
+		return this.units;
+	}
+	
+	public void setUnits(String unit) {
+		this.units = unit;
+	}
+
 	public void setFeeling(String feeling) {
 		this.feeling = feeling;
 	}

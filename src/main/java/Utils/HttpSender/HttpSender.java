@@ -56,8 +56,10 @@ public class HttpSender {
             if(parameters!=null){
                 con.setDoOutput(true);
                 con.setRequestProperty("Content-Type",this.contentType);
-                OutputStream os = con.getOutputStream();
-                OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+                @SuppressWarnings("resource")
+				OutputStream os = con.getOutputStream();
+                @SuppressWarnings("resource")
+				OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
                 osw.write(this.parameters);
                 osw.flush();
                 osw.close();

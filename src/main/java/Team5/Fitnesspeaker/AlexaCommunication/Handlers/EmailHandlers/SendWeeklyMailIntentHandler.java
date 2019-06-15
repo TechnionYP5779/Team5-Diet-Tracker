@@ -26,7 +26,7 @@ public class SendWeeklyMailIntentHandler implements RequestHandler {
 	WeeklyStatistics weeklyStatistics = new WeeklyStatistics();
 	DBUtils db;
 
-	private String[] getDates() {
+	private static String[] getDates() {
 		String[] dates = new String[7];
 		Calendar weekDay = Calendar.getInstance();
 		weekDay.add(Calendar.DATE, -7);
