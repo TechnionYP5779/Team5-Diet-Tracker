@@ -54,10 +54,10 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 			speechText = FoodStrings.DIDNT_EAT_ANYTHING;
 		else {
 			Portion.Meal m = FoodList.get(0).getMeal();
-			speechText += ". For " + m.name();
+			speechText += "For " + m.name();
 			for (final Portion p : FoodList) {
 				if (!(p.getMeal().name().equals(m.name()))) {
-					speechText += ". For " + p.getMeal().name();
+					speechText += ", For " + p.getMeal().name();
 					m = p.getMeal();
 				}
 				String[] splited2 = p.getTime().toString().split(" ")[3].split(":");
