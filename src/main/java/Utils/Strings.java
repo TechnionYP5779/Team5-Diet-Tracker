@@ -33,6 +33,14 @@ public class Strings {
 		public static final String WEIGHT_PROGRESS_INTENT = "weightProgressIntent";
 		public static final String WHAT_I_ATE_INTENT = "WhatIAteIntent";
 		public static final String WHAT_IS_MY_NAME_INTENT = "WhatIsMyNameIntent";
+		public static final String PERIODIC_WEIGHT_PROGRESS = "PeriodicWeightProgress";
+		public static final String ADD_CUSTOM_MEAL_INTENT = "AddCustomMeal";
+		public static final String REMOVE_CUSTOM_MEAL_INTENT = "RemoveCustomMeal";
+		public static final String ADD_INGREDIENT_MEAL_INTENT = "AddCustomMealIngredient";
+		public static final String EAT_CUSTOM_MEAL_INTENT = "EatingCustomMeal";
+		public static final String FEELINGS_REPORT_INTENT = "FeelingReport";
+		public static final String FEELING_INTENT = "HowDoYouFeel";
+
 	}
 
 	public static class AgeStrings {
@@ -54,23 +62,38 @@ public class Strings {
 		public static final String DIDNT_DRINKED_TODAY = "You haven't drink %s today yet";
 		public static final String DRINKED_SO_FAR_MANY = "so far, you have drank %d cups of %s";
 		public static final String DRINKED_SO_FAR_ONE = "so far, you have drank a single cup of %s";
-		public static final String DRINKS_LOGGING_PROBLEM = "There was a problem with the water logging, Please tell me again";
-		public static final String DRINKS_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with the water logging,  Please tell me again";
+		public static final String DRINKS_LOGGED_START = "You logged ";
+		public static final String DRINKS_LOGGING_PROBLEM = "There was a problem with logging your drink, Please tell me again";
+		public static final String DRINKS_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with logging your drink,  Please tell me again";
+		public static final String DRINKS_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the drink in different units, in liters for example";
+		public static final String DRINKS_UNITS_PROBLEM_REPEAT = "I'll repeat, there was a problem with the units you provided, Please try to tell me the drink in different units, in liters for example";
+		public static final String DRINK_NOT_FOUND = "I cannot find information about %s";
+		public static final String DRINK_LOGGED = " %d %s of %s , ";
+		public static final String TELL_DRINK_AGAIN = "I'm not sure what you drank. Please tell me again";
 		public static final String MANY_DRINKS_LOGGED = "You logged %d cups of %s, to your health!";
-		public static final String ONE_DRINKS_LOGGED = "You logged one cup of %s, to your health!";
+		public static final String ONE_DRINK_LOGGED = "You logged one cup of %s, to your health!";
 		public static final String SITTING_TIP = " Remember to drink while sitting down. ";
+		public static final String DRINK_LOGGING_PROBLEM = "There was a problem with the portion logging, Please tell me again";
+		public static final String DRINK_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the drink in different units, in cups for example";
 		public static final String TELL_DRINKS_AGAIN = "I'm not sure what did you drink. Please tell me again";
 		public static final String TELL_DRINKS_AGAIN_REPEAT = "I will repeat, I'm not sure what did you  drink. Please tell me again";
 		public static final String TELL_DRINKS_AMOUNT_AGAIN = "I'm not sure how many cups you drank. Please tell me again";
 		public static final String TELL_DRINKS_AMOUNT_AGAIN_REPEAT = "I will repeat, I'm not sure how many cups you drank. Please tell me again";
+		public static final String DRINK_LOGGED_END = " to your health!";
+
 	}
 
 	public static class FoodStrings {
 		public static final String DIDNT_EAT_ANYTHING = "you haven't eaten anything today yet. Please Tell me when you do";
 		public static final String DRINK_LIQUID_TIP = " Remember to drink liquids after the meal. ";
-		public static final String FOOD_LOGGED = "You logged %d %s of %s, bon appetit!";
+		public static final String FOOD_LOGGED_START = "You logged ";
+		public static final String FOOD_LOGGED = " %d %s of %s , ";
+		public static final String FOOD_LOGGED_WITHOU_LOG = " %d %s %s , ";
+		public static final String FOOD_LOGGED_END = " bon appetit!";
 		public static final String FOOD_LOGGING_PROBLEM = "There was a problem with the portion logging, Please tell me again";
 		public static final String FOOD_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with the portion logging,  Please tell me again";
+		public static final String FOOD_NOT_FOUND = "I cannot find information about %s, but you can insert it into your custom food list by saying, log custome meal %s";
+		public static final String FOOD_NOT_FOUND_REPEAT = "I'll repeat, I cannot find information about %s, but you can insert it into your custom food list by saying, log custome meal %s";
 		public static final String FOOD_UNITS_PROBLEM = "There was a problem with the units you provided, Please try to tell me the food in different units, in grams for example";
 		public static final String FOOD_UNITS_PROBLEM_REPEAT = "I'll repeat, there was a problem with the units you provided, Please try to tell me the food in different units, in grams for example";
 		public static final String SITTING_TIP = " Remember to eat your meals while sitting down comfortably. ";
@@ -153,6 +176,9 @@ public class Strings {
 		public static final String WEEKLY_MAIL_SENT = "I sent you a mail with a weekly report";
 		public static final String WEIGHT_MAIL_SENT = "I sent you a mail describing your weight progress";
 		public static final String WEIGHT_MAIL_NOT_SENT = "I don't have enough measurements";
+		public static final String DAILY_FEELING_MAIL_SENT = "I sent you a mail with a daily feelings report";
+		public static final String WEEKLY_FEELING_MAIL_SENT = "I sent you a mail with a weekly feelings report";
+		public static final String MONTHLY_FEELING_MAIL_SENT = "I sent you a mail with a monthly feelings report";
 	}
 
 	public static class GoalsAndMeasuresStrings {
@@ -181,6 +207,52 @@ public class Strings {
 		public static final String TELL_MEASURE_GOAL_AGAIN_REPEAT = "I will repeat, I'm not sure what is your goal. Please tell me again";
 	}
 
+	public static class SlotString {
+		public static final String NUMBER_SLOT = "Number";
+		public static final String ADD_COUNT_SLOT = "Number";
+		public static final String DRINK_NAME_SLOT = "drink";
+		public static final String AMOUNT_SLOT = "Number";
+		public static final String FOOD_SLOT = "Food";
+		public static final String UNIT_SLOT = "Unit";
+		public static final String TIME_UNIT_SLOT = "TimeUnit";
+		public static final String MEASURE_SLOT = "Measure";
+		public static final String AMOUNT_SLOT2 = "NumberTwo";
+		public static final String FOOD_SLOT2 = "FoodTwo";
+		public static final String UNIT_SLOT2 = "UnitTwo";
+		public static final String AMOUNT_SLOT3 = "NumberThree";
+		public static final String FOOD_SLOT3 = "FoodThree";
+		public static final String UNIT_SLOT3 = "UnitThree";
+		public static final String AMOUNT_SLOT4 = "NumberFour";
+		public static final String FOOD_SLOT4 = "FoodFour";
+		public static final String UNIT_SLOT4 = "UnitFour";
+		public static final String CUSTOM_MEAL_SLOT = "meal";
+		public static final String INGREDIANT_SLOT = "ingredient";
+		public static final String PORTION_SLOT = "portion";
+		public static final String FEELING_SLOT = "feeling";
+	}
+
+	public static class NutritionalString {
+		public static final String CALORIES = "calories";
+		public static final String CARBS = "carbs";
+		public static final String PROTEINS = "proteins";
+		public static final String FATS = "fats";
+	}
+
+	public static class CustomMealStrings {
+		public static final String TELL_CUSTOM_MEAL_AGAIN = "Tell your custom meal again.";
+		public static final String CUSTOM_MEAL_ADDING_ERROR = "There was a problem added your custom meal, please try again.";
+		public static final String CUSTOM_MEAL_EXISTS = "The custom meal you want to add exists, please use other name.";
+		public static final String CUSTOM_MEAL_LOGGED = "Your custom meal logged succesfully, add ingerdients to it by saying add ingredient to my custom meal";
+		public static final String CUSTOM_MEAL_REMOVE_ERROR = "There was a problem removing custom meal, please try again.";
+		public static final String CUSTOM_MEAL_DOESNT_EXISTS = "The custom meal doesnt exist.";
+		public static final String CUSTOM_MEAL_REMOVE_SUCCESS = "Your custom meal removed succesfully.";
+		public static final String TELL_INGREDIANT_AGAIN = "Tell your ingrediant again.";
+		public static final String CUSTOM_MEAL_UPDATE_ERROR = "There was a problem adding ingrediant to custom meal, please try again.";
+		public static final String ADDED_INGREDIANT = "You successfully added an ingrediant to your custom meal.";
+		public static final String TELL_INGREDIENT_UNITS_AGAIN = "Tell the units of the ingredient again";
+		public static final String TELL_INGREDIENT_AMOUNT_AGAIN = "Tell the amount of the ingredient again";
+	}
+
 	public static class GeneralString {
 		public static final String LOGGED_SUCCESSFULLY = "logged succesfully";
 		public static final String LOGGED_SUCCESSFULLY_REPEAT = "I will repeat, logged successfully";
@@ -193,7 +265,7 @@ public class Strings {
 	public static class HelpString {
 		public static final String SAY_HELP = "You can tell me what you ate, for example, i ate twenty grams of pasta or you can tell me everytime you drink,"
 				+ " for example, i drank 3 cups of water.";
-		public static final String SAY_HELP_REPEAT = "I will repeat, " +SAY_HELP;
+		public static final String SAY_HELP_REPEAT = "I will repeat, " + SAY_HELP;
 	}
 
 }

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import Utils.UnitsConverter;
 @SuppressWarnings("static-method")
 public class UnitsConverterTest {
 
@@ -15,18 +16,19 @@ public class UnitsConverterTest {
 	public static final double grams_const = 1000;
 	public static final double kilogram_pound_const = 2.2046244202;
 
+
 	@Test
 	public void literToMl() {
-		assertEquals(liters_const, UnitsConverter.literToMilliliter(1), DELTA);
-		assertEquals(0., UnitsConverter.literToMilliliter(0), DELTA);
-		assertEquals(-1, UnitsConverter.literToMilliliter(-10.2), DELTA);
+		assertEquals(liters_const, UnitsConverter.literToMilliliterTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.literToMilliliterTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.literToMilliliterTrivial(-10.2), DELTA);
 	}
 
 	@Test
 	public void mlToLiter() {
-		assertEquals(1 / liters_const, UnitsConverter.milliliterToLiter(1), DELTA);
-		assertEquals(0., UnitsConverter.milliliterToLiter(0), DELTA);
-		assertEquals(-1, UnitsConverter.milliliterToLiter(-10.2), DELTA);
+		assertEquals(1 / liters_const, UnitsConverter.milliliterToLiterTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.milliliterToLiterTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.milliliterToLiterTrivial(-10.2), DELTA);
 	}
 
 	@Test
@@ -255,44 +257,44 @@ public class UnitsConverterTest {
 
 	@Test
 	public void grToMg() {
-		assertEquals(grams_const, UnitsConverter.gramsToMilligrams(1), DELTA);
-		assertEquals(0., UnitsConverter.gramsToMilligrams(0), DELTA);
-		assertEquals(-1, UnitsConverter.gramsToMilligrams(-10.2), DELTA);
+		assertEquals(grams_const, UnitsConverter.gramsToMilligramsTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.gramsToMilligramsTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.gramsToMilligramsTrivial(-10.2), DELTA);
 	}
 
 	@Test
 	public void grToKg() {
-		assertEquals(1 / grams_const, UnitsConverter.gramsToKilograms(1), DELTA);
-		assertEquals(0., UnitsConverter.gramsToKilograms(0), DELTA);
-		assertEquals(-1, UnitsConverter.gramsToKilograms(-10.2), DELTA);
+		assertEquals(1 / grams_const, UnitsConverter.gramsToKilogramsTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.gramsToKilogramsTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.gramsToKilogramsTrivial(-10.2), DELTA);
 	}
 
 	@Test
 	public void kgToMg() {
-		assertEquals(Math.pow(grams_const, 2), UnitsConverter.kilogramsToMilligrams(1), DELTA);
-		assertEquals(0., UnitsConverter.kilogramsToMilligrams(0), DELTA);
-		assertEquals(-1, UnitsConverter.kilogramsToMilligrams(-10.2), DELTA);
+		assertEquals(Math.pow(grams_const, 2), UnitsConverter.kilogramsToMilligramsTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.kilogramsToMilligramsTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.kilogramsToMilligramsTrivial(-10.2), DELTA);
 	}
 
 	@Test
 	public void kgTogr() {
-		assertEquals(grams_const, UnitsConverter.kilogramsToGrams(1), DELTA);
-		assertEquals(0., UnitsConverter.kilogramsToGrams(0), DELTA);
-		assertEquals(-1, UnitsConverter.kilogramsToGrams(-10.2), DELTA);
+		assertEquals(grams_const, UnitsConverter.kilogramsToGramsTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.kilogramsToGramsTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.kilogramsToGramsTrivial(-10.2), DELTA);
 	}
 
 	@Test
 	public void mgToGr() {
-		assertEquals(1 / grams_const, UnitsConverter.milligramsToGrams(1), DELTA);
-		assertEquals(0., UnitsConverter.milligramsToGrams(0), DELTA);
-		assertEquals(-1, UnitsConverter.milligramsToGrams(-10.2), DELTA);
+		assertEquals(1 / grams_const, UnitsConverter.milligramsToGramsTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.milligramsToGramsTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.milligramsToGramsTrivial(-10.2), DELTA);
 	}
 
 	@Test
 	public void mgToKg() {
-		assertEquals(Math.pow(1 / grams_const, 2), UnitsConverter.milligramsToKilograms(1), DELTA);
-		assertEquals(0., UnitsConverter.milligramsToKilograms(0), DELTA);
-		assertEquals(-1, UnitsConverter.milligramsToKilograms(-10.2), DELTA);
+		assertEquals(Math.pow(1 / grams_const, 2), UnitsConverter.milligramsToKilogramsTrivial(1), DELTA);
+		assertEquals(0., UnitsConverter.milligramsToKilogramsTrivial(0), DELTA);
+		assertEquals(-1, UnitsConverter.milligramsToKilogramsTrivial(-10.2), DELTA);
 	}
 
 	@Test
