@@ -37,7 +37,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 		return i.matches(intentName(IntentsNames.ADD_DRINK_INTENT));
 	}
 	
-	public static String addDrinkToDB(Slot amountSlot, Slot unitSlot, Slot drinkSlot,DBUtils db) throws Exception,DBException {
+	public static Pair<String, SearchResults> addDrinkToDB(Slot amountSlot, Slot unitSlot, Slot drinkSlot,DBUtils db) throws Exception,DBException {
 		Integer amountAux;
 		if (amountSlot.getValue() == null || amountSlot.getValue().equals("0")) {
 			amountAux = Integer.valueOf(1);
@@ -59,7 +59,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 			 * the option of custom meal
 			 **/
 			if(p.getName() == SearchResults.SEARCH_NO_RESULTS || p.getName() == SearchResults.SEARCH_ERROR) {
-				return String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink);
+				return new Pair<String,SearchResults>(String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink,added_drink), SearchResults.SEARCH_NO_RESULTS);
 			} else {
 				Portion portionToPush=p.getValue();
 				portionToPush.units=units;
@@ -67,9 +67,11 @@ public class AddDrinkIntentHandler implements RequestHandler {
 
 			}
 		}catch (final Exception | DBException e) {
-			return String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink);
+			return new Pair<String,SearchResults>(String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink,added_drink),SearchResults.SEARCH_ERROR);
 		}
-		return String.format(DrinkStrings.DRINK_LOGGED, amount, units, added_drink);
+		if(unitSlot.getValue() == null)
+			return new Pair<String, SearchResults>(String.format(DrinkStrings.DRINK_LOGGED, amount, " ", added_drink),SearchResults.SEARCH_FOUND);
+		return new Pair<String, SearchResults>(String.format(DrinkStrings.DRINK_LOGGED, amount, units, added_drink),SearchResults.SEARCH_FOUND);
 	}
 
 	@Override
@@ -81,7 +83,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 				unitSlot = ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots()
 						.get(SlotString.UNIT_SLOT);
 		
-		String speechText = String.format(DrinkStrings.DRINKS_LOGGED_START);
+		String speechText="";
 		final String repromptText = "";
 		
 		if (drinkSlot.getValue() == null)
@@ -93,7 +95,14 @@ public class AddDrinkIntentHandler implements RequestHandler {
 		final DBUtils db = new DBUtils(i.getServiceClientFactory().getUpsService().getProfileEmail());
 		
 		try {
-			speechText += addDrinkToDB(amountSlot,unitSlot,drinkSlot,db);
+			Pair<String,SearchResults> p =addDrinkToDB(amountSlot,unitSlot,drinkSlot,db);
+			if(p.getValue()==SearchResults.SEARCH_FOUND) {
+				speechText += p.getName();
+			}else {
+				return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, String.format(DrinkStrings.DRINK_NOT_FOUND,drinkSlot.getValue()))
+						.withSpeech(String.format(DrinkStrings.DRINK_NOT_FOUND,drinkSlot.getValue())).withReprompt(String.format(DrinkStrings.DRINK_NOT_FOUND,drinkSlot.getValue()))
+						.withShouldEndSession(Boolean.FALSE).build();
+			}
 		} catch (final DBException e) {
 			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, DrinkStrings.DRINK_LOGGING_PROBLEM)
 					.withSpeech(DrinkStrings.DRINK_LOGGING_PROBLEM).withReprompt(DrinkStrings.DRINK_LOGGING_PROBLEM)
@@ -107,7 +116,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 					.withSpeech(DrinkStrings.DRINK_UNITS_PROBLEM).withReprompt(DrinkStrings.DRINK_UNITS_PROBLEM)
 					.withShouldEndSession(Boolean.FALSE).build();
 		}
-		speechText += String.format(DrinkStrings.DRINK_LOGGED_END);
+		speechText = String.format(DrinkStrings.DRINKS_LOGGED_START)+speechText+ String.format(DrinkStrings.DRINK_LOGGED_END);
 
 		final Random rand = new Random();
 		if (rand.nextInt(6) != 2)
