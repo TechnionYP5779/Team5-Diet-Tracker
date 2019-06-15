@@ -49,7 +49,8 @@ public class EmailSender {
 			+ "    <td> %.2f</td>\r\n    <td> %.2f</td>\r\n    <td> %.2f</td>\r\n  </tr>\r\n";
 
 	private final String dailyEmailBottom = "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
-			+ "  <td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
+			+ "  <td  style=\"outline: thin solid\" ></td>\r\n <td  style=\"outline: thin solid\" ></td>\r\n   <td  style=\"outline: thin solid\" ></td>\r\n"
+			+ " <td  style=\"outline: thin solid\" >"
 			+ "%.2f</td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
@@ -160,7 +161,7 @@ public class EmailSender {
 			final DailyStatistics s) {  
 		String messegeText = String.format(dailyEmailTop, "%", getDate(), name);
 		for (final Portion p : s.foodPortions)
-			messegeText += String.format(dailyEmailTableLine, p.getName(),p.getUnits(), Double.valueOf(p.getAmount()) ,
+			messegeText += String.format(dailyEmailTableLine, p.getName(),p.getUnits()==null? "":p.getUnits(), Double.valueOf(p.getAmount()) ,
 					Double.valueOf(p.getAmount() * p.getCalories_per_100_grams()),
 					Double.valueOf(p.getAmount() * p.getProteins_per_100_grams()),
 					Double.valueOf(p.getAmount() * p.getCarbs_per_100_grams()),
@@ -287,7 +288,7 @@ public class EmailSender {
 		if (period.equals("monthly"))
 			messegeText = String.format(monthlyFeelingEmailTop, "%", getDate(), name);
 		for (final Portion p : f)
-			messegeText += String.format(FeelingEmailTableLine, p.getName(),p.getUnits(), p.getAmount(),
+			messegeText += String.format(FeelingEmailTableLine, p.getName(),p.getUnits()==null?"":p.getUnits(), p.getAmount(),
 					p.getFeeling(),formatter.format(p.getTime()));
 		messegeText += String.format(FeelingEmailBottom);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
