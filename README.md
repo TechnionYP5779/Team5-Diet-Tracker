@@ -27,4 +27,4 @@
 
 ## Acknowledgments
 
-* **Mr Kobe Mike**
+* **Mr Koby Mike**
