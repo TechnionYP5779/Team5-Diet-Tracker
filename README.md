@@ -1,6 +1,6 @@
 # Diet Tracker
 ## Diet-Tracker development status 
-[![Build Status](https://travis-ci.org/TechnionYP5779/Team5-Fitnesspeaker.svg?branch=master)](https://travis-ci.org/TechnionYP5779/Team5-Fitnesspeaker)
+[![Build Status](https://travis-ci.org/TechnionYP5779/Team5-Fitnesspeaker.svg?branch=master)](https://travis-ci.org/TechnionYP5779/Team5-Diet-Tracker)
 [![GitHub issues](https://img.shields.io/github/issues/TechnionYP5779/Team5-Diet-Tracker.svg)](https://github.com/TechnionYP5779/Team5-Diet-Tracker/issues)
 [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/TechnionYP5779/Team5-Diet-Tracker.svg?maxAge=2592000)]()
 
