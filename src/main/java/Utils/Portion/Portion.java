@@ -21,7 +21,7 @@ public class Portion {
 
 	public final Meal meal;
 	public final Type type;
-	public final String name;
+	public String name;
 
 	/** if food - in grams, if liquid - in milliliters **/
 	public double amount;

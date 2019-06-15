@@ -62,6 +62,7 @@ public class AddDrinkIntentHandler implements RequestHandler {
 				return new Pair<String,SearchResults>(String.format(DrinkStrings.DRINK_NOT_FOUND,added_drink,added_drink), SearchResults.SEARCH_NO_RESULTS);
 			} else {
 				Portion portionToPush=p.getValue();
+				portionToPush.name=portionToPush.name.replace("%20", " ");
 				portionToPush.units=units;
 				db.DBPushFood(portionToPush);
 
