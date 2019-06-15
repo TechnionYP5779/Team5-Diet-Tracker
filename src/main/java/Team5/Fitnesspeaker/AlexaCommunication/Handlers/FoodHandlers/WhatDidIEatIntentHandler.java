@@ -60,6 +60,9 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 					speechText += ", For " + p.getMeal().name();
 					m = p.getMeal();
 				}
+				boolean addOf = true;
+				if(p.getUnits()!=null&&p.getUnits().contains("small")||p.getUnits().contains("medium")||
+						p.getUnits().contains("large")||p.getUnits().contains("big")) addOf=false;
 				String[] splited2 = p.getTime().toString().split(" ")[3].split(":");
 				if (p.type == Type.MEAL) {
 					speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
@@ -67,7 +70,7 @@ public class WhatDidIEatIntentHandler implements RequestHandler {
 				} else if (p.type == Type.FOOD) {
 					if (p.getUnits()!=null) {
 						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
-						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " "+p.getUnits()+" of " + p.getName();
+						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " "+p.getUnits()+(addOf?" of ":" ") + p.getName();
 					} else {
 						speechText += ", at " + Integer.parseInt(splited2[0]) + ":" + Integer.parseInt(splited2[1])
 						+ " you ate " + Integer.valueOf((int) p.getAmount()) + " " + p.getName();

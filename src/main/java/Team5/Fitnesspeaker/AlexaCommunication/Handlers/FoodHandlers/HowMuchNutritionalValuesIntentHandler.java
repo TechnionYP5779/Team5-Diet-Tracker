@@ -145,7 +145,7 @@ public class HowMuchNutritionalValuesIntentHandler implements RequestHandler {
 					Integer.valueOf((int) total_measure), measure_str) + speechText2;
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withShouldEndSession(Boolean.FALSE).build();
+				.withShouldEndSession(Boolean.TRUE).build();
 
 	}
 }

@@ -73,7 +73,11 @@ public class AddFoodIntentHandler implements RequestHandler {
 		}
 		if(unitSlot.getValue() == null)
 			return new Pair<String, SearchResults>(String.format(FoodStrings.FOOD_LOGGED, amount, " ", added_food),SearchResults.SEARCH_FOUND);
-		return new Pair<String, SearchResults>(String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food),SearchResults.SEARCH_FOUND);
+		if(units!=null&&units.contains("small")||units.contains("medium")||
+				units.contains("large")||units.contains("big"))
+			return new Pair<String, SearchResults>(String.format(FoodStrings.FOOD_LOGGED_WITHOU_LOG, amount, units, added_food),SearchResults.SEARCH_FOUND);
+		else
+			return new Pair<String, SearchResults>(String.format(FoodStrings.FOOD_LOGGED, amount, units, added_food),SearchResults.SEARCH_FOUND);
 
 	}
 

@@ -85,6 +85,7 @@ public class Strings {
 		public static final String DRINK_LIQUID_TIP = " Remember to drink liquids after the meal. ";
 		public static final String FOOD_LOGGED_START = "You logged ";
 		public static final String FOOD_LOGGED = " %d %s of %s , ";
+		public static final String FOOD_LOGGED_WITHOU_LOG = " %d %s %s , ";
 		public static final String FOOD_LOGGED_END = " bon appetit!";
 		public static final String FOOD_LOGGING_PROBLEM = "There was a problem with the portion logging, Please tell me again";
 		public static final String FOOD_LOGGING_PROBLEM_REPEAT = "I'll repeat, there was a problem with the portion logging,  Please tell me again";
