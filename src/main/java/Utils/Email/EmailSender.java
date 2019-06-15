@@ -50,6 +50,7 @@ public class EmailSender {
 
 	private final String dailyEmailBottom = "  <tr style=\"outline: thin solid\">\r\n  <td  style=\"outline: thin solid\" >Total</td>\r\n"
 			+ "  <td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
+			+ "<td  style=\"outline: thin solid\" ></td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f</td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
 			+ "%.2f </td>\r\n  <td  style=\"outline: thin solid\" >"
@@ -87,7 +88,7 @@ public class EmailSender {
 			+ "\r\ntr:nth-child(even) {\r\n  background-color: #dddddd;\r\n}\r\n</style>\r\n"
 			+ "</head>\r\n<body>\r\n<h3>Date: %s </h3></br>"
 			+ "<center><h1><u>Daily Feeling Statistics</u></h1></center>\r\n</br>\r\nHi %s,</br>\r\n"
-			+ "here is a brief review of how you felt today:\r\n<br><\br></br>\r\n</br>\r\n</br>\r\n"
+			+ "here is a brief review of how you felt today:\r\n</br>\r\n</br>\r\n</br>\r\n"
 			+ "</br>\r\n\r\n<table>\r\n  <tr>\r\n    <th>Food</th>\r\n <th>Unit</th>\r\n"
 			+ "    <th>Amount</th>\r\n    <th>Feelings Recorded</th>\r\n    <th>Time</th>\r\n"
 			+ "  </tr>\r\n  <tr>\r\n";
@@ -165,7 +166,7 @@ public class EmailSender {
 					Double.valueOf(p.getAmount() * p.getProteins_per_100_grams()),
 					Double.valueOf(p.getAmount() * p.getCarbs_per_100_grams()),
 					Double.valueOf(p.getAmount() * p.getFats_per_100_grams()));
-		messegeText += String.format(dailyEmailBottom, Double.valueOf(s.dailyCalories), Double.valueOf(s.dailyProteins),
+		messegeText += String.format(dailyEmailBottom,Double.valueOf(s.dailyCalories), Double.valueOf(s.dailyProteins),
 				Double.valueOf(s.dailyCarbs), Double.valueOf(s.dailyFats), s.ciggaretesSmoked);
 		final Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override
