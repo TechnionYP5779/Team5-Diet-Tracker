@@ -228,8 +228,14 @@ public class AddFoodIntentHandler implements RequestHandler {
 		speechText += String.format(FoodStrings.FOOD_LOGGED_END);
 
 		final Random rand = new Random();
-		if (rand.nextInt(6) == 2)
+		int randNum = rand.nextInt(6);
+		if (randNum == 2)
 			speechText += String.format(tips[rand.nextInt(tips.length)]);
+		if (randNum == 4 || randNum == 6) {
+			speechText += String.format(FoodStrings.ASK_FEELING);
+			return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)
+					.withReprompt(repromptText).withShouldEndSession(Boolean.FALSE).build();
+		}
 
 		// the Boolean.TRUE says that the Alexa will end the session
 		return i.getResponseBuilder().withSimpleCard(Strings.GLOBAL_SESSION_NAME, speechText).withSpeech(speechText)

@@ -105,6 +105,7 @@ public class Strings {
 		public static final String TELL_FOOD_UNITS_AGAIN = "I'm not sure about the units of what you ate, Please tell me again";
 		public static final String TELL_FOOD_UNITS_AGAIN_REPEAT = "I will repeat, I'm not sure about the units of what you ate, Please tell me again";
 		public static final String WATER_BEFORE_MEAL_TIP = " Remember to drink a cup of water before the meal. ";
+		public static final String ASK_FEELING = " How did you feel during the meal? ";
 	}
 
 	public static class HeightStrings {

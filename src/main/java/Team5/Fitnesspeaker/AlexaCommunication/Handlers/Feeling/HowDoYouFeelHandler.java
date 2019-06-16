@@ -91,7 +91,7 @@ public class HowDoYouFeelHandler implements RequestHandler {
 		}
 
 		return i.getResponseBuilder().withSimpleCard("FitnessSpeakerSession", speechText).withSpeech(speechText)
-				.withShouldEndSession(Boolean.FALSE).build();
+				.withShouldEndSession(Boolean.TRUE).build();
 	}
 
 }

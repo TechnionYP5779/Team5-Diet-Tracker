@@ -17,10 +17,10 @@ public class DailyStatistics {
 	public void calculateDailyNutritions() {
 		double calories = 0.0, proteins = 0.0, carbs = 0.0, fats = 0.0;
 		for (Portion portion : foodPortions) {
-			calories += portion.amount * portion.calories_per_100_grams / 100;
-			proteins += portion.amount * portion.proteins_per_100_grams / 100;
-			carbs += portion.amount * portion.carbs_per_100_grams / 100;
-			fats += portion.amount * portion.fats_per_100_grams / 100;
+			calories += portion.amount * portion.calories_per_100_grams;
+			proteins += portion.amount * portion.proteins_per_100_grams;
+			carbs += portion.amount * portion.carbs_per_100_grams;
+			fats += portion.amount * portion.fats_per_100_grams;
 		}
 		this.dailyCalories = ""+calories;
 		this.dailyProteins = ""+proteins;
